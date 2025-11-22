@@ -1,0 +1,13 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<h2>Результат теста: {{ result.test.title }}</h2>
+
+<p>Балл: {{ result.score }}%</p>
+<p>Оценка: <b>{{ result.grade }}</b></p>
+
+<a href="/">Вернуться на главную</a>
+
+{% endblock %}

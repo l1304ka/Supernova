@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Админ-панель{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="mb-4">
+    <nav class="nav nav-pills">
+      <a class="nav-link {% if section == 'dashboard' %}active{% endif %}" href="/admin-panel/">🏠 Главная</a>
+      <a class="nav-link {% if section == 'students' %}active{% endif %}" href="/admin-panel/students/">👨‍🎓 Ученики</a>
+      <a class="nav-link {% if section == 'teachers' %}active{% endif %}" href="/admin-panel/teachers/">👨‍🏫 Учителя</a>
+      <a class="nav-link {% if section == 'classes' %}active{% endif %}" href="/admin-panel/classes/">🏫 Классы</a>
+      <a class="nav-link {% if section == 'subjects' %}active{% endif %}" href="/admin-panel/subjects/">📚 Предметы</a>
+      <a class="nav-link {% if section == 'topics' %}active{% endif %}" href="/admin-panel/topics/">🧩 Темы</a>
+      <a class="nav-link {% if section == 'subtopics' %}active{% endif %}" href="/admin-panel/subtopics/">🔹 Подтемы</a>
+      <a class="nav-link {% if section == 'questions' %}active{% endif %}" href="/admin-panel/questions/">❓ Вопросы</a>
+    </nav>
+  </div>
+
+  {% block admin_content %}{% endblock %}
+</div>
+{% endblock %}

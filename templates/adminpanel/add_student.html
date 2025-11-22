@@ -1,0 +1,30 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+<h2>Добавить ученика</h2>
+
+<form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">Логин</label>
+        <input type="text" name="username" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Пароль</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Имя</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Фамилия</label>
+        <input type="text" name="surname" class="form-control" required>
+    </div>
+
+    <button class="btn btn-success">Создать</button>
+</form>
+{% endblock %}

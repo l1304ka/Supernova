@@ -1,0 +1,34 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+<h2>Вопросы</h2>
+
+<a href="{% url 'admin_add_question' %}" class="btn btn-success mb-3">Добавить вопрос</a>
+
+<table class="table table-striped table-bordered shadow-sm">
+  <thead class="table-light">
+    <tr>
+      <th>ID</th>
+      <th>Подтема</th>
+      <th>Текст</th>
+      <th>Сложность</th>
+      <th>Тип</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in questions %}
+    <tr>
+      <td>{{ q.id }}</td>
+      <td>{{ q.subtopic.name }}</td>
+      <td style="max-width: 350px">{{ q.text|truncatechars:80 }}</td>
+      <td>{{ q.get_difficulty_display }}</td>
+      <td>{% if q.is_open %}Развернутый{% else %}Выбор 1–4{% endif %}</td>
+      <td>
+        <a href="{% url 'admin_edit_question' q.id %}" class="btn btn-sm btn-primary">Изменить</a>
+        <a href="{% url 'admin_delete_question' q.id %}" class="btn btn-sm btn-danger">Удалить</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

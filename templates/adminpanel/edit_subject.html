@@ -1,0 +1,30 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+<h2>Редактировать предмет</h2>
+
+<form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">Название предмета</label>
+        <input type="text" name="name" class="form-control" value="{{ subject.name }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Темы</label>
+        <select name="topics" class="form-select" size="10" multiple>
+            {% for t in all_topics %}
+                <option value="{{ t.id }}"
+                    {% if t in subject.topics.all %}selected{% endif %}
+                >
+                    {{ t.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <small class="text-muted">Удерживай Ctrl / Cmd, чтобы выбрать несколько.</small>
+    </div>
+
+    <button class="btn btn-primary mt-3">Сохранить</button>
+</form>
+
+{% endblock %}

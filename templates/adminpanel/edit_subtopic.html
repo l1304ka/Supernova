@@ -1,0 +1,12 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+<h2>Редактировать подтему</h2>
+
+<form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    <label class="form-label">Название подтемы</label>
+    <input type="text" name="name" class="form-control" value="{{ subtopic.name }}" required>
+
+    <button class="btn btn-primary mt-3">Сохранить</button>
+</form>
+{% endblock %}

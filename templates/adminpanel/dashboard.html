@@ -1,0 +1,64 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+
+<div class="container mt-4">
+  <h2 class="mb-4">Панель управления школой</h2>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm">
+        <h4>Ученики</h4>
+        <p>{{ students }} всего</p>
+        <a href="{% url 'admin_students' %}" class="btn btn-primary">Управлять</a>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm">
+        <h4>Учителя</h4>
+        <p>{{ teachers }} всего</p>
+        <a href="{% url 'admin_teachers' %}" class="btn btn-primary">Управлять</a>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm">
+        <h4>Классы</h4>
+        <p>{{ classes }} всего</p>
+        <a href="{% url 'admin_classes' %}" class="btn btn-primary">Управлять</a>
+      </div>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <div class="card p-3 shadow-sm">
+        <h4>Предметы</h4>
+        <p>{{ subjects }} всего</p>
+        <a href="{% url 'admin_subjects' %}" class="btn btn-primary">Управлять</a>
+      </div>
+  </div>
+
+    <div class="col-md-4 mt-4">
+      <div class="card p-3 shadow-sm">
+        <h4>Темы</h4>
+        <p>{{ topics }} всего</p>
+        <a href="{% url 'admin_topics' %}" class="btn btn-primary">Управлять</a>
+      </div>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <div class="card p-3 shadow-sm">
+        <h4>Подтемы</h4>
+        <p>{{ subtopics }} всего</p>
+        <a href="{% url 'admin_subtopics' %}" class="btn btn-primary">Управлять</a>
+      </div>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <div class="card p-3 shadow-sm">
+        <h4>Вопросы</h4>
+        <p>{{ questions }} всего</p>
+        <a href="{% url 'admin_questions' %}" class="btn btn-primary">Управлять</a>
+      </div>
+  </div>
+</div>
+{% endblock %}

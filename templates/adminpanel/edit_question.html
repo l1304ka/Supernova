@@ -1,0 +1,92 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+<h2>Редактировать вопрос #{{ question.id }}</h2>
+
+<form method="post" class="card p-4 shadow-sm">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label class="form-label">Подтема</label>
+    <select name="subtopic" class="form-select" required>
+      {% for st in subtopics %}
+        <option value="{{ st.id }}" {% if st.id == question.subtopic.id %}selected{% endif %}>
+          {{ st.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Текст вопроса</label>
+    <textarea name="text" class="form-control" rows="3" required>{{ question.text }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Сложность</label>
+    <select name="difficulty" class="form-select" required>
+      <option value="very_easy" {% if question.difficulty == 'very_easy' %}selected{% endif %}>Очень легко</option>
+      <option value="easy" {% if question.difficulty == 'easy' %}selected{% endif %}>Легко</option>
+      <option value="medium" {% if question.difficulty == 'medium' %}selected{% endif %}>Средне</option>
+      <option value="hard" {% if question.difficulty == 'hard' %}selected{% endif %}>Сложно</option>
+      <option value="very_hard" {% if question.difficulty == 'very_hard' %}selected{% endif %}>Очень сложно</option>
+    </select>
+  </div>
+
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="is_open" id="is_open"
+           {% if question.is_open %}checked{% endif %}>
+    <label class="form-check-label" for="is_open">
+      Развернутый ответ (ввод текста вместо вариантов)
+    </label>
+  </div>
+
+  <!-- Блок вариантов -->
+  <div id="options_block">
+
+    <div class="mb-3">
+      <label class="form-label">Вариант 1</label>
+      <input type="text" class="form-control" name="option_1" value="{{ question.option_1 }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Вариант 2</label>
+      <input type="text" class="form-control" name="option_2" value="{{ question.option_2 }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Вариант 3</label>
+      <input type="text" class="form-control" name="option_3" value="{{ question.option_3 }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Вариант 4</label>
+      <input type="text" class="form-control" name="option_4" value="{{ question.option_4 }}">
+    </div>
+
+  </div>
+
+  <!-- Блок ответа -->
+  <div class="mb-3">
+    <label class="form-label">Правильный ответ</label>
+    <input type="text" class="form-control" name="correct_answer"
+           value="{{ question.correct_answer }}" required>
+    <small class="text-muted">В тесте с вариантами — цифра 1–4. В открытом — текст.</small>
+  </div>
+
+  <button class="btn btn-primary">Сохранить</button>
+</form>
+
+<script>
+  function updateVisibility() {
+    const isOpen = document.getElementById("is_open").checked;
+    const optionsBlock = document.getElementById("options_block");
+    optionsBlock.style.display = isOpen ? "none" : "block";
+  }
+
+  document.getElementById("is_open").addEventListener("change", updateVisibility);
+
+  // применяем сразу при загрузке
+  updateVisibility();
+</script>
+
+{% endblock %}

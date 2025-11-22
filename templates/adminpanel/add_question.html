@@ -1,0 +1,82 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+<h2>Добавить вопрос</h2>
+
+<form method="post" class="card p-4 shadow-sm">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label class="form-label">Подтема</label>
+    <select name="subtopic" class="form-select" required>
+      {% for st in subtopics %}
+        <option value="{{ st.id }}">{{ st.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Текст вопроса</label>
+    <textarea name="text" class="form-control" rows="3" required></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Сложность</label>
+    <select name="difficulty" class="form-select">
+      <option value="very_easy">Очень легко</option>
+      <option value="easy">Легко</option>
+      <option value="medium">Средне</option>
+      <option value="hard">Сложно</option>
+      <option value="very_hard">Очень сложно</option>
+    </select>
+  </div>
+
+  <div class="form-check mb-3">
+    <input type="checkbox" name="is_open" id="is_open" class="form-check-input">
+    <label class="form-check-label" for="is_open">Развернутый ответ</label>
+  </div>
+
+  <div id="options_block">
+
+    <div class="mb-3">
+      <label class="form-label">Вариант 1</label>
+      <input type="text" class="form-control" name="option_1">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Вариант 2</label>
+      <input type="text" class="form-control" name="option_2">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Вариант 3</label>
+      <input type="text" class="form-control" name="option_3">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Вариант 4</label>
+      <input type="text" class="form-control" name="option_4">
+    </div>
+
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Правильный ответ</label>
+    <input type="text" class="form-control" name="correct_answer" required>
+    <small class="text-muted">Если с вариантами — цифра 1–4. Если открытый — текст.</small>
+  </div>
+
+  <button class="btn btn-primary">Создать</button>
+</form>
+
+<script>
+  function updateVisibility() {
+    const isOpen = document.getElementById("is_open").checked;
+    const optionsBlock = document.getElementById("options_block");
+    optionsBlock.style.display = isOpen ? "none" : "block";
+  }
+
+  document.getElementById("is_open").addEventListener("change", updateVisibility);
+  updateVisibility();
+</script>
+
+{% endblock %}

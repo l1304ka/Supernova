@@ -1,0 +1,98 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+
+<h2>Здравствуйте, {{ teacher.name }} {{ teacher.surname }}!</h2>
+<h3>Ваши классы:</h3>
+<ul>
+    {% for c in classes %}
+        <li>{{ c.name }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Статистика по ученикам</h3>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Ученик</th>
+        <th>Средний балл</th>
+        <th>Результаты</th>
+    </tr>
+    {% for s in stats %}
+        <tr>
+            <td>{{ s.student.surname }} {{ s.student.name }}</td>
+            <td>{% if s.avg_grade %}{{ s.avg_grade }}{% else %}—{% endif %}</td>
+            <td>
+                {% for r in s.results %}
+                    {{ r.test.title }}: {{ r.grade }}<br>
+                {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<button onclick="document.getElementById('hwModal').style.display='block'" class="btn btn-primary">Выдать ДЗ</button>
+
+<div id="hwModal" style="display:none; padding:20px; border:1px solid #ccc;">
+    <form method="post" action="{% url 'assign_homework' %}">
+        {% csrf_token %}
+        <label>Класс:</label>
+        <select name="class_id">
+            {% for c in classes %}
+                <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label>Предмет:</label>
+        <select name="subject_id" id="subjectSelect">
+            <option value="">Выберите предмет</option>
+            {% for s in subjects %}
+                <option value="{{ s.id }}">{{ s.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label>Тема:</label>
+        <select name="topic_id" id="topicSelect">
+            <option value="">Сначала выберите предмет</option>
+        </select><br>
+
+        <label>Название теста:</label>
+        <input type="text" name="title" placeholder="Домашняя работа"><br>
+
+        <button type="submit" class="btn btn-primary">Выдать ДЗ</button>
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('hwModal').style.display='none'">Отмена</button>
+    </form>
+</div>
+
+
+<script>
+    document.getElementById("subjectSelect").addEventListener("change", async function () {
+        const subjectId = this.value;
+        const topicSelect = document.getElementById("topicSelect");
+        topicSelect.innerHTML = "<option>Загрузка...</option>";
+
+        if (!subjectId) {
+            topicSelect.innerHTML = "<option value=''>Сначала выберите предмет</option>";
+            return;
+        }
+
+        const response = await fetch(`/get_topics_by_subject/?subject_id=${subjectId}`);
+        const data = await response.json();
+
+        if (data.topics) {
+            topicSelect.innerHTML = "";
+            data.topics.forEach(t => {
+                const opt = document.createElement("option");
+                opt.value = t.id;
+                opt.textContent = t.name;
+                topicSelect.appendChild(opt);
+            });
+        } else {
+            topicSelect.innerHTML = "<option value=''>Темы не найдены</option>";
+        }
+    });
+</script>
+{% endblock %}

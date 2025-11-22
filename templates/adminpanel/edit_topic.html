@@ -1,0 +1,30 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+<h2>Редактировать тему</h2>
+
+<form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">Название темы</label>
+        <input type="text" name="name" class="form-control" value="{{ topic.name }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Подтемы</label>
+        <select name="subtopics" class="form-select" size="10" multiple>
+            {% for st in all_subtopics %}
+                <option value="{{ st.id }}"
+                    {% if st in topic.subtopics.all %}selected{% endif %}
+                >
+                    {{ st.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <small class="text-muted">Удерживай Ctrl / Cmd, чтобы выбрать несколько.</small>
+    </div>
+
+    <button class="btn btn-primary mt-3">Сохранить</button>
+</form>
+
+{% endblock %}

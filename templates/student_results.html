@@ -1,0 +1,27 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<h2>История ваших тестов</h2>
+<table border="1" cellpadding="6">
+  <tr>
+    <th>Дата</th>
+    <th>Предмет</th>
+    <th>Тема</th>
+    <th>Оценка</th>
+    <th>Балл (%)</th>
+  </tr>
+  {% for r in results %}
+  <tr>
+    <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
+    <td>{{ r.test.lesson.subject.name }}</td>
+    <td>{{ r.test.lesson.title }}</td>
+    <td>{{ r.grade }}</td>
+    <td>{{ r.score }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<a href="/">← Назад на главную</a>
+{% endblock %}

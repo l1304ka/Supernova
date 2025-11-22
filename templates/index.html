@@ -1,0 +1,47 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <h2>Привет, {{ request.user.student.name }}!</h2>
+
+    {% if available_topics %}
+        <h3>📘 Доступные темы для прохождения:</h3>
+        <ul>
+            {% for at in available_topics %}
+                <li>
+                    <b>{{ at.topic.name }}</b> ({{ at.school_class.name }})
+                    <a href="{% url 'adaptive_test' at.id %}">Пройти тест</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет доступных тем для тестов.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>📊 Ваши результаты:</h3>
+    {% if results %}
+        <table border="1" cellpadding="5">
+            <tr>
+                <th>Дата</th>
+                <th>Тема</th>
+                <th>Оценка</th>
+                <th>Балл (%)</th>
+                <th>Подробнее</th>
+            </tr>
+            {% for r in results %}
+                <tr>
+                    <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ r.test.lesson.title }}</td>
+                    <td>{{ r.grade }}</td>
+                    <td>{{ r.score }}</td>
+                    <td><a href="{% url 'test_result_detail' r.id %}">Открыть</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Результатов пока нет.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+﻿{% extends "adminpanel/base_admin.html" %}
+{% block admin_content %}
+<h2>Подтемы</h2>
+
+<a href="{% url 'admin_add_subtopic' %}" class="btn btn-success mb-3">Добавить подтему</a>
+
+<table class="table table-striped shadow-sm">
+    <thead>
+        <tr><th>ID</th><th>Название</th><th>Используется в темах</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for st in subtopics %}
+        <tr>
+            <td>{{ st.id }}</td>
+            <td>{{ st.name }}</td>
+            <td>{{ st.topics.count }}</td>
+            <td>
+                <a class="btn btn-sm btn-primary" href="{% url 'admin_edit_subtopic' st.id %}">
+                    Изменить
+                </a>
+                <a class="btn btn-sm btn-danger" href="{% url 'admin_delete_subtopic' st.id %}">
+                    Удалить
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

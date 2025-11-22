@@ -1,0 +1,42 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<h2>Результат: {{ result.test.title }}</h2>
+
+<p><b>Дата:</b> {{ result.completed_at|date:"d.m.Y H:i" }}</p>
+<p><b>Оценка:</b> {{ result.grade }}</p>
+<p><b>Балл:</b> {{ result.score }}%</p>
+<p><b>Правильных ответов:</b> {{ correct }}/{{ total }} ({{ percent }}%)</p>
+
+<hr>
+
+<h3>Разбор вопросов</h3>
+<table border="1" cellpadding="6">
+  <tr>
+    <th>№</th>
+    <th>Вопрос</th>
+    <th>Ваш ответ</th>
+    <th>Правильный ответ</th>
+    <th>Результат</th>
+  </tr>
+  {% for a in answers %}
+  <tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ a.question.text }}</td>
+    <td>{{ a.given_answer }}</td>
+    <td>{{ a.question.correct_answer }}</td>
+    <td>
+      {% if a.is_correct %}
+        ✅ Верно
+      {% else %}
+        ❌ Неверно
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<a href="/">← Назад на главную</a>
+{% endblock %}

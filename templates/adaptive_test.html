@@ -1,0 +1,27 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+{% block content %}
+<h3>Вопрос {{ step }} из 10</h3>
+{% if question %}
+    <p><b>Сложность:</b> {{ difficulty }}</p>
+    <p>{{ question.text }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+        {% if question.is_open %}
+            <input type="text" name="answer" required>
+        {% else %}
+            <label><input type="radio" name="answer" value="1" required> 1</label>
+            <label><input type="radio" name="answer" value="2"> 2</label>
+            <label><input type="radio" name="answer" value="3"> 3</label>
+            <label><input type="radio" name="answer" value="4"> 4</label>
+        {% endif %}
+        <button type="submit">Ответить</button>
+    </form>
+{% else %}
+    <p>Загрузка вопроса...</p>
+{% endif %}
+
+{% endblock %}
