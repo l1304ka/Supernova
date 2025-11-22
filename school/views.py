@@ -169,156 +169,171 @@ def get_topics_by_subject(request):
 @login_required
 def adaptive_test(request, test_id):
     student = request.user.student
-    topic = get_object_or_404(AssignedTopic, id=test_id, is_active=True)
+    assigned = get_object_or_404(AssignedTopic, id=test_id, is_active=True)
 
-    # если ученик уже проходил тест по этой теме
-    if TestResult.objects.filter(student=student, test__lesson__topics=topic.topic).exists():
+    # Уже проходил — редирект
+    if TestResult.objects.filter(student=student, assigned_topic=assigned).exists():
         return redirect("index")
 
-    # --- ПЕРВОЕ ОТКРЫТИЕ СТРАНИЦЫ ---
+    # =========================
+    #     НАЧАЛО ТЕСТА (GET)
+    # =========================
     if request.method == "GET":
+
         # Инициализация сессии
         data = {
-            "topic_id": test_id,
+            "assigned_id": assigned.id,
             "step": 1,
             "difficulty": "medium",
             "correct": 0,
             "wrong": 0,
-            "asked_ids": []
+            "asked_ids": [],
+            "answers": []  # чтобы хранить ВСЕ ответы
         }
 
-        # Берём первый вопрос средней сложности
-        questions = Question.objects.filter(
-            subtopic__topics=topic.topic,
-            difficulty=data["difficulty"]
+        # Выбор первого вопроса
+        next_q = Question.objects.filter(
+            subtopic__topics=assigned.topic,
+            difficulty="medium"
         )
 
-        if not questions.exists():
-            # fallback — если нет среднего, берём любые
-            questions = Question.objects.filter(subtopic__topics=topic.topic)
+        if not next_q.exists():
+            next_q = Question.objects.filter(subtopic__topics=assigned.topic)
 
-        if not questions.exists():
-            return render(request, "adaptive_test.html", {"step": 1, "error": "Нет вопросов по этой теме."})
-
-        question = random.choice(list(questions))
+        question = random.choice(list(next_q))
         data["asked_ids"].append(question.id)
+
         request.session["adaptive"] = data
 
         return render(request, "adaptive_test.html", {
-            "step": data["step"],
+            "step": 1,
             "question": question,
-            "difficulty": data["difficulty"],
+            "difficulty": "medium"
         })
 
-    # --- ОБРАБОТКА ОТВЕТА ---
-    if request.method == "POST":
-        data = request.session.get("adaptive")
-        if not data:
-            return redirect("index")
+    # =========================
+    #     ОБРАБОТКА POST
+    # =========================
+    data = request.session.get("adaptive")
+    if not data:
+        return redirect("index")
 
-        question_id = int(request.POST.get("question_id"))
-        answer = request.POST.get("answer", "").strip().lower()
-        question = get_object_or_404(Question, id=question_id)
+    qid = int(request.POST.get("question_id"))
+    question = get_object_or_404(Question, id=qid)
 
-        is_correct = (answer == question.correct_answer.strip().lower())
-        # Проверяем правильность
-        if answer == question.correct_answer.strip().lower():
-            data["correct"] += 1
-            if data["difficulty"] == "very_easy":
-                data["difficulty"] = "easy"
-            elif data["difficulty"] == "easy":
-                data["difficulty"] = "medium"
-            elif data["difficulty"] == "medium":
-                data["difficulty"] = "hard"
-            elif data["difficulty"] == "hard":
-                data["difficulty"] = "very_hard"
-        else:
-            data["wrong"] += 1
-            if data["difficulty"] == "very_hard":
-                data["difficulty"] = "hard"
-            elif data["difficulty"] == "hard":
-                data["difficulty"] = "medium"
-            elif data["difficulty"] == "medium":
-                data["difficulty"] = "easy"
-            elif data["difficulty"] == "easy":
-                data["difficulty"] = "very_easy"
+    given_answer = request.POST.get("answer", "").strip().lower()
+    correct_answer = question.correct_answer.strip().lower()
 
-        data["step"] += 1
+    is_correct = (given_answer == correct_answer)
 
-        if "answers" not in data:
-            data["answers"] = []
-        data["answers"].append({
-            "question_id": question.id,
-            "given_answer": answer,
-            "is_correct": is_correct,
-        })
+    # Сохраняем ответ в сессии
+    data["answers"].append({
+        "question_id": question.id,
+        "given_answer": given_answer,
+        "correct": is_correct
+    })
 
-        # --- Если уже 10 вопросов — завершение ---
-        if data["step"] > 10:
-            total = data["correct"] + data["wrong"]
-            score = int((data["correct"] / total) * 100) if total else 0
-            grade = 2 if score < 40 else 3 if score < 60 else 4 if score < 85 else 5
+    # Обновляем статистику
+    if is_correct:
+        data["correct"] += 1
+        data["difficulty"] = increase_difficulty(data["difficulty"])
+    else:
+        data["wrong"] += 1
+        data["difficulty"] = decrease_difficulty(data["difficulty"])
 
-            subject = topic.topic.lessons.first().subject
-            lesson = topic.topic.lessons.first()
-            test = Test.objects.create(
-                topic=topic.topic,
-                assigned_topic=topic,
-                lesson=lesson,
-                title=f"Адаптивный тест по {topic.topic.name}",
-                date_available=now().date()
+    data["step"] += 1
+    request.session["adaptive"] = data
+
+    # =========================
+    #      ЗАВЕРШЕНИЕ ТЕСТА
+    # =========================
+    if data["step"] > 10:
+        total = data["correct"] + data["wrong"]
+        pct = int((data["correct"] / total) * 100) if total else 0
+
+        grade = (
+            2 if pct < 40 else
+            3 if pct < 60 else
+            4 if pct < 85 else
+            5
+        )
+
+        lesson = assigned.topic.lessons.first()
+
+        final_test = Test.objects.create(
+            lesson=lesson,
+            title=f"Адаптивный тест по теме: {assigned.topic.name}",
+            date_available=now().date(),
+            assigned_topic=assigned,
+            topic=assigned.topic
+        )
+
+        result = TestResult.objects.create(
+            student=student,
+            test=final_test,
+            assigned_topic=assigned,
+            score=pct,
+            grade=grade
+        )
+
+        # Сохраняем ВСЕ ответы
+        for item in data["answers"]:
+            q = Question.objects.get(id=item["question_id"])
+            StudentAnswer.objects.create(
+                result=result,
+                question=q,
+                given_answer=item["given_answer"],
+                is_correct=item["correct"]
             )
-            result = TestResult.objects.create(student=student, test=test, score=score, grade=grade, assigned_topic=topic)
 
-            for a in data.get("answers", []):
-                StudentAnswer.objects.create(
-                    result=result,
-                    question_id=a["question_id"],
-                    given_answer=a["given_answer"],
-                    is_correct=a["is_correct"]
-                )
+        del request.session["adaptive"]
 
-            del request.session["adaptive"]
-            return redirect("test_result", test_id=test.id)
+        return redirect("test_result_detail", result.id)
 
-        # --- Следующий вопрос ---
-        next_qs = Question.objects.filter(
-            subtopic__topics=topic.topic,
-            difficulty=data["difficulty"]
+    # =========================
+    #     ВЫБОР СЛЕД. ВОПРОСА
+    # =========================
+    next_q = Question.objects.filter(
+        subtopic__topics=assigned.topic,
+        difficulty=data["difficulty"]
+    ).exclude(id__in=data["asked_ids"])
+
+    # Фоллбек — любые вопросы, если по сложности нет
+    if not next_q.exists():
+        next_q = Question.objects.filter(
+            subtopic__topics=assigned.topic
         ).exclude(id__in=data["asked_ids"])
 
-        if not next_qs.exists():
-            next_qs = Question.objects.filter(subtopic__topics=topic.topic).exclude(id__in=data["asked_ids"])
+    # Если вопросов вообще не осталось
+    if not next_q.exists():
+        return redirect("index")  # или показать сообщение
 
-        if not next_qs.exists():
-            # если кончились вопросы — завершить тест досрочно
-            total = data["correct"] + data["wrong"]
-            score = int((data["correct"] / total) * 100) if total else 0
-            grade = 2 if score < 40 else 3 if score < 60 else 4 if score < 85 else 5
+    question = random.choice(list(next_q))
+    data["asked_ids"].append(question.id)
+    request.session["adaptive"] = data
 
-            subject = topic.topic.lessons.first().subject
-            lesson = topic.topic.lessons.first()
-            test = Test.objects.create(
-                topic=topic.topic,
-                assigned_topic=topic,
-                lesson=lesson,
-                title=f"Адаптивный тест по {topic.topic.name}",
-                date_available=now().date()
-            )
+    return render(request, "adaptive_test.html", {
+        "step": data["step"],
+        "question": question,
+        "difficulty": data["difficulty"]
+    })
 
-            TestResult.objects.create(student=student, test=test, score=score, grade=grade, assigned_topic=topic)
-            del request.session["adaptive"]
-            return redirect("test_result", test_id=test.id)
 
-        question = random.choice(list(next_qs))
-        data["asked_ids"].append(question.id)
-        request.session["adaptive"] = data
+# =================================================
+#         ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+# =================================================
 
-        return render(request, "adaptive_test.html", {
-            "step": data["step"],
-            "question": question,
-            "difficulty": data["difficulty"],
-        })
+def increase_difficulty(d):
+    order = ["very_easy", "easy", "medium", "hard", "very_hard"]
+    i = order.index(d)
+    return order[min(i + 1, 4)]
+
+
+def decrease_difficulty(d):
+    order = ["very_easy", "easy", "medium", "hard", "very_hard"]
+    i = order.index(d)
+    return order[max(i - 1, 0)]
+
 
 
 @login_required

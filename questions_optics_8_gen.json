@@ -1,0 +1,587 @@
+[
+    {
+        "model": "school.question",
+        "pk": 1,
+        "fields": {
+            "subtopic": 1,
+            "text": "Что из перечисленного не является источником света?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Луна",
+            "option_2": "Фонарик",
+            "option_3": "Лампа",
+            "option_4": "Свеча",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 2,
+        "fields": {
+            "subtopic": 1,
+            "text": "Почему при диффузном отражении лучи рассеиваются в разные стороны?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Потому что отражаются от неровной поверхности",
+            "option_2": "Преломление света",
+            "option_3": "Рассеяние света",
+            "option_4": "Интерференция света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 3,
+        "fields": {
+            "subtopic": 1,
+            "text": "Точечный источник света — это источник...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Размеры которого малы по сравнению с расстоянием до точки наблюдения",
+            "option_2": "Лампа",
+            "option_3": "Солнце",
+            "option_4": "Свеча",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 4,
+        "fields": {
+            "subtopic": 1,
+            "text": "Оптически более плотная среда — это среда, в которой...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Скорость распространения света меньше",
+            "option_2": "Отражение света",
+            "option_3": "Преломление света",
+            "option_4": "Рассеяние света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 5,
+        "fields": {
+            "subtopic": 1,
+            "text": "Как распространяется свет?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Свет распространяется прямолинейно",
+            "option_2": "Преломление света",
+            "option_3": "Поглощение света",
+            "option_4": "Интерференция света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 6,
+        "fields": {
+            "subtopic": 1,
+            "text": "Что происходит при диффузном отражении света?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Луч отражается от множества микронеровностей",
+            "option_2": "Поглощение света",
+            "option_3": "Интерференция света",
+            "option_4": "Преломление света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 7,
+        "fields": {
+            "subtopic": 2,
+            "text": "В зеркале мы видим мнимые изображения потому что...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Мнимые изображения строятся продолжениями отражённых лучей",
+            "option_2": "Действительное и прямое",
+            "option_3": "Прямое и увеличенное",
+            "option_4": "Мнимое и уменьшенное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 8,
+        "fields": {
+            "subtopic": 2,
+            "text": "Утверждение 'в однородной среде свет распространяется прямолинейно' относится к закону...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Распространения света",
+            "option_2": "Преломление света",
+            "option_3": "Отражение света",
+            "option_4": "Интерференция света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 9,
+        "fields": {
+            "subtopic": 2,
+            "text": "Угол падения — это угол между...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Падающим лучом и перпендикуляром к поверхности",
+            "option_2": "Угол между отраженным лучом и нормалью",
+            "option_3": "Угол между преломленным лучом и поверхностью",
+            "option_4": "Угол между падающим лучом и зеркалом",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 10,
+        "fields": {
+            "subtopic": 2,
+            "text": "Если поверхность абсолютно гладкая, то...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Она даёт зеркальное отражение",
+            "option_2": "Отражение света",
+            "option_3": "Поглощение света",
+            "option_4": "Рассеяние света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 11,
+        "fields": {
+            "subtopic": 2,
+            "text": "При зеркальном отражении угол падения...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Равен углу отражения",
+            "option_2": "Угол между лучом и поверхностью",
+            "option_3": "Угол между падающим лучом и зеркалом",
+            "option_4": "Угол между преломленным лучом и поверхностью",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 12,
+        "fields": {
+            "subtopic": 2,
+            "text": "Угол между падающим и отражённым лучами равен 40°. Чему равен угол падения?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "20°",
+            "option_2": "Угол между отраженным лучом и нормалью",
+            "option_3": "Угол между лучом и поверхностью",
+            "option_4": "Угол между преломленным лучом и поверхностью",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 13,
+        "fields": {
+            "subtopic": 2,
+            "text": "Угол падения увеличили на 20°. Как изменится угол отражения?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Увеличится на 20°",
+            "option_2": "Угол между лучом и поверхностью",
+            "option_3": "Угол между преломленным лучом и поверхностью",
+            "option_4": "Угол между отраженным лучом и нормалью",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 14,
+        "fields": {
+            "subtopic": 2,
+            "text": "Падающий, отражённый и преломлённый лучи лежат...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "В одной плоскости",
+            "option_2": "Интерференция света",
+            "option_3": "Рассеяние света",
+            "option_4": "Поглощение света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 15,
+        "fields": {
+            "subtopic": 3,
+            "text": "Преломление света называют явление...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Изменения направления распространения света при переходе между средами",
+            "option_2": "Рассеяние света",
+            "option_3": "Отражение света",
+            "option_4": "Преломление света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 16,
+        "fields": {
+            "subtopic": 3,
+            "text": "Угол преломления — это угол между...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Преломлённым лучом и перпендикуляром в точке падения",
+            "option_2": "Угол между преломленным лучом и поверхностью",
+            "option_3": "Угол между отраженным лучом и нормалью",
+            "option_4": "Угол между лучом и поверхностью",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 17,
+        "fields": {
+            "subtopic": 3,
+            "text": "Свет не преломляется при падении на границу двух сред, если...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Падает перпендикулярно границе",
+            "option_2": "Угол между падающим лучом и зеркалом",
+            "option_3": "Угол между преломленным лучом и поверхностью",
+            "option_4": "Угол между лучом и поверхностью",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 18,
+        "fields": {
+            "subtopic": 3,
+            "text": "Процесс преломления происходит из-за...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Различной скорости света в разных средах",
+            "option_2": "Поглощение света",
+            "option_3": "Рассеяние света",
+            "option_4": "Преломление света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 19,
+        "fields": {
+            "subtopic": 3,
+            "text": "Что происходит при переходе света из воздуха в воду?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Луч отклоняется к нормали",
+            "option_2": "Интерференция света",
+            "option_3": "Поглощение света",
+            "option_4": "Отражение света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 20,
+        "fields": {
+            "subtopic": 3,
+            "text": "Показатель преломления — это...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Отношение скорости света в вакууме к скорости в данной среде",
+            "option_2": "Преломление света",
+            "option_3": "Поглощение света",
+            "option_4": "Отражение света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 21,
+        "fields": {
+            "subtopic": 4,
+            "text": "Если Луна оказывается между Солнцем и Землёй, то...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Произойдёт солнечное затмение",
+            "option_2": "Рассеяние света",
+            "option_3": "Преломление света",
+            "option_4": "Отражение света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 22,
+        "fields": {
+            "subtopic": 4,
+            "text": "При солнечном затмении...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Луна отбрасывает тень на Землю",
+            "option_2": "Интерференция света",
+            "option_3": "Рассеяние света",
+            "option_4": "Преломление света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 23,
+        "fields": {
+            "subtopic": 4,
+            "text": "При лунном затмении...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Луна попадает в тень от Земли",
+            "option_2": "Преломление света",
+            "option_3": "Поглощение света",
+            "option_4": "Отражение света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 24,
+        "fields": {
+            "subtopic": 4,
+            "text": "Если объект отбрасывает тень, значит...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Он находится на пути распространения света",
+            "option_2": "Отражение света",
+            "option_3": "Рассеяние света",
+            "option_4": "Поглощение света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 25,
+        "fields": {
+            "subtopic": 5,
+            "text": "Предмет расположен от собирающей линзы дальше двойного фокусного. Каким будет изображение?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Действительное, уменьшенное и перевёрнутое",
+            "option_2": "Собирающая",
+            "option_3": "Рассеивающая",
+            "option_4": "Тонкая линза",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 26,
+        "fields": {
+            "subtopic": 5,
+            "text": "Если предмет в двойном фокусе собирающей линзы...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Изображение будет действительным и равным по размеру предмету",
+            "option_2": "Рассеивающая",
+            "option_3": "Тонкая линза",
+            "option_4": "Толстая линза",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 27,
+        "fields": {
+            "subtopic": 5,
+            "text": "Если предмет между фокусом и линзой...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Изображение мнимое, прямое, увеличенное",
+            "option_2": "Собирающая",
+            "option_3": "Рассеивающая",
+            "option_4": "Толстая линза",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 28,
+        "fields": {
+            "subtopic": 5,
+            "text": "Оптическая сила линзы равна 5 дптр. Чему равно фокусное расстояние?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "0.2 м",
+            "option_2": "Рассеивающая",
+            "option_3": "Толстая линза",
+            "option_4": "Собирающая",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 29,
+        "fields": {
+            "subtopic": 5,
+            "text": "Оптическая сила D рассчитывается по формуле...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "D = 1 / f",
+            "option_2": "Преломление света",
+            "option_3": "Поглощение света",
+            "option_4": "Интерференция света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 30,
+        "fields": {
+            "subtopic": 5,
+            "text": "Собирающая линза может давать...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Увеличенные, уменьшенные и равные изображения",
+            "option_2": "Рассеивающая",
+            "option_3": "Тонкая линза",
+            "option_4": "Собирающая",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 31,
+        "fields": {
+            "subtopic": 5,
+            "text": "Рассеивающая линза даёт...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Мнимое, уменьшенное изображение",
+            "option_2": "Собирающая",
+            "option_3": "Рассеивающая",
+            "option_4": "Тонкая линза",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 32,
+        "fields": {
+            "subtopic": 5,
+            "text": "Если фокусное расстояние линзы 20 см, то её оптическая сила равна...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "5 дптр",
+            "option_2": "Собирающая",
+            "option_3": "Тонкая линза",
+            "option_4": "Рассеивающая",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 33,
+        "fields": {
+            "subtopic": 5,
+            "text": "Изображение предмета, даваемое линзой, мнимое и уменьшенное. Какая это линза?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Рассеивающая",
+            "option_2": "Собирающая",
+            "option_3": "Толстая линза",
+            "option_4": "Тонкая линза",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 34,
+        "fields": {
+            "subtopic": 5,
+            "text": "Дверной глазок представляет собой...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Двояковогнутую линзу",
+            "option_2": "Интерференция света",
+            "option_3": "Отражение света",
+            "option_4": "Поглощение света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 35,
+        "fields": {
+            "subtopic": 5,
+            "text": "Могут ли линзы давать мнимые изображения предметов?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Да, собирающие и рассеивающие",
+            "option_2": "Толстая линза",
+            "option_3": "Рассеивающая",
+            "option_4": "Собирающая",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 36,
+        "fields": {
+            "subtopic": 6,
+            "text": "На каком явлении основана работа перископа?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Отражение света",
+            "option_2": "Преломление света",
+            "option_3": "Поглощение света",
+            "option_4": "Рассеяние света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 37,
+        "fields": {
+            "subtopic": 6,
+            "text": "Работа очков основана на...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Преломлении света",
+            "option_2": "Преломление света",
+            "option_3": "Поглощение света",
+            "option_4": "Интерференция света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 38,
+        "fields": {
+            "subtopic": 6,
+            "text": "Фотоаппарат основан на...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Преломлении и фокусировке света",
+            "option_2": "Отражение света",
+            "option_3": "Поглощение света",
+            "option_4": "Рассеяние света",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 39,
+        "fields": {
+            "subtopic": 6,
+            "text": "Проектор создаёт изображение...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Действительное, увеличенное, перевёрнутое",
+            "option_2": "Перевёрнутое и увеличенное",
+            "option_3": "Мнимое и уменьшенное",
+            "option_4": "Действительное и прямое",
+            "correct_answer": "1"
+        }
+    }
+]
