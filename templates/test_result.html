@@ -1,13 +1,30 @@
 ﻿{% extends "base.html" %}
 
-{% block title %}Главная{% endblock %}
+{% block title %}Результат теста{% endblock %}
 
 {% block content %}
-<h2>Результат теста: {{ result.test.title }}</h2>
+<div class="container mt-4">
 
-<p>Балл: {{ result.score }}%</p>
-<p>Оценка: <b>{{ result.grade }}</b></p>
+  <div class="card shadow-sm p-4 mb-4">
+    <h3 class="card-title mb-3">{{ result.test.title }}</h3>
 
-<a href="/">Вернуться на главную</a>
+    <p class="mb-1"><b>Балл:</b> {{ result.score }}%</p>
+    <p class="mb-3">
+      <b>Оценка:</b>
+      <span class="badge
+        {% if result.grade == 5 %}bg-success
+        {% elif result.grade == 4 %}bg-primary
+        {% elif result.grade == 3 %}bg-warning
+        {% else %}bg-danger{% endif %}
+      ">{{ result.grade }}</span>
+    </p>
 
+    <a href="{% url 'test_result_detail' result.id %}" class="btn btn-secondary">
+      Посмотреть подробный разбор
+    </a>
+  </div>
+
+  <a href="/" class="btn btn-outline-secondary">← На главную</a>
+
+</div>
 {% endblock %}

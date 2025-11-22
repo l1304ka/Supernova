@@ -1,42 +1,88 @@
 ﻿{% extends "base.html" %}
 
-{% block title %}Главная{% endblock %}
+{% block title %}Результат теста{% endblock %}
 
 {% block content %}
-<h2>Результат: {{ result.test.title }}</h2>
+  <div class="container mt-4">
 
-<p><b>Дата:</b> {{ result.completed_at|date:"d.m.Y H:i" }}</p>
-<p><b>Оценка:</b> {{ result.grade }}</p>
-<p><b>Балл:</b> {{ result.score }}%</p>
-<p><b>Правильных ответов:</b> {{ correct }}/{{ total }} ({{ percent }}%)</p>
+    <!-- Заголовок -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h3 class="card-title mb-1">{{ result.test.title }}</h3>
+        <p class="text-muted mb-0">{{ result.completed_at|date:"d.m.Y H:i" }}</p>
+      </div>
+    </div>
 
-<hr>
+    <!-- Основные показатели -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm text-center p-3">
+          <h5>Оценка</h5>
+          <span class="badge
+          {% if result.grade == 5 %}bg-success
+          {% elif result.grade == 4 %}bg-primary
+          {% elif result.grade == 3 %}bg-warning
+          {% else %}bg-danger{% endif %}
+        " style="font-size:1.3rem">{{ result.grade }}</span>
+        </div>
+      </div>
 
-<h3>Разбор вопросов</h3>
-<table border="1" cellpadding="6">
-  <tr>
-    <th>№</th>
-    <th>Вопрос</th>
-    <th>Ваш ответ</th>
-    <th>Правильный ответ</th>
-    <th>Результат</th>
-  </tr>
-  {% for a in answers %}
-  <tr>
-    <td>{{ forloop.counter }}</td>
-    <td>{{ a.question.text }}</td>
-    <td>{{ a.given_answer }}</td>
-    <td>{{ a.question.correct_answer }}</td>
-    <td>
-      {% if a.is_correct %}
-        ✅ Верно
-      {% else %}
-        ❌ Неверно
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+      <div class="col-md-4">
+        <div class="card shadow-sm text-center p-3">
+          <h5>Балл</h5>
+          <span class="fw-bold">{{ result.score }}%</span>
+        </div>
+      </div>
 
-<a href="/">← Назад на главную</a>
+      <div class="col-md-4">
+        <div class="card shadow-sm text-center p-3">
+          <h5>Верных ответов</h5>
+          <span class="fw-bold">{{ correct }}/{{ total }}</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="mb-4">
+
+    <!-- Разбор -->
+    <h4 class="mb-3">Разбор вопросов</h4>
+
+   <div class="table-responsive">
+  <table class="custom-table">
+
+    <thead>
+    <tr>
+      <th style="width:50px;">№</th>
+      <th>Вопрос</th>
+      <th>Ваш ответ</th>
+      <th>Правильный ответ</th>
+      <th style="width:110px;">Результат</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for a in answers %}
+      <tr class="{% if a.is_correct %}custom-row-correct{% else %}custom-row-wrong{% endif %}">
+        <td class="text-center">{{ forloop.counter }}</td>
+        <td>{{ a.question.text }}</td>
+        <td class="fw-semibold">{{ a.given_answer }}</td>
+        <td class="fw-semibold">{{ a.question.correct_answer }}</td>
+        <td class="text-center">
+          {% if a.is_correct %}
+            <span class="badge bg-success">Верно</span>
+          {% else %}
+            <span class="badge bg-danger">Неверно</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+
+  </table>
+</div>
+
+
+    <a href="/" class="btn btn-outline-secondary mt-3">← На главную</a>
+
+  </div>
 {% endblock %}
