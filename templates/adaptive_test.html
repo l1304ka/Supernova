@@ -1,51 +1,91 @@
 ﻿{% extends "base.html" %}
+{% block title %}Тест{% endblock %}
 
-{% block title %}Главная{% endblock %}
 {% block content %}
-  <h3>Вопрос {{ step }} из 10</h3>
-  {% if question %}
-    <p><b>Сложность:</b> {{ difficulty }}</p>
-    <p>{{ question.text }}</p>
 
-    <form method="post">
-      {% csrf_token %}
-      <input type="hidden" name="question_id" value="{{ question.id }}">
-      {% if not question.is_open %}
+  <div class="container mt-4" style="max-width: 700px;">
 
-        {% if question.option_1 %}
-          <label class="d-block">
-            <input type="radio" name="answer" value="1" required>
-            {{ question.option_1 }}
-          </label>
-        {% endif %}
+    <!-- Прогресс -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="m-0">Вопрос {{ step }} из 10</h4>
 
-        {% if question.option_2 %}
-          <label class="d-block">
-            <input type="radio" name="answer" value="2">
-            {{ question.option_2 }}
-          </label>
-        {% endif %}
-
-        {% if question.option_3 %}
-          <label class="d-block">
-            <input type="radio" name="answer" value="3">
-            {{ question.option_3 }}
-          </label>
-        {% endif %}
-
-        {% if question.option_4 %}
-          <label class="d-block">
-            <input type="radio" name="answer" value="4">
-            {{ question.option_4 }}
-          </label>
-        {% endif %}
-
+      {% if user.is_staff %}
+        <span class="badge bg-info text-dark">
+            {{ difficulty }}
+        </span>
       {% endif %}
+    </div>
 
-      <button type="submit">Ответить</button>
-    </form>
-  {% else %}
-    <p>Загрузка вопроса...</p>
-  {% endif %}
+    <!-- Карточка вопроса -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+
+        <p class="fs-5 mb-4">{{ question.text }}</p>
+
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="question_id" value="{{ question.id }}">
+
+          {% if not question.is_open %}
+            <!-- Варианты ответа -->
+            <div class="list-group">
+
+              {% if question.option_1 %}
+                <label class="list-group-item list-group-item-action">
+                  <input class="form-check-input me-2" type="radio" name="answer" value="1" required>
+                  {{ question.option_1 }}
+                </label>
+              {% endif %}
+
+              {% if question.option_2 %}
+                <label class="list-group-item list-group-item-action">
+                  <input class="form-check-input me-2" type="radio" name="answer" value="2">
+                  {{ question.option_2 }}
+                </label>
+              {% endif %}
+
+              {% if question.option_3 %}
+                <label class="list-group-item list-group-item-action">
+                  <input class="form-check-input me-2" type="radio" name="answer" value="3">
+                  {{ question.option_3 }}
+                </label>
+              {% endif %}
+
+              {% if question.option_4 %}
+                <label class="list-group-item list-group-item-action">
+                  <input class="form-check-input me-2" type="radio" name="answer" value="4">
+                  {{ question.option_4 }}
+                </label>
+              {% endif %}
+
+            </div>
+
+          {% else %}
+            <!-- Открытый ответ -->
+            <textarea name="answer" class="form-control" rows="2" placeholder="Введите ответ..." required></textarea>
+          {% endif %}
+
+          <!-- Кнопка -->
+          <button type="submit" class="btn btn-primary mt-4 w-100">
+            Ответить →
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <style>
+      /* Доп. поддержка тёмной темы */
+      [data-bs-theme="dark"] .list-group-item {
+          background-color: #1e1e1e !important;
+          color: #e6e6e6 !important;
+          border-color: #333 !important;
+      }
+
+      [data-bs-theme="dark"] .list-group-item:hover {
+          background-color: #2b2b2b !important;
+      }
+  </style>
 
 {% endblock %}

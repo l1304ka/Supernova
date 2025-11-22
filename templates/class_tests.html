@@ -13,13 +13,13 @@
     <h3>Назначенные темы</h3>
 
     {% if assigned %}
-    <table class="table table-bordered table-striped shadow-sm">
-        <thead class="table-dark">
+    <table class="custom-table table-striped shadow-sm">
+        <thead>
             <tr>
                 <th>Название</th>
                 <th>Тема</th>
                 <th>Назначено</th>
-                <th></th>
+                <th style="width: 100px"></th>
             </tr>
         </thead>
         <tbody>
@@ -49,13 +49,13 @@
     <h3 class="mt-5">Пройденные тесты</h3>
 
     {% if tests %}
-    <table class="table table-bordered table-striped shadow-sm">
-        <thead class="table-dark">
+    <table class="custom-table table-striped shadow-sm">
+        <thead>
             <tr>
                 <th>Название теста</th>
                 <th>Проходили</th>
                 <th>Даты</th>
-                <th>Удалить</th>
+                <th style="width: 100px"></th>
             </tr>
         </thead>
         <tbody>

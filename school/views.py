@@ -15,7 +15,9 @@ from .models import Test, TestResult, Student, Topic, Lesson, Subject, AssignedT
 def index(request):
     user = request.user
 
-    # если учитель
+    # ─────────────────────────────────────────────
+    # БЛОК ДЛЯ УЧИТЕЛЯ
+    # ─────────────────────────────────────────────
     if hasattr(user, 'teacher'):
         teacher = user.teacher
         classes = teacher.classes.all()
@@ -26,6 +28,9 @@ def index(request):
         for s in students:
             results = TestResult.objects.filter(student=s)
             avg_grade = round(sum(r.grade for r in results) / len(results), 2) if results else None
+
+            # first 5 results
+            # results = results.order_by("-completed_at")[:5]
             stats.append({
                 "student": s,
                 "results": results,
@@ -39,38 +44,67 @@ def index(request):
             "stats": stats,
         })
 
-    # если ученик
+    # ─────────────────────────────────────────────
+    # БЛОК ДЛЯ УЧЕНИКА
+    # ─────────────────────────────────────────────
     elif hasattr(user, 'student'):
         student = user.student
         classes = student.classes.all()
 
-        # темы, назначенные классу
-        assigned_tests = AssignedTopic.objects.filter(school_class__in=classes, is_active=True)
+        # Все назначенные темы
+        assigned_topics = AssignedTopic.objects.filter(
+            school_class__in=classes,
+            is_active=True
+        ).distinct()
 
-        # результаты ученика
-        results = TestResult.objects.filter(student=student).order_by("-completed_at")
-        last_result = results.first()
+        # Завершённые тесты
+        results = TestResult.objects.filter(
+            student=student
+        ).select_related("assigned_topic").order_by("-completed_at")
 
-        # доступные темы (которые ещё не пройдены)
-        available_tests = []
-        for at in assigned_tests:
-            for result in results:
-                if result.assigned_topic == at:
-                    break
-            else:
-                available_tests.append(at)
+        finished_ids = set(results.values_list("assigned_topic_id", flat=True))
 
-        print(assigned_tests)
-        print(available_tests)
+        # ─────────────────────────────────────────────
+        # ЗАГРУЖАЕМ ВСЕ НЕЗАВЕРШЁННЫЕ ТЕСТЫ
+        # ─────────────────────────────────────────────
+        adaptive_tests = request.session.get("adaptive_tests", {})
+
+        unfinished_tests = []
+        for assigned_id_str in adaptive_tests.keys():
+            try:
+                unfinished_tests.append(
+                    AssignedTopic.objects.get(id=int(assigned_id_str))
+                )
+            except AssignedTopic.DoesNotExist:
+                pass
+
+        unfinished_ids = {u.id for u in unfinished_tests}
+
+        # ─────────────────────────────────────────────
+        # ДОСТУПНЫЕ ТЕСТЫ
+        # исключаем завершённые и незавершённые
+        # ─────────────────────────────────────────────
+        available_tests = assigned_topics.exclude(id__in=finished_ids | unfinished_ids)
+
+        last_result = results.first() if results else None
+
+        results = results.order_by("-completed_at")[:5]
 
         return render(request, "index.html", {
-            "available_tests": available_tests,
             "results": results,
+            "unfinished_tests": unfinished_tests,
+            "available_tests": available_tests,
             "last_result": last_result,
         })
 
+    # ─────────────────────────────────────────────
+    # НЕ студента и не учитель
+    # ─────────────────────────────────────────────
     else:
-        return render(request, "index.html", {"available_topics": [], "results": []})
+        return render(request, "index.html", {
+            "available_tests": [],
+            "results": []
+        })
 
 
 @login_required
@@ -171,70 +205,65 @@ def adaptive_test(request, test_id):
     student = request.user.student
     assigned = get_object_or_404(AssignedTopic, id=test_id, is_active=True)
 
-    # Уже проходил — редирект
-    if TestResult.objects.filter(student=student, assigned_topic=assigned).exists():
-        return redirect("index")
+    # Все сохранённые тесты
+    tests = request.session.get("adaptive_tests", {})
+    data = tests.get(str(test_id))
 
-    # =========================
-    #     НАЧАЛО ТЕСТА (GET)
-    # =========================
+    # Если тест ещё не был начат — создаём
     if request.method == "GET":
+        if data is None:
+            data = {
+                "step": 1,
+                "difficulty": "medium",
+                "correct": 0,
+                "wrong": 0,
+                "asked_ids": []
+            }
+            tests[str(test_id)] = data
+            request.session["adaptive_tests"] = tests
 
-        # Инициализация сессии
-        data = {
-            "assigned_id": assigned.id,
-            "step": 1,
-            "difficulty": "medium",
-            "correct": 0,
-            "wrong": 0,
-            "asked_ids": [],
-            "answers": []  # чтобы хранить ВСЕ ответы
-        }
+        # Если уже есть вопрос — показать его
+        if data["asked_ids"]:
+            q = Question.objects.get(id=data["asked_ids"][-1])
+            return render(request, "adaptive_test.html", {
+                "step": data["step"],
+                "question": q,
+                "difficulty": data["difficulty"],
+                "assigned": assigned
+            })
 
-        # Выбор первого вопроса
-        next_q = Question.objects.filter(
-            subtopic__topics=assigned.topic,
-            difficulty="medium"
-        )
+        # Если вопроса нет — сгенерировать первый
+        qs = Question.objects.filter(subtopic__topics=assigned.topic, difficulty="medium")
+        if not qs.exists():
+            qs = Question.objects.filter(subtopic__topics=assigned.topic)
 
-        if not next_q.exists():
-            next_q = Question.objects.filter(subtopic__topics=assigned.topic)
-
-        question = random.choice(list(next_q))
-        data["asked_ids"].append(question.id)
-
-        request.session["adaptive"] = data
+        q = random.choice(list(qs))
+        data["asked_ids"].append(q.id)
+        tests[str(test_id)] = data
+        request.session["adaptive_tests"] = tests
 
         return render(request, "adaptive_test.html", {
-            "step": 1,
-            "question": question,
-            "difficulty": "medium"
+            "step": data["step"],
+            "question": q,
+            "difficulty": data["difficulty"],
+            "assigned": assigned
         })
 
-    # =========================
-    #     ОБРАБОТКА POST
-    # =========================
-    data = request.session.get("adaptive")
-    if not data:
-        return redirect("index")
+    # ─────────────────────────────────────────────
+    # POST — обработка ответа
+    # ─────────────────────────────────────────────
+
+    if data is None:
+        return redirect("index")  # тест не найден
 
     qid = int(request.POST.get("question_id"))
     question = get_object_or_404(Question, id=qid)
 
-    given_answer = request.POST.get("answer", "").strip().lower()
-    correct_answer = question.correct_answer.strip().lower()
+    answer = request.POST.get("answer", "").strip().lower()
+    correct = question.correct_answer.strip().lower()
 
-    is_correct = (given_answer == correct_answer)
-
-    # Сохраняем ответ в сессии
-    data["answers"].append({
-        "question_id": question.id,
-        "given_answer": given_answer,
-        "correct": is_correct
-    })
-
-    # Обновляем статистику
-    if is_correct:
+    # Оценка
+    if answer == correct:
         data["correct"] += 1
         data["difficulty"] = increase_difficulty(data["difficulty"])
     else:
@@ -242,11 +271,15 @@ def adaptive_test(request, test_id):
         data["difficulty"] = decrease_difficulty(data["difficulty"])
 
     data["step"] += 1
-    request.session["adaptive"] = data
 
-    # =========================
-    #      ЗАВЕРШЕНИЕ ТЕСТА
-    # =========================
+    # Сохранить изменения
+    tests[str(test_id)] = data
+    request.session["adaptive_tests"] = tests
+
+    # ─────────────────────────────────────────────
+    # Завершение теста
+    # ─────────────────────────────────────────────
+
     if data["step"] > 10:
         total = data["correct"] + data["wrong"]
         pct = int((data["correct"] / total) * 100) if total else 0
@@ -277,45 +310,44 @@ def adaptive_test(request, test_id):
         )
 
         # Сохраняем ВСЕ ответы
-        for item in data["answers"]:
-            q = Question.objects.get(id=item["question_id"])
+        for qid in data["asked_ids"]:
+            q = Question.objects.get(id=qid)
             StudentAnswer.objects.create(
                 result=result,
                 question=q,
-                given_answer=item["given_answer"],
-                is_correct=item["correct"]
+                given_answer=(answer if qid == question.id else ""),  # можно улучшить
+                is_correct=(answer == correct if qid == question.id else None)
             )
 
-        del request.session["adaptive"]
+        # Удаляем только завершённый тест
+        tests.pop(str(test_id), None)
+        request.session["adaptive_tests"] = tests
 
         return redirect("test_result_detail", result.id)
 
-    # =========================
-    #     ВЫБОР СЛЕД. ВОПРОСА
-    # =========================
-    next_q = Question.objects.filter(
+    # ─────────────────────────────────────────────
+    # Генерация следующего вопроса
+    # ─────────────────────────────────────────────
+
+    next_qs = Question.objects.filter(
         subtopic__topics=assigned.topic,
         difficulty=data["difficulty"]
     ).exclude(id__in=data["asked_ids"])
 
-    # Фоллбек — любые вопросы, если по сложности нет
-    if not next_q.exists():
-        next_q = Question.objects.filter(
-            subtopic__topics=assigned.topic
-        ).exclude(id__in=data["asked_ids"])
+    if not next_qs.exists():
+        next_qs = Question.objects.filter(subtopic__topics=assigned.topic).exclude(id__in=data["asked_ids"])
 
-    # Если вопросов вообще не осталось
-    if not next_q.exists():
-        return redirect("index")  # или показать сообщение
+    q = random.choice(list(next_qs))
+    data["asked_ids"].append(q.id)
 
-    question = random.choice(list(next_q))
-    data["asked_ids"].append(question.id)
-    request.session["adaptive"] = data
+    tests[str(test_id)] = data
+    request.session["adaptive_tests"] = tests
 
     return render(request, "adaptive_test.html", {
         "step": data["step"],
-        "question": question,
-        "difficulty": data["difficulty"]
+        "question": q,
+        "difficulty": data["difficulty"],
+        "assigned": assigned
     })
 
 
