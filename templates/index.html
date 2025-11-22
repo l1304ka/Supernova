@@ -1,49 +1,94 @@
 ﻿{% extends "base.html" %}
-
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-    <h2>Привет, {{ request.user.student.name }}!</h2>
+<div class="container mt-4">
+
+    <h2 class="mb-4">Здравствуйте, {{ request.user.student.name }}!</h2>
+
+    <!-- Блок прогресса -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">Ваш прогресс</h4>
+            <p>Пройдено тестов: <b>{{ results|length }}</b></p>
+
+            {% if results %}
+                {% if last_result %}
+                  <p>Последняя оценка:
+                      <span class="badge
+                          {% if last_result.grade == 5 %}bg-success
+                          {% elif last_result.grade == 4 %}bg-primary
+                          {% elif last_result.grade == 3 %}bg-warning
+                          {% else %}bg-danger{% endif %}
+                      ">{{ last_result.grade }}</span>
+                  </p>
+                {% endif %}
+
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Доступные тесты -->
+    <h3 class="mt-4">📘 Доступные тесты</h3>
 
     {% if available_tests %}
-        <h3>📘 Доступные темы для прохождения:</h3>
-        <ul>
+        <div class="list-group mb-4">
             {% for at in available_tests %}
-                <li>
-                    <b>{{ at.title }}</b> - {{ at.topic.name }} ({{ at.school_class.name }})
-                    <a href="{% url 'adaptive_test' at.id %}">Пройти тест</a>
-                </li>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <b>{{ at.title }}</b><br>
+                        <small>{{ at.topic.name }} — {{ at.school_class.name }}</small>
+                    </div>
+                    <a href="{% url 'adaptive_test' at.id %}" class="btn btn-success btn-sm">Пройти тест</a>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <p>Нет доступных тем для тестов.</p>
+        <p class="text-muted">Нет доступных тестов.</p>
     {% endif %}
 
     <hr>
 
-    <h3>📊 Последние результаты:</h3>
+    <!-- Последние результаты -->
+    <h3 class="mt-4">📊 Последние результаты</h3>
+
     {% if results %}
-        <table border="1" cellpadding="5">
-            <tr>
-                <th>Дата</th>
-                <th>Предмет</th>
-                <th>Тема</th>
-                <th>Оценка</th>
-                <th>Балл (%)</th>
-                <th>Подробнее</th>
-            </tr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Предмет</th>
+                    <th>Тема</th>
+                    <th>Оценка</th>
+                    <th>Балл (%)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
             {% for r in results %}
                 <tr>
                     <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
                     <td>{{ r.test.lesson.subject.name }}</td>
-                    <td>{{ r.test.assigned_topic.title }}</td>
-                    <td>{{ r.grade }}</td>
+                    <td>{{ r.assigned_topic.title }}</td>
+
+                    <td>
+                        <span class="badge
+                            {% if r.grade == 5 %}bg-success
+                            {% elif r.grade == 4 %}bg-primary
+                            {% elif r.grade == 3 %}bg-warning
+                            {% else %}bg-danger{% endif %}
+                        ">{{ r.grade }}</span>
+                    </td>
+
                     <td>{{ r.score }}</td>
-                    <td><a href="{% url 'test_result_detail' r.id %}">Открыть</a></td>
+                    <td><a href="{% url 'test_result_detail' r.id %}" class="btn btn-outline-secondary btn-sm">Открыть</a></td>
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% else %}
-        <p>Результатов пока нет.</p>
+        <p class="text-muted">Ещё нет результатов.</p>
     {% endif %}
+
+</div>
 {% endblock %}

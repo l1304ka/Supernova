@@ -49,6 +49,7 @@ def index(request):
 
         # результаты ученика
         results = TestResult.objects.filter(student=student).order_by("-completed_at")
+        last_result = results.first()
 
         # доступные темы (которые ещё не пройдены)
         available_tests = []
@@ -65,6 +66,7 @@ def index(request):
         return render(request, "index.html", {
             "available_tests": available_tests,
             "results": results,
+            "last_result": last_result,
         })
 
     else:
@@ -374,7 +376,6 @@ def edit_subject(request, id):
         "section": "subjects",
         "subject": subject
     })
-
 
 
 @superuser_required
