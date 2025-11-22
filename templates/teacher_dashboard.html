@@ -1,98 +1,74 @@
 ﻿{% extends "base.html" %}
-
-{% block title %}Главная{% endblock %}
+{% block title %}Панель учителя{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
 
-<h2>Здравствуйте, {{ teacher.name }} {{ teacher.surname }}!</h2>
-<h3>Ваши классы:</h3>
-<ul>
-    {% for c in classes %}
-        <li>{{ c.name }}</li>
-    {% endfor %}
-</ul>
+    <h2 class="mb-4">Здравствуйте, {{ teacher.name }} {{ teacher.surname }}!</h2>
 
-<h3>Статистика по ученикам</h3>
-<table border="1" cellpadding="5">
-    <tr>
-        <th>Ученик</th>
-        <th>Средний балл</th>
-        <th>Результаты</th>
-    </tr>
-    {% for s in stats %}
-        <tr>
-            <td>{{ s.student.surname }} {{ s.student.name }}</td>
-            <td>{% if s.avg_grade %}{{ s.avg_grade }}{% else %}—{% endif %}</td>
-            <td>
-                {% for r in s.results %}
-                    {{ r.test.title }}: {{ r.grade }}<br>
-                {% endfor %}
-            </td>
-        </tr>
-    {% endfor %}
-</table>
+    <!-- === БЛОК КЛАССОВ === -->
+    <h3 class="mt-4">Ваши классы</h3>
+    <div class="row">
+        {% for c in classes %}
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-3 p-3">
+                <h4>{{ c.name }}</h4>
+                <p>Ученики: {{ c.students.count }}</p>
+                <p>Назначенных тем: {{ c.assigned_topics.count }}</p>
 
-<hr>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'class_journal' c.id %}" class="btn btn-primary btn-sm">Журнал класса</a>
+                    <a href="{% url 'assign_homework_class' c.id %}" class="btn btn-outline-secondary btn-sm">Выдать ДЗ</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
-<button onclick="document.getElementById('hwModal').style.display='block'" class="btn btn-primary">Выдать ДЗ</button>
+    <!-- === БЛОК АКТИВНОСТИ === -->
+    <h3 class="mt-5">Последние события</h3>
+    {% if recent_events %}
+        <ul class="list-group shadow-sm">
+        {% for e in recent_events %}
+            <li class="list-group-item">{{ e }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">Нет недавних событий</p>
+    {% endif %}
 
-<div id="hwModal" style="display:none; padding:20px; border:1px solid #ccc;">
-    <form method="post" action="{% url 'assign_homework' %}">
-        {% csrf_token %}
-        <label>Класс:</label>
-        <select name="class_id">
-            {% for c in classes %}
-                <option value="{{ c.id }}">{{ c.name }}</option>
+    <!-- === БЛОК СТАТИСТИКИ === -->
+    <h3 class="mt-5">Статистика по ученикам</h3>
+
+    <table class="table table-striped table-bordered shadow-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Ученик</th>
+                <th>Средний балл</th>
+                <th>Последний тест</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in stats %}
+            <tr>
+                <td>{{ s.student.surname }} {{ s.student.name }}</td>
+                <td>{% if s.avg_grade %}{{ s.avg_grade }}{% else %}—{% endif %}</td>
+                <td>
+                    {% if s.results %}
+                        {{ s.results.last.test.title }} — {{ s.results.last.grade }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'teacher_student_detail' s.student.id %}"
+                       class="btn btn-sm btn-outline-primary">Подробнее</a>
+                </td>
+            </tr>
             {% endfor %}
-        </select><br>
+        </tbody>
+    </table>
 
-        <label>Предмет:</label>
-        <select name="subject_id" id="subjectSelect">
-            <option value="">Выберите предмет</option>
-            {% for s in subjects %}
-                <option value="{{ s.id }}">{{ s.name }}</option>
-            {% endfor %}
-        </select><br>
-
-        <label>Тема:</label>
-        <select name="topic_id" id="topicSelect">
-            <option value="">Сначала выберите предмет</option>
-        </select><br>
-
-        <label>Название теста:</label>
-        <input type="text" name="title" placeholder="Домашняя работа"><br>
-
-        <button type="submit" class="btn btn-primary">Выдать ДЗ</button>
-        <button type="button" class="btn btn-secondary" onclick="document.getElementById('hwModal').style.display='none'">Отмена</button>
-    </form>
 </div>
-
-
-<script>
-    document.getElementById("subjectSelect").addEventListener("change", async function () {
-        const subjectId = this.value;
-        const topicSelect = document.getElementById("topicSelect");
-        topicSelect.innerHTML = "<option>Загрузка...</option>";
-
-        if (!subjectId) {
-            topicSelect.innerHTML = "<option value=''>Сначала выберите предмет</option>";
-            return;
-        }
-
-        const response = await fetch(`/get_topics_by_subject/?subject_id=${subjectId}`);
-        const data = await response.json();
-
-        if (data.topics) {
-            topicSelect.innerHTML = "";
-            data.topics.forEach(t => {
-                const opt = document.createElement("option");
-                opt.value = t.id;
-                opt.textContent = t.name;
-                topicSelect.appendChild(opt);
-            });
-        } else {
-            topicSelect.innerHTML = "<option value=''>Темы не найдены</option>";
-        }
-    });
-</script>
 {% endblock %}

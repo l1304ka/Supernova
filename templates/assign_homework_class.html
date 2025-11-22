@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Выдать ДЗ — {{ school_class.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>Выдать ДЗ классу {{ school_class.name }}</h2>
+
+    <form method="post" class="card p-4 shadow-sm">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Предмет</label>
+            <select id="subjectSelect" name="subject_id" class="form-select" required>
+                <option value="">Выберите предмет</option>
+                {% for s in subjects %}
+                    <option value="{{ s.id }}">{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Тема</label>
+            <select id="topicSelect" name="topic_id" class="form-select" required>
+                <option value="">Сначала выберите предмет</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Название задания</label>
+            <input type="text" name="title" class="form-control"
+                   placeholder="Например: Тест по теме 'Линзы'" required>
+        </div>
+
+        <button class="btn btn-primary">Назначить</button>
+        <a href="{% url 'class_journal' school_class.id %}" class="btn btn-secondary">Отмена</a>
+    </form>
+
+</div>
+
+<script>
+document.getElementById("subjectSelect").addEventListener("change", async function() {
+    const subjectId = this.value;
+    const topicSelect = document.getElementById("topicSelect");
+    topicSelect.innerHTML = "<option>Загрузка...</option>";
+
+    if (!subjectId) {
+        topicSelect.innerHTML = "<option>Сначала выберите предмет</option>";
+        return;
+    }
+
+    const response = await fetch(`/get_topics_by_subject/?subject_id=${subjectId}`);
+    const data = await response.json();
+
+    topicSelect.innerHTML = "";
+    if (data.topics) {
+        data.topics.forEach(t => {
+            const opt = document.createElement("option");
+            opt.value = t.id;
+            opt.textContent = t.name;
+            topicSelect.appendChild(opt);
+        });
+    } else {
+        topicSelect.innerHTML = "<option>Темы не найдены</option>";
+    }
+});
+</script>
+
+{% endblock %}

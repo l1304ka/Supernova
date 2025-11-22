@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Тесты класса {{ school_class.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>Тесты класса {{ school_class.name }}</h2>
+
+    <a href="{% url 'class_journal' school_class.id %}" class="btn btn-secondary mb-3">← Назад</a>
+
+
+    <!-- Назначенные темы -->
+    <h3>Назначенные темы</h3>
+
+    {% if assigned %}
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Название</th>
+                <th>Тема</th>
+                <th>Назначено</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for a in assigned %}
+            <tr>
+                <td>{{ a.title }}</td>
+                <td>{{ a.topic.name }}</td>
+                <td>{{ a.date_assigned|date:"d.m.Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'delete_assigned_topic' a.id %}"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Удалить назначенную тему?')">
+                       Удалить
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="text-muted">Нет назначенных тем.</p>
+    {% endif %}
+
+
+
+    <!-- Тесты, созданные системой -->
+    <h3 class="mt-5">Пройденные тесты</h3>
+
+    {% if tests %}
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Название теста</th>
+                <th>Проходили</th>
+                <th>Даты</th>
+                <th>Удалить</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for t in tests %}
+            <tr>
+                <td>{{ t.test.title }}</td>
+                <td>{{ t.students_count }} учен.</td>
+                <td>
+                    {% for r in t.results %}
+                        {{ r.student.surname }}: {{ r.completed_at|date:"d.m.Y H:i" }}<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'delete_test' t.test.id %}"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Удалить тест и все результаты?')">
+                       Удалить
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="text-muted">Ученики ещё не проходили тесты.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

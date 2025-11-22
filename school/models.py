@@ -98,6 +98,8 @@ class Question(models.Model):
 
 class Test(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="tests")
+    assigned_topic = models.ForeignKey('AssignedTopic', on_delete=models.SET_NULL, null=True, blank=True)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
     date_available = models.DateField()
     questions = models.ManyToManyField(Question, blank=True)
@@ -110,6 +112,7 @@ class Test(models.Model):
 class TestResult(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    assigned_topic = models.ForeignKey('AssignedTopic', on_delete=models.SET_NULL, null=True, blank=True)
     score = models.IntegerField()
     grade = models.IntegerField()
     completed_at = models.DateTimeField(auto_now_add=True)

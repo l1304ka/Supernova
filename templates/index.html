@@ -5,12 +5,12 @@
 {% block content %}
     <h2>Привет, {{ request.user.student.name }}!</h2>
 
-    {% if available_topics %}
+    {% if available_tests %}
         <h3>📘 Доступные темы для прохождения:</h3>
         <ul>
-            {% for at in available_topics %}
+            {% for at in available_tests %}
                 <li>
-                    <b>{{ at.topic.name }}</b> ({{ at.school_class.name }})
+                    <b>{{ at.title }}</b> - {{ at.topic.name }} ({{ at.school_class.name }})
                     <a href="{% url 'adaptive_test' at.id %}">Пройти тест</a>
                 </li>
             {% endfor %}
@@ -21,11 +21,12 @@
 
     <hr>
 
-    <h3>📊 Ваши результаты:</h3>
+    <h3>📊 Последние результаты:</h3>
     {% if results %}
         <table border="1" cellpadding="5">
             <tr>
                 <th>Дата</th>
+                <th>Предмет</th>
                 <th>Тема</th>
                 <th>Оценка</th>
                 <th>Балл (%)</th>
@@ -34,7 +35,8 @@
             {% for r in results %}
                 <tr>
                     <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
-                    <td>{{ r.test.lesson.title }}</td>
+                    <td>{{ r.test.lesson.subject.name }}</td>
+                    <td>{{ r.test.assigned_topic.title }}</td>
                     <td>{{ r.grade }}</td>
                     <td>{{ r.score }}</td>
                     <td><a href="{% url 'test_result_detail' r.id %}">Открыть</a></td>

@@ -1,4 +1,5 @@
 import random
+from urllib import request
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
@@ -44,19 +45,25 @@ def index(request):
         classes = student.classes.all()
 
         # темы, назначенные классу
-        assigned_topics = AssignedTopic.objects.filter(school_class__in=classes, is_active=True)
+        assigned_tests = AssignedTopic.objects.filter(school_class__in=classes, is_active=True)
 
         # результаты ученика
         results = TestResult.objects.filter(student=student).order_by("-completed_at")
 
-        # темы, по которым ученик уже прошёл тест
-        completed_topic_ids = results.values_list("test__lesson__topics__id", flat=True)
+        # доступные темы (которые ещё не пройдены)
+        available_tests = []
+        for at in assigned_tests:
+            for result in results:
+                if result.assigned_topic == at:
+                    break
+            else:
+                available_tests.append(at)
 
-        # темы, доступные для прохождения
-        available_topics = assigned_topics.exclude(topic__id__in=completed_topic_ids)
+        print(assigned_tests)
+        print(available_tests)
 
         return render(request, "index.html", {
-            "available_topics": available_topics,
+            "available_tests": available_tests,
             "results": results,
         })
 
@@ -123,9 +130,11 @@ def test_detail(request, test_id):
         TestResult.objects.create(
             student=student,
             test=test,
+            assigned_topic=test.assigned_topic,  # ← ВАЖНО: сохраняем конкретное назначение!
             score=score,
             grade=grade
         )
+
 
         return redirect("test_result", test_id=test.id)
 
@@ -251,11 +260,13 @@ def adaptive_test(request, test_id):
             subject = topic.topic.lessons.first().subject
             lesson = topic.topic.lessons.first()
             test = Test.objects.create(
+                topic=topic.topic,
+                assigned_topic=topic,
                 lesson=lesson,
                 title=f"Адаптивный тест по {topic.topic.name}",
                 date_available=now().date()
             )
-            result = TestResult.objects.create(student=student, test=test, score=score, grade=grade)
+            result = TestResult.objects.create(student=student, test=test, score=score, grade=grade, assigned_topic=topic)
 
             for a in data.get("answers", []):
                 StudentAnswer.objects.create(
@@ -286,12 +297,14 @@ def adaptive_test(request, test_id):
             subject = topic.topic.lessons.first().subject
             lesson = topic.topic.lessons.first()
             test = Test.objects.create(
+                topic=topic.topic,
+                assigned_topic=topic,
                 lesson=lesson,
                 title=f"Адаптивный тест по {topic.topic.name}",
                 date_available=now().date()
             )
 
-            TestResult.objects.create(student=student, test=test, score=score, grade=grade)
+            TestResult.objects.create(student=student, test=test, score=score, grade=grade, assigned_topic=topic)
             del request.session["adaptive"]
             return redirect("test_result", test_id=test.id)
 
@@ -363,6 +376,7 @@ def edit_subject(request, id):
     })
 
 
+
 @superuser_required
 def delete_subject(request, id):
     subject = get_object_or_404(Subject, id=id)
@@ -405,3 +419,109 @@ def assign_students(request, id):
 
 def superuser_required(view_func):
     return user_passes_test(lambda u: u.is_superuser, login_url="/account/login/")(view_func)
+
+@login_required
+def class_journal(request, class_id):
+    school_class = get_object_or_404(SchoolClass, id=class_id)
+    students = school_class.students.all()
+
+    rows = []
+    for s in students:
+        results = TestResult.objects.filter(student=s).order_by("completed_at")
+        rows.append({
+            "student": s,
+            "results": results,
+            "last": results.last() if results else None,
+            "avg": round(sum(r.grade for r in results) / len(results), 2) if results else None,
+        })
+    print(rows)
+
+
+    return render(request, "class_journal.html", {
+        "class": school_class,
+        "rows": rows,
+    })
+
+
+@login_required
+def assign_homework_class(request, class_id):
+    teacher = request.user.teacher
+    school_class = get_object_or_404(SchoolClass, id=class_id)
+
+    subjects = teacher.subjects.all()
+
+    if request.method == "POST":
+        topic_id = request.POST.get("topic_id")
+        title = request.POST.get("title", "")
+
+        AssignedTopic.objects.create(
+            title=title,
+            school_class=school_class,
+            topic_id=topic_id,
+            assigned_by=teacher
+        )
+
+        return redirect("class_journal", class_id=class_id)
+
+    return render(request, "assign_homework_class.html", {
+        "school_class": school_class,
+        "subjects": subjects,
+    })
+
+@login_required
+def teacher_student_detail(request, id):
+    student = get_object_or_404(Student, id=id)
+
+    results = TestResult.objects.filter(student=student).order_by("-completed_at")
+
+    return render(request, "teacher_student_detail.html", {
+        "student": student,
+        "results": results,
+    })
+
+@login_required
+def class_tests(request, class_id):
+    school_class = get_object_or_404(SchoolClass, id=class_id)
+
+    # назначенные темы
+    assigned = AssignedTopic.objects.filter(school_class=school_class)
+
+    # все тесты, которые когда-либо проходили ученики класса
+    test_results = TestResult.objects.filter(
+        student__classes=school_class
+    ).select_related("test", "student")
+
+    # сгруппировать тесты
+    tests = {}
+    for r in test_results:
+        t = r.test
+        if t.id not in tests:
+            tests[t.id] = {
+                "test": t,
+                "results": [],
+                "students_count": 0
+            }
+        tests[t.id]["results"].append(r)
+
+    for t in tests.values():
+        t["students_count"] = len(t["results"])
+
+    return render(request, "class_tests.html", {
+        "school_class": school_class,
+        "assigned": assigned,
+        "tests": tests.values(),
+    })
+
+
+@login_required
+def delete_test(request, test_id):
+    test = get_object_or_404(Test, id=test_id)
+    test.delete()
+    return redirect(request.META.get("HTTP_REFERER", "/"))
+
+
+@login_required
+def delete_assigned_topic(request, aid):
+    assigned = get_object_or_404(AssignedTopic, id=aid)
+    assigned.delete()
+    return redirect(request.META.get("HTTP_REFERER", "/"))

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Журнал класса {{ class.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>Журнал класса {{ class.name }}</h2>
+
+    <a class="btn btn-outline-primary mb-3"
+    href="{% url 'class_tests' class.id %}">
+    Тесты класса
+    </a>
+
+    <a href="{% url 'assign_homework_class' class.id %}" class="btn btn-primary mb-3">
+        Выдать ДЗ классу
+    </a>
+
+    {% if rows %}
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Ученик</th>
+                <th>Последняя оценка</th>
+                <th>Средний балл</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>
+                    <a href="{% url 'teacher_student_detail' row.student.id %}">
+                        {{ row.student.surname }} {{ row.student.name }}
+                    </a>
+                </td>
+
+                <td>
+                    {% if row.last %}{{ row.last.grade }}{% else %}—{% endif %}
+                </td>
+
+                <td>
+                    {% if row.avg %}{{ row.avg }}{% else %}—{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    {% else %}
+        <p class="text-muted">В этом классе пока нет учеников.</p>
+    {% endif %}
+
+</div>
+{% endblock %}
