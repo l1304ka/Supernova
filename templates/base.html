@@ -113,10 +113,6 @@
       <ul class="navbar-nav ms-auto">
         {% if request.user.is_authenticated %}
 
-          {% if request.user.student %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'student_results' %}">Результаты</a></li>
-          {% endif %}
-
           {% if request.user.is_staff and not request.user.is_superuser %}
             <li class="nav-item"><a class="nav-link" href="/admin/">Учитель: Админка</a></li>
           {% endif %}
