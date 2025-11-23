@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from school.models import Student, Test, Question, TestResult, Subject, SchoolClass, Topic, Lesson, Teacher, SubTopic, AssignedTopic
+from school.models import *
 
 admin.site.register(Student)
 admin.site.register(Test)
@@ -13,3 +13,6 @@ admin.site.register(Lesson)
 admin.site.register(Teacher)
 admin.site.register(SubTopic)
 admin.site.register(AssignedTopic)
+admin.site.register(Homework)
+admin.site.register(HomeworkTask)
+admin.site.register(StudentAnswer)
