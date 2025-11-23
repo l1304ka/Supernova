@@ -45,40 +45,32 @@
     <hr class="mb-4">
 
     <!-- Разбор -->
-    <h4 class="mb-3">Разбор вопросов</h4>
+   <h4 class="mb-3">Разбор вопросов</h4>
 
-   <div class="table-responsive">
-  <table class="custom-table">
+<div class="question-cards-wrapper">
 
-    <thead>
-    <tr>
-      <th style="width:50px;">№</th>
-      <th>Вопрос</th>
-      <th>Ваш ответ</th>
-      <th>Правильный ответ</th>
-      <th style="width:110px;">Результат</th>
-    </tr>
-    </thead>
+  {% for a in answers %}
+    <div class="question-card {% if a.is_correct %}qc-correct{% else %}qc-wrong{% endif %} shadow-sm">
 
-    <tbody>
-    {% for a in answers %}
-      <tr class="{% if a.is_correct %}custom-row-correct{% else %}custom-row-wrong{% endif %}">
-        <td class="text-center">{{ forloop.counter }}</td>
-        <td>{{ a.question.text }}</td>
-        <td class="fw-semibold">{{ a.given_answer }}</td>
-        <td class="fw-semibold">{{ a.question.correct_answer }}</td>
-        <td class="text-center">
-          {% if a.is_correct %}
-            <span class="badge bg-success">Верно</span>
-          {% else %}
-            <span class="badge bg-danger">Неверно</span>
-          {% endif %}
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
+        <div class="qc-header">
+            <h5 class="qc-number">Вопрос {{ forloop.counter }}</h5>
 
-  </table>
+            <span class="qc-status {% if a.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">
+              {% if a.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
+            </span>
+        </div>
+
+        <div class="qc-body">
+            <p class="qc-question">{{ a.question.text }}</p>
+
+            <p class="qc-field"><span>Ваш ответ:</span> {{ a.get_given_text }}</p>
+
+            <p class="qc-field"><span>Правильный ответ:</span> {{ a.question.get_correct_text }}</p>
+        </div>
+
+    </div>
+  {% endfor %}
+
 </div>
 
 

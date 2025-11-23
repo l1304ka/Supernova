@@ -92,6 +92,19 @@ class Question(models.Model):
     # Правильный вариант (1–4 или текст для открытого)
     correct_answer = models.CharField(max_length=255)
 
+    def get_correct_text(self):
+        """Человекочитаемый текст правильного ответа."""
+        if self.is_open:
+            return self.correct_answer
+
+        mapping = {
+            "1": self.option_1,
+            "2": self.option_2,
+            "3": self.option_3,
+            "4": self.option_4,
+        }
+        return mapping.get(self.correct_answer, self.correct_answer)
+
     def __str__(self):
         return f"{self.subtopic}: {self.text[:30]}"
 
@@ -140,6 +153,22 @@ class StudentAnswer(models.Model):
     question = models.ForeignKey("Question", on_delete=models.SET_NULL, null=True)
     given_answer = models.CharField(max_length=255)
     is_correct = models.BooleanField()
+
+    def get_given_text(self):
+        """Человекочитаемый текст ответа ученика."""
+        if not self.question:
+            return self.given_answer
+
+        if self.question.is_open:
+            return self.given_answer
+
+        mapping = {
+            "1": self.question.option_1,
+            "2": self.question.option_2,
+            "3": self.question.option_3,
+            "4": self.question.option_4,
+        }
+        return mapping.get(self.given_answer, self.given_answer)
 
     def __str__(self):
         return f"{self.result.student} → {self.question} ({'✔' if self.is_correct else '✘'})"

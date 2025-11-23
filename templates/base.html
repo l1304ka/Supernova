@@ -92,6 +92,95 @@
     color: #e2b9b9 !important;
 }
 
+.question-cards-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Карточка */
+.question-card {
+    border-radius: 12px;
+    padding: 18px 22px;
+    transition: 0.2s;
+    border-left: 6px solid transparent;
+}
+
+/* Успех / ошибка */
+.qc-correct {
+    border-color: #2ecc71;
+    background: rgba(46, 204, 113, 0.08);
+}
+
+.qc-wrong {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.08);
+}
+
+/* Тёмная тема */
+[data-bs-theme="dark"] .qc-correct {
+    background: rgba(46, 204, 113, 0.15);
+}
+
+[data-bs-theme="dark"] .qc-wrong {
+    background: rgba(231, 76, 60, 0.15);
+}
+
+/* Ховер */
+.question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Заголовок */
+.qc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.qc-number {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Статус */
+.qc-status {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.qc-status-true {
+    background: rgba(0, 200, 0, 0.25);
+    color: #2ecc71;
+}
+
+.qc-status-false {
+    background: rgba(255, 0, 0, 0.25);
+    color: #ff6b6b;
+}
+
+/* Текст внутри */
+.qc-body {
+    padding-left: 4px;
+}
+
+.qc-question {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.qc-field {
+    margin-bottom: 4px;
+}
+
+.qc-field > span {
+    font-weight: 500;
+    opacity: 0.8;
+}
 
 
   </style>
