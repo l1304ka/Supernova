@@ -61,7 +61,7 @@
         <tbody>
         {% for t in tests %}
             <tr>
-                <td>{{ t.test.title }}</td>
+                <td>{{ t.test.assigned_topic.title }}</td>
                 <td>{{ t.students_count }} учен.</td>
                 <td>
                     {% for r in t.results %}

@@ -200,70 +200,124 @@ def get_topics_by_subject(request):
     return JsonResponse({"topics": list(topics)})
 
 
+def shuffle_options(question):
+    opts = []
+    if question.option_1:
+        opts.append(("1", question.option_1))
+    if question.option_2:
+        opts.append(("2", question.option_2))
+    if question.option_3:
+        opts.append(("3", question.option_3))
+    if question.option_4:
+        opts.append(("4", question.option_4))
+
+    random.shuffle(opts)
+    return opts
+
+
 @login_required
 def adaptive_test(request, test_id):
     student = request.user.student
     assigned = get_object_or_404(AssignedTopic, id=test_id, is_active=True)
 
-    # Все сохранённые тесты
+    # Все активные адаптивные тесты в сессии
     tests = request.session.get("adaptive_tests", {})
+
+    # Данные конкретного теста
     data = tests.get(str(test_id))
 
-    # Если тест ещё не был начат — создаём
+    # ─────────────────────────────────────────────
+    # ИНИЦИАЛИЗАЦИЯ ТЕСТА (GET)
+    # ─────────────────────────────────────────────
     if request.method == "GET":
+
         if data is None:
+            # Создаём новую структуру
             data = {
                 "step": 1,
                 "difficulty": "medium",
                 "correct": 0,
                 "wrong": 0,
-                "asked_ids": []
+                "asked": [],
+                "answers": {}  # question_id → {"answer": "...", "is_correct": bool}
             }
             tests[str(test_id)] = data
             request.session["adaptive_tests"] = tests
 
-        # Если уже есть вопрос — показать его
-        if data["asked_ids"]:
-            q = Question.objects.get(id=data["asked_ids"][-1])
+        # Если уже был задан вопрос — показываем его
+        if data["asked"]:
+            q = Question.objects.get(id=data["asked"][-1])
+
+            # перемешиваем варианты (однакj сохраняем порядок оригинальных id!!)
+            options = []
+            if q.option_1: options.append(("1", q.option_1))
+            if q.option_2: options.append(("2", q.option_2))
+            if q.option_3: options.append(("3", q.option_3))
+            if q.option_4: options.append(("4", q.option_4))
+
+            random.shuffle(options)
+
             return render(request, "adaptive_test.html", {
                 "step": data["step"],
+                "total_questions": assigned.question_count,
                 "question": q,
                 "difficulty": data["difficulty"],
-                "assigned": assigned
+                "assigned": assigned,
+                "options": options
             })
 
-        # Если вопроса нет — сгенерировать первый
-        qs = Question.objects.filter(subtopic__topics=assigned.topic, difficulty="medium")
+        # Генерируем первый вопрос
+        qs = Question.objects.filter(
+            subtopic__topics=assigned.topic,
+            difficulty="medium"
+        )
         if not qs.exists():
             qs = Question.objects.filter(subtopic__topics=assigned.topic)
 
         q = random.choice(list(qs))
-        data["asked_ids"].append(q.id)
+        data["asked"].append(q.id)
         tests[str(test_id)] = data
         request.session["adaptive_tests"] = tests
 
+        # перемешиваем варианты
+        options = []
+        if q.option_1: options.append(("1", q.option_1))
+        if q.option_2: options.append(("2", q.option_2))
+        if q.option_3: options.append(("3", q.option_3))
+        if q.option_4: options.append(("4", q.option_4))
+        random.shuffle(options)
+
         return render(request, "adaptive_test.html", {
             "step": data["step"],
+            "total_questions": assigned.question_count,
             "question": q,
             "difficulty": data["difficulty"],
-            "assigned": assigned
+            "assigned": assigned,
+            "options": options
         })
 
     # ─────────────────────────────────────────────
-    # POST — обработка ответа
+    # POST — ОБРАБОТКА ОТВЕТА
     # ─────────────────────────────────────────────
 
     if data is None:
-        return redirect("index")  # тест не найден
+        return redirect("index")
 
     qid = int(request.POST.get("question_id"))
     question = get_object_or_404(Question, id=qid)
 
     answer = request.POST.get("answer", "").strip().lower()
     correct = question.correct_answer.strip().lower()
+    is_correct = (answer == correct)
 
-    # Оценка
-    if answer == correct:
+    # сохраняем ответ в сессию полностью!
+    data["answers"][str(qid)] = {
+        "answer": answer,
+        "is_correct": is_correct
+    }
+
+    # обновляем статистику сложности
+    if is_correct:
         data["correct"] += 1
         data["difficulty"] = increase_difficulty(data["difficulty"])
     else:
@@ -271,16 +325,14 @@ def adaptive_test(request, test_id):
         data["difficulty"] = decrease_difficulty(data["difficulty"])
 
     data["step"] += 1
-
-    # Сохранить изменения
     tests[str(test_id)] = data
     request.session["adaptive_tests"] = tests
 
     # ─────────────────────────────────────────────
-    # Завершение теста
+    # ЗАВЕРШЕНИЕ ТЕСТА
     # ─────────────────────────────────────────────
 
-    if data["step"] > 10:
+    if data["step"] > assigned.question_count:
         total = data["correct"] + data["wrong"]
         pct = int((data["correct"] / total) * 100) if total else 0
 
@@ -298,7 +350,8 @@ def adaptive_test(request, test_id):
             title=f"Адаптивный тест по теме: {assigned.topic.name}",
             date_available=now().date(),
             assigned_topic=assigned,
-            topic=assigned.topic
+            topic=assigned.topic,
+            maximin_questions=assigned.question_count
         )
 
         result = TestResult.objects.create(
@@ -310,44 +363,58 @@ def adaptive_test(request, test_id):
         )
 
         # Сохраняем ВСЕ ответы
-        for qid in data["asked_ids"]:
+        for qid in data["asked"]:
             q = Question.objects.get(id=qid)
-            StudentAnswer.objects.create(
-                result=result,
-                question=q,
-                given_answer=(answer if qid == question.id else ""),  # можно улучшить
-                is_correct=(answer == correct if qid == question.id else None)
-            )
+            saved = data["answers"].get(str(qid))
 
-        # Удаляем только завершённый тест
+            if saved:
+                StudentAnswer.objects.create(
+                    result=result,
+                    question=q,
+                    given_answer=saved["answer"],
+                    is_correct=saved["is_correct"]
+                )
+
+        # удаляем только этот тест из сессии
         tests.pop(str(test_id), None)
         request.session["adaptive_tests"] = tests
 
         return redirect("test_result_detail", result.id)
 
     # ─────────────────────────────────────────────
-    # Генерация следующего вопроса
+    # ГЕНЕРАЦИЯ НОВОГО ВОПРОСА
     # ─────────────────────────────────────────────
 
     next_qs = Question.objects.filter(
         subtopic__topics=assigned.topic,
         difficulty=data["difficulty"]
-    ).exclude(id__in=data["asked_ids"])
+    ).exclude(id__in=data["asked"])
 
     if not next_qs.exists():
-        next_qs = Question.objects.filter(subtopic__topics=assigned.topic).exclude(id__in=data["asked_ids"])
+        next_qs = Question.objects.filter(
+            subtopic__topics=assigned.topic
+        ).exclude(id__in=data["asked"])
 
     q = random.choice(list(next_qs))
-    data["asked_ids"].append(q.id)
-
+    data["asked"].append(q.id)
     tests[str(test_id)] = data
     request.session["adaptive_tests"] = tests
 
+    # перемешиваем варианты ответов
+    options = []
+    if q.option_1: options.append(("1", q.option_1))
+    if q.option_2: options.append(("2", q.option_2))
+    if q.option_3: options.append(("3", q.option_3))
+    if q.option_4: options.append(("4", q.option_4))
+    random.shuffle(options)
+
     return render(request, "adaptive_test.html", {
         "step": data["step"],
+        "total_questions": assigned.question_count,
         "question": q,
         "difficulty": data["difficulty"],
-        "assigned": assigned
+        "assigned": assigned,
+        "options": options
     })
 
 
@@ -501,12 +568,14 @@ def assign_homework_class(request, class_id):
     if request.method == "POST":
         topic_id = request.POST.get("topic_id")
         title = request.POST.get("title", "")
+        question_count = int(request.POST.get("question_count", "0"))
 
         AssignedTopic.objects.create(
             title=title,
             school_class=school_class,
             topic_id=topic_id,
-            assigned_by=teacher
+            assigned_by=teacher,
+            question_count=question_count
         )
 
         return redirect("class_journal", class_id=class_id)

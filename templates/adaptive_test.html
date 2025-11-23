@@ -7,7 +7,7 @@
 
     <!-- Прогресс -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h4 class="m-0">Вопрос {{ step }} из 10</h4>
+      <h4 class="m-0">Вопрос {{ step }} из {{ total_questions }}</h4>
 
       {% if user.is_staff %}
         <span class="badge bg-info text-dark">
@@ -27,43 +27,18 @@
           <input type="hidden" name="question_id" value="{{ question.id }}">
 
           {% if not question.is_open %}
-            <!-- Варианты ответа -->
             <div class="list-group">
-
-              {% if question.option_1 %}
+              {% for val, text in options %}
                 <label class="list-group-item list-group-item-action">
-                  <input class="form-check-input me-2" type="radio" name="answer" value="1" required>
-                  {{ question.option_1 }}
+                  <input class="form-check-input me-2" type="radio" name="answer" value="{{ val }}" required>
+                  {{ text }}
                 </label>
-              {% endif %}
-
-              {% if question.option_2 %}
-                <label class="list-group-item list-group-item-action">
-                  <input class="form-check-input me-2" type="radio" name="answer" value="2">
-                  {{ question.option_2 }}
-                </label>
-              {% endif %}
-
-              {% if question.option_3 %}
-                <label class="list-group-item list-group-item-action">
-                  <input class="form-check-input me-2" type="radio" name="answer" value="3">
-                  {{ question.option_3 }}
-                </label>
-              {% endif %}
-
-              {% if question.option_4 %}
-                <label class="list-group-item list-group-item-action">
-                  <input class="form-check-input me-2" type="radio" name="answer" value="4">
-                  {{ question.option_4 }}
-                </label>
-              {% endif %}
-
+              {% endfor %}
             </div>
-
           {% else %}
-            <!-- Открытый ответ -->
             <textarea name="answer" class="form-control" rows="2" placeholder="Введите ответ..." required></textarea>
           {% endif %}
+
 
           <!-- Кнопка -->
           <button type="submit" class="btn btn-primary mt-4 w-100">

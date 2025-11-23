@@ -106,7 +106,7 @@ class Test(models.Model):
     maximin_questions = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.lesson.subject.name} — {self.title}"
+        return f"{self.assigned_topic}: {self.lesson.subject.name} — {self.title}"
 
 
 class TestResult(models.Model):
@@ -129,9 +129,10 @@ class AssignedTopic(models.Model):
     assigned_by = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="given_topics")
     date_assigned = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+    question_count = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.topic.name} → {self.school_class.name}"
+        return f"{self.title}: {self.topic.name} → {self.school_class.name}"
 
 
 class StudentAnswer(models.Model):

@@ -32,6 +32,12 @@
                    placeholder="Например: Тест по теме «Линзы»" required>
         </div>
 
+      <div class="mb-4">
+            <label class="form-label">Количество вопросов</label>
+            <input type="text" name="question_count" class="form-control"
+                    placeholder="Например: 10" required>
+        </div>
+
         <div class="d-flex gap-2">
             <button class="btn btn-primary flex-grow-1">Назначить</button>
             <a href="{% url 'class_journal' school_class.id %}" class="btn btn-outline-secondary flex-grow-1">
