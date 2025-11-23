@@ -45,33 +45,53 @@
     <hr class="mb-4">
 
     <!-- Разбор -->
-   <h4 class="mb-3">Разбор вопросов</h4>
+    <h4 class="mb-3">Разбор вопросов</h4>
 
-<div class="question-cards-wrapper">
+    <div class="question-cards-wrapper">
 
-  {% for a in answers %}
-    <div class="question-card {% if a.is_correct %}qc-correct{% else %}qc-wrong{% endif %} shadow-sm">
+      {% for a in answers %}
+        <div class="question-card {% if a.is_correct %}qc-correct{% else %}qc-wrong{% endif %} shadow-sm">
 
-        <div class="qc-header">
+          <div class="qc-header">
             <h5 class="qc-number">Вопрос {{ forloop.counter }}</h5>
 
             <span class="qc-status {% if a.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">
               {% if a.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
             </span>
-        </div>
+          </div>
 
-        <div class="qc-body">
+          <div class="qc-body">
             <p class="qc-question">{{ a.question.text }}</p>
 
             <p class="qc-field"><span>Ваш ответ:</span> {{ a.get_given_text }}</p>
 
             <p class="qc-field"><span>Правильный ответ:</span> {{ a.question.get_correct_text }}</p>
+          </div>
+
         </div>
+      {% endfor %}
 
     </div>
-  {% endfor %}
 
-</div>
+    <hr class="mb-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="mb-0">Домашнее задание</h4>
+
+      {% if result.homework %}
+        <a href="{% url 'homework_detail' result.homework.id %}"
+           class="btn btn-primary">
+          Открыть домашнее задание
+        </a>
+      {% else %}
+        <form method="post" action="{% url 'generate_homework' result.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-primary">
+            Сгенерировать ДЗ по этой теме
+          </button>
+        </form>
+      {% endif %}
+    </div>
 
 
     <a href="/" class="btn btn-outline-secondary mt-3">← На главную</a>

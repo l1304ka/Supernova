@@ -7,8 +7,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 
 from administrator.views import superuser_required
+from .ai_utils import generate_homework_tasks_gemini
 from .models import Test, TestResult, Student, Topic, Lesson, Subject, AssignedTopic, Question, StudentAnswer, Teacher, \
-    SchoolClass
+    SchoolClass, Homework, HomeworkTask
 
 
 @login_required
@@ -642,3 +643,100 @@ def delete_assigned_topic(request, aid):
     assigned = get_object_or_404(AssignedTopic, id=aid)
     assigned.delete()
     return redirect(request.META.get("HTTP_REFERER", "/"))
+
+
+@login_required
+def generate_homework(request, result_id):
+    """Создать ИИ-домашку по конкретному результату теста."""
+    result = get_object_or_404(TestResult, id=result_id, student__user=request.user)
+
+    # если уже есть ДЗ — просто переходим к нему
+    if hasattr(result, "homework"):
+        return redirect("homework_detail", homework_id=result.homework.id)
+
+    assigned = result.assigned_topic  # ты уже сохраняешь assigned_topic в TestResult
+    student = result.student
+
+    # сколько задач по умолчанию берём из назначенной темы, иначе 3
+    tasks_count = 3
+
+    # подсказка для сложности
+    if result.score >= 85:
+        diff_hint = "чуть выше среднего уровня, можно включить 1–2 сложные задачи"
+    elif result.score >= 60:
+        diff_hint = "средний уровень"
+    else:
+        diff_hint = "чуть проще среднего уровня, чтобы закрепить базу"
+
+    # генерим задачи через Gemini
+    tasks_data = generate_homework_tasks_gemini(
+        topic_name=assigned.topic.name,
+        tasks_count=tasks_count,
+        difficulty_hint=diff_hint,
+        score_percent=result.score,
+    )
+
+    # создаём Homework + задачи
+    hw = Homework.objects.create(
+        student=student,
+        topic=assigned,
+        test_result=result,
+        tasks_count=len(tasks_data),
+    )
+
+    for i, t in enumerate(tasks_data, start=1):
+        HomeworkTask.objects.create(
+            homework=hw,
+            order=i,
+            text=t["text"],
+            solution=t["solution"],
+            correct_answer=t["answer"],
+        )
+
+    return redirect("homework_detail", homework_id=hw.id)
+
+@login_required
+def homework_detail(request, homework_id):
+    hw = get_object_or_404(
+        Homework,
+        id=homework_id,
+        student__user=request.user
+    )
+    tasks = list(hw.tasks.order_by("order"))
+
+    if request.method == "POST":
+        # ученик отправил ответы
+        for task in tasks:
+            field_name = f"task_{task.id}"
+            ans = request.POST.get(field_name, "").strip()
+
+            if ans != "":
+                task.student_answer = ans
+                # сравниваем как числа с небольшой поблажкой
+                try:
+                    correct = float(str(task.correct_answer).replace(",", "."))
+                    given = float(ans.replace(",", "."))
+                    task.is_correct = abs(correct - given) < 1e-6
+                except ValueError:
+                    task.is_correct = False
+            else:
+                task.student_answer = ""
+                task.is_correct = False
+
+            task.save()
+
+        hw.is_checked = True
+        hw.save()
+
+        return redirect("homework_detail", homework_id=hw.id)
+
+    # количество верных для отображения
+    total = len(tasks)
+    correct = len([t for t in tasks if t.is_correct])
+
+    return render(request, "homework_detail.html", {
+        "homework": hw,
+        "tasks": tasks,
+        "total": total,
+        "correct": correct,
+    })
