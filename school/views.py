@@ -209,7 +209,6 @@ def test_detail(request, test_id):
             grade=grade
         )
 
-
         return redirect("test_result", test_id=test.id)
 
     return render(request, "test_detail.html", {"test": test, "questions": questions})
@@ -472,7 +471,6 @@ def decrease_difficulty(d):
     return order[max(i - 1, 0)]
 
 
-
 @login_required
 def student_results(request):
     student = request.user.student
@@ -570,8 +568,10 @@ def assign_students(request, id):
         "all_students": all_students
     })
 
+
 def superuser_required(view_func):
     return user_passes_test(lambda u: u.is_superuser, login_url="/account/login/")(view_func)
+
 
 @login_required
 def class_journal(request, class_id):
@@ -588,7 +588,6 @@ def class_journal(request, class_id):
             "avg": round(sum(r.grade for r in results) / len(results), 2) if results else None,
         })
     print(rows)
-
 
     return render(request, "class_journal.html", {
         "class": school_class,
@@ -623,6 +622,7 @@ def assign_homework_class(request, class_id):
         "subjects": subjects,
     })
 
+
 @login_required
 def teacher_student_detail(request, id):
     student = get_object_or_404(Student, id=id)
@@ -633,6 +633,7 @@ def teacher_student_detail(request, id):
         "student": student,
         "results": results,
     })
+
 
 @login_required
 def class_tests(request, class_id):
@@ -684,53 +685,64 @@ def delete_assigned_topic(request, aid):
 
 @login_required
 def generate_homework(request, result_id):
-    """Создать ИИ-домашку по конкретному результату теста."""
+    """Создать ИИ-домашку по результату теста — с защитой от повторных кликов."""
     result = get_object_or_404(TestResult, id=result_id, student__user=request.user)
 
-    # если уже есть ДЗ — просто переходим к нему
+    # если ДЗ уже создано
     if hasattr(result, "homework"):
         return redirect("homework_detail", homework_id=result.homework.id)
 
-    assigned = result.assigned_topic  # ты уже сохраняешь assigned_topic в TestResult
-    student = result.student
+    # если ДЗ уже в процессе генерации
+    if result.is_homework_generating:
+        return redirect("index")
 
-    # сколько задач по умолчанию берём из назначенной темы, иначе 3
-    tasks_count = 3
+    # помечаем что генерация началась
+    result.is_homework_generating = True
+    result.save()
 
-    # подсказка для сложности
-    if result.score >= 85:
-        diff_hint = "чуть выше среднего уровня, можно включить 1–2 сложные задачи"
-    elif result.score >= 60:
-        diff_hint = "средний уровень"
-    else:
-        diff_hint = "чуть проще среднего уровня, чтобы закрепить базу"
+    try:
+        assigned = result.assigned_topic
+        student = result.student
 
-    # генерим задачи через Gemini
-    tasks_data = generate_homework_tasks_gemini(
-        topic_name=assigned.topic.name,
-        tasks_count=tasks_count,
-        difficulty_hint=diff_hint,
-        score_percent=result.score,
-    )
+        tasks_count = 3
 
-    # создаём Homework + задачи
-    hw = Homework.objects.create(
-        student=student,
-        topic=assigned,
-        test_result=result,
-        tasks_count=len(tasks_data),
-    )
+        if result.score >= 85:
+            diff_hint = "чуть выше среднего уровня, можно включить 1–2 сложные задачи"
+        elif result.score >= 60:
+            diff_hint = "средний уровень"
+        else:
+            diff_hint = "чуть проще среднего уровня, чтобы закрепить базу"
 
-    for i, t in enumerate(tasks_data, start=1):
-        HomeworkTask.objects.create(
-            homework=hw,
-            order=i,
-            text=t["text"],
-            solution=t["solution"],
-            correct_answer=t["answer"],
+        tasks_data = generate_homework_tasks_gemini(
+            topic_name=assigned.topic.name,
+            tasks_count=tasks_count,
+            difficulty_hint=diff_hint,
+            score_percent=result.score,
         )
 
-    return redirect("homework_detail", homework_id=hw.id)
+        hw = Homework.objects.create(
+            student=student,
+            topic=assigned,
+            test_result=result,
+            tasks_count=len(tasks_data),
+        )
+
+        for i, t in enumerate(tasks_data, start=1):
+            HomeworkTask.objects.create(
+                homework=hw,
+                order=i,
+                text=t["text"],
+                solution=t["solution"],
+                correct_answer=t["answer"],
+            )
+
+        return redirect("homework_detail", homework_id=hw.id)
+
+    finally:
+        # снимаем блокировку в любом случае
+        result.is_homework_generating = False
+        result.save()
+
 
 @login_required
 def homework_detail(request, homework_id):
@@ -771,7 +783,29 @@ def homework_detail(request, homework_id):
     total = len(tasks)
     correct = len([t for t in tasks if t.is_correct])
 
+    # расчёт прогресса
+    solved = len([t for t in tasks if t.is_correct is not False])
+    percent = int((solved / total) * 100) if total else 0
+
     return render(request, "homework_detail.html", {
+        "homework": hw,
+        "tasks": tasks,
+        "total": total,
+        "correct": correct,
+        "solved": solved,
+        "percent": percent,
+    })
+
+
+@login_required
+def homework_result(request, homework_id):
+    hw = get_object_or_404(Homework, id=homework_id, student__user=request.user)
+    tasks = list(hw.tasks.order_by("order"))
+
+    total = len(tasks)
+    correct = len([t for t in tasks if t.is_correct])
+
+    return render(request, "homework_result.html", {
         "homework": hw,
         "tasks": tasks,
         "total": total,

@@ -2,64 +2,83 @@
 {% block title %}Домашнее задание{% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
+<div class="container mt-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="mb-0">Домашнее задание по теме: {{ homework.topic.topic.name }}</h2>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">{{ homework.topic.topic.name }}</h2>
+
+    {% if homework.is_checked %}
       <a href="{% url 'test_result_detail' homework.test_result.id %}"
-         class="btn btn-outline-secondary btn-sm">← К результату теста</a>
-    </div>
+         class="btn btn-outline-secondary btn-sm">
+        ← К результату теста
+      </a>
+    {% endif %}
+  </div>
 
-    <p class="text-muted">
-      {{ homework.student.name }} {{ homework.student.surname }},
-      заданий: {{ tasks|length }}.
-      {% if homework.is_checked %}
-        Верно: {{ correct }} из {{ total }}.
-      {% endif %}
-    </p>
+  <!-- ПРОГРЕСС -->
+  <div class="hw-progress mb-3">
+    <div class="hw-progress-fill" style="width: {{ percent }}%;"></div>
+  </div>
 
-    <form method="post" class="mt-3">
-      {% csrf_token %}
+  {% if not homework.is_checked %}
+    <p class="text-muted">Заданий: {{ total }}. Заполните поля и нажмите "Проверить".</p>
+  {% else %}
+    <p class="text-muted">Верно: {{ solved }} / {{ total }} ({{ percent }}%).</p>
+  {% endif %}
 
-      {% for t in tasks %}
-        <div class="task-card {% if t.is_correct %}qc-correct{% else %}qc-wrong{% endif %} shadow-sm">
+  <form method="post">
+    {% csrf_token %}
 
-          <div class="qc-header">
-            <h5 class="qc-number">Задача {{ forloop.counter }}</h5>
+    {% for t in tasks %}
+
+      <div class="task-card mb-4
+        {% if not homework.is_checked %}task-neutral
+        {% elif t.is_correct %}task-correct
+        {% else %}task-wrong{% endif %}
+        shadow-sm">
+
+        <div class="qc-header">
+          <h5 class="qc-number">Задача {{ forloop.counter }}</h5>
+
+          {% if homework.is_checked %}
             <span class="qc-status {% if t.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">
-      {% if t.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
-    </span>
-          </div>
-
-          <div class="qc-body">
-            <p class="qc-question">{{ t.text }}</p>
-
-            {% if homework.is_checked %}
-              <p class="qc-field"><span>Ваш ответ:</span> {{ t.student_answer }}</p>
-              <p class="qc-field"><span>Правильный ответ:</span> {{ t.correct_answer }}</p>
-
-              <details class="mt-2">
-                <summary><span class="qc-status {% if t.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">Показать решение</span></summary>
-                <div class="mt-2 solution-html ps-3">{{ t.solution|safe }}</div>
-
-              </details>
-            {% else %}
-              <input type="text" class="form-control" name="task_{{ t.id }}" placeholder="Введите число" required>
-            {% endif %}
-          </div>
-
+              {% if t.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
+            </span>
+          {% endif %}
         </div>
 
-      {% endfor %}
+        <div class="qc-body">
+          <p class="qc-question">{{ t.text }}</p>
 
-      {% if not homework.is_checked %}
-        <button type="submit" class="btn btn-primary">
-          Проверить ответы
-        </button>
-      {% else %}
-        <a href="/" class="btn btn-outline-secondary">На главную</a>
-      {% endif %}
-    </form>
+          {% if not homework.is_checked %}
+            <!-- ПОЛЕ ВВОДА -->
+            <input type="text"
+                   class="form-control"
+                   name="task_{{ t.id }}"
+                   placeholder="Введите число"
+                   required>
+          {% else %}
+            <!-- РЕЗУЛЬТАТЫ -->
+            <p class="qc-field"><span>Ваш ответ:</span> {{ t.student_answer }}</p>
+            <p class="qc-field"><span>Правильный ответ:</span> {{ t.correct_answer }}</p>
 
-  </div>
+            <details class="mt-2">
+              <summary class="mb-2"><b>Показать решение</b></summary>
+              <div class="mt-2 solution-html ps-3">{{ t.solution|safe }}</div>
+            </details>
+          {% endif %}
+        </div>
+
+      </div>
+
+    {% endfor %}
+
+    {% if not homework.is_checked %}
+      <button class="btn btn-primary">Проверить ответы</button>
+    {% else %}
+      <a href="/" class="btn btn-outline-secondary">На главную</a>
+    {% endif %}
+  </form>
+
+</div>
 {% endblock %}

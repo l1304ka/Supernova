@@ -42,9 +42,19 @@
               <small>{{ r.test.lesson.subject.name }} — {{ r.completed_at|date:"d.m.Y H:i" }}</small>
             </div>
 
-            <a href="{% url 'generate_homework' r.id %}" class="btn btn-warning btn-sm">
-              Сгенерировать ДЗ
-            </a>
+            {% if r.is_homework_generating %}
+              <button class="btn btn-secondary btn-sm" disabled>
+                ⏳ Генерация...
+              </button>
+            {% else %}
+              <a href="{% url 'generate_homework' r.id %}"
+                 class="btn btn-warning btn-sm hw-generate-btn"
+                 data-id="{{ r.id }}">
+                Сгенерировать ДЗ
+              </a>
+
+            {% endif %}
+
           </div>
         {% endfor %}
       </div>
@@ -68,9 +78,9 @@
                 {{ item.hw.created_at|date:"d.m.Y H:i" }}
               </small><br>
 
-{#              <small class="text-muted">#}
-{#                Выполнено задач: {{ item.solved }} / {{ item.total }}#}
-{#              </small>#}
+              {#              <small class="text-muted">#}
+              {#                Выполнено задач: {{ item.solved }} / {{ item.total }}#}
+              {#              </small>#}
             </div>
 
             <a href="{% url 'homework_detail' item.hw.id %}"
@@ -209,4 +219,17 @@
 
 
   </div>
+
+  <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          document.querySelectorAll(".hw-generate-btn").forEach(btn => {
+              btn.addEventListener("click", () => {
+                  btn.innerHTML = "⏳ Генерация...";
+                  btn.classList.remove("btn-warning");
+                  btn.classList.add("btn-secondary");
+                  btn.setAttribute("disabled", "disabled");
+              });
+          });
+      });
+  </script>
 {% endblock %}

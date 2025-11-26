@@ -25,4 +25,5 @@ urlpatterns = [
     path("assigned/delete/<int:aid>/", views.delete_assigned_topic, name="delete_assigned_topic"),
     path("homework/generate/<int:result_id>/", views.generate_homework, name="generate_homework"),
     path("homework/<int:homework_id>/", views.homework_detail, name="homework_detail"),
+    path("homework/<int:homework_id>/result/", views.homework_result, name="homework_result"),
 ]

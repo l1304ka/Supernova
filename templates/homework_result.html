@@ -1,0 +1,39 @@
+﻿{% extends "base.html" %}
+{% block title %}Результаты ДЗ{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2>Результаты ДЗ: {{ correct }} из {{ total }}</h2>
+
+  <div class="question-cards-wrapper mt-3">
+
+    {% for t in tasks %}
+      <div class="question-card {% if t.is_correct %}qc-correct{% else %}qc-wrong{% endif %}">
+        <div class="qc-header">
+          <h5 class="qc-number">Задача {{ forloop.counter }}</h5>
+          <span class="qc-status {% if t.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">
+            {% if t.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
+          </span>
+        </div>
+
+        <div class="qc-body">
+          <p class="qc-question">{{ t.text }}</p>
+
+          <p class="qc-field"><span>Ваш ответ:</span> {{ t.student_answer }}</p>
+          <p class="qc-field"><span>Правильный ответ:</span> {{ t.correct_answer }}</p>
+
+          <details class="mt-2">
+            <summary>Показать решение</summary>
+            <div class="mt-2 solution-html ps-3">{{ t.solution|safe }}</div>
+          </details>
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+
+  <a href="/" class="btn btn-outline-secondary mt-3">На главную</a>
+
+</div>
+{% endblock %}

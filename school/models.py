@@ -165,6 +165,7 @@ class TestResult(models.Model):
     score = models.IntegerField()
     grade = models.IntegerField()
     completed_at = models.DateTimeField(auto_now_add=True)
+    is_homework_generating = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Результат теста"

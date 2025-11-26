@@ -26,229 +26,307 @@
 
 
       .custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 8px;
-    overflow: hidden;
-    font-size: 16px;
-}
+          width: 100%;
+          border-collapse: collapse;
+          border-radius: 8px;
+          overflow: hidden;
+          font-size: 16px;
+      }
 
-/* Заголовок */
-.custom-table thead tr {
-    background: #f2f4f7;
-}
-.custom-table thead th {
-    padding: 12px;
-    font-weight: 600;
-    border-bottom: 1px solid #e1e5eb;
-}
+      /* Заголовок */
+      .custom-table thead tr {
+          background: #f2f4f7;
+      }
 
-/* Полосатость */
-.custom-table tbody tr:nth-child(odd) {
-    background: #fafafa;
-}
+      .custom-table thead th {
+          padding: 12px;
+          font-weight: 600;
+          border-bottom: 1px solid #e1e5eb;
+      }
 
-/* Ячейки */
-.custom-table td {
-    padding: 12px;
-    border-bottom: 1px solid #e3e3e3;
-}
+      /* Полосатость */
+      .custom-table tbody tr:nth-child(odd) {
+          background: #fafafa;
+      }
 
-/* ===== СТАТУСЫ ===== */
-.custom-row-correct {
-    background: #e5f6ea !important;
-    color: #207c3d !important;
-}
-.custom-row-wrong {
-    background: #fdeaea !important;
-    color: #a52b2b !important;
-}
+      /* Ячейки */
+      .custom-table td {
+          padding: 12px;
+          border-bottom: 1px solid #e3e3e3;
+      }
 
-/* ====== ТЕМНАЯ ТЕМА ====== */
-[data-bs-theme="dark"] .custom-table {
-    color: #dcdcdc;
-}
+      /* ===== СТАТУСЫ ===== */
+      .custom-row-correct {
+          background: #e5f6ea !important;
+          color: #207c3d !important;
+      }
 
-[data-bs-theme="dark"] .custom-table thead tr {
-    background: #2a2a2a;
-    border-bottom: 2px solid #3a3a3a;
-}
-[data-bs-theme="dark"] .custom-table tbody tr:nth-child(odd) {
-    background: #1c1c1c;
-}
+      .custom-row-wrong {
+          background: #fdeaea !important;
+          color: #a52b2b !important;
+      }
 
-[data-bs-theme="dark"] .custom-table td {
-    border-color: #333;
-}
+      /* ====== ТЕМНАЯ ТЕМА ====== */
+      [data-bs-theme="dark"] .custom-table {
+          color: #dcdcdc;
+      }
 
-/* success / wrong */
-[data-bs-theme="dark"] .custom-row-correct {
-    background: #1f3d1f !important;
-    color: #b9e2b9 !important;
-}
+      [data-bs-theme="dark"] .custom-table thead tr {
+          background: #2a2a2a;
+          border-bottom: 2px solid #3a3a3a;
+      }
 
-[data-bs-theme="dark"] .custom-row-wrong {
-    background: #3d1f1f !important;
-    color: #e2b9b9 !important;
-}
+      [data-bs-theme="dark"] .custom-table tbody tr:nth-child(odd) {
+          background: #1c1c1c;
+      }
 
-.question-cards-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+      [data-bs-theme="dark"] .custom-table td {
+          border-color: #333;
+      }
 
-/* Карточка */
-.question-card {
-    border-radius: 12px;
-    padding: 18px 22px;
-    transition: 0.2s;
-    border-left: 6px solid transparent;
-}
+      /* success / wrong */
+      [data-bs-theme="dark"] .custom-row-correct {
+          background: #1f3d1f !important;
+          color: #b9e2b9 !important;
+      }
 
-/* Успех / ошибка */
-.qc-correct {
-    border-color: #2ecc71;
-    background: rgba(46, 204, 113, 0.08);
-}
+      [data-bs-theme="dark"] .custom-row-wrong {
+          background: #3d1f1f !important;
+          color: #e2b9b9 !important;
+      }
 
-.qc-wrong {
-    border-color: #e74c3c;
-    background: rgba(231, 76, 60, 0.08);
-}
+      .question-cards-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+      }
 
-/* Тёмная тема */
-[data-bs-theme="dark"] .qc-correct {
-    background: rgba(46, 204, 113, 0.15);
-}
+      /* Карточка */
+      .question-card {
+          border-radius: 12px;
+          padding: 18px 22px;
+          transition: 0.2s;
+          border-left: 6px solid transparent;
+      }
 
-[data-bs-theme="dark"] .qc-wrong {
-    background: rgba(231, 76, 60, 0.15);
-}
+      /* Успех / ошибка */
+      .qc-correct {
+          border-color: #2ecc71;
+          background: rgba(46, 204, 113, 0.08);
+      }
 
-/* Ховер */
-.question-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}
+      .qc-wrong {
+          border-color: #e74c3c;
+          background: rgba(231, 76, 60, 0.08);
+      }
 
-/* Заголовок */
-.qc-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
+      /* Тёмная тема */
+      [data-bs-theme="dark"] .qc-correct {
+          background: rgba(46, 204, 113, 0.15);
+      }
 
-.qc-number {
-    margin: 0;
-    font-size: 1.1rem;
-}
+      [data-bs-theme="dark"] .qc-wrong {
+          background: rgba(231, 76, 60, 0.15);
+      }
 
-/* Статус */
-.qc-status {
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
+      .qc-standard {
+          background: rgba(200, 200, 200, 0.1);
+      }
 
-.qc-status-true {
-    background: rgba(0, 200, 0, 0.25);
-    color: #2ecc71;
-}
+      [data-bs-theme="dark"] .qc-standard {
+          background: rgba(55, 55, 55, 0.2);
+      }
 
-.qc-status-false {
-    background: rgba(255, 0, 0, 0.25);
-    color: #ff6b6b;
-}
+      /* Ховер */
+      .question-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Заголовок */
+      .qc-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+      }
+
+      .qc-number {
+          margin: 0;
+          font-size: 1.1rem;
+      }
+
+      /* Статус */
+      .qc-status {
+          padding: 4px 10px;
+          border-radius: 8px;
+          font-size: 0.9rem;
+          font-weight: 600;
+      }
+
+      .qc-status-true {
+          background: rgba(0, 200, 0, 0.25);
+          color: #2ecc71;
+      }
+
+      .qc-status-false {
+          background: rgba(255, 0, 0, 0.25);
+          color: #ff6b6b;
+      }
 
 
+      /* Текст внутри */
+      .qc-body {
+          padding-left: 4px;
+      }
 
-/* Текст внутри */
-.qc-body {
-    padding-left: 4px;
-}
+      .qc-question {
+          font-weight: 600;
+          margin-bottom: 10px;
+      }
 
-.qc-question {
-    font-weight: 600;
-    margin-bottom: 10px;
-}
+      .qc-field {
+          margin-bottom: 4px;
+      }
 
-.qc-field {
-    margin-bottom: 4px;
-}
+      .qc-field > span {
+          font-weight: 500;
+          opacity: 0.8;
+      }
 
-.qc-field > span {
-    font-weight: 500;
-    opacity: 0.8;
-}
+      .qc-correct {
+          background: #102f10;
+          border-left: 5px solid #29d629;
+      }
 
-.qc-correct {
-  background: #102f10;
-  border-left: 5px solid #29d629;
-}
-.qc-wrong {
-  background: #3a1111;
-  border-left: 5px solid #d62929;
-}
-.qc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.qc-status-true {
-  background: #29d629;
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 5px;
-}
-.qc-status-false {
-  background: #d62929;
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 5px;
-}
-.qc-body {
-  margin-top: 10px;
-}
-.qc-number {
-  margin: 0;
-}
-.qc-question {
-  font-weight: 500;
-}
-.qc-field span {
-  opacity: .7;
-  margin-right: 4px;
-}
-.task-card {
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 18px;
-}
+      .qc-wrong {
+          background: #3a1111;
+          border-left: 5px solid #d62929;
+      }
 
-/* ===== Форматирование LaTeX-формул в решениях ===== */
-.math-block {
-    margin: 12px 0;
-    text-align: center;
-}
+      .qc-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
 
-/* Обертка для решения задачи */
-.solution-text p {
-    margin-bottom: 8px;
-}
+      .qc-status-true {
+          background: #29d629;
+          color: #fff;
+          padding: 2px 8px;
+          border-radius: 5px;
+      }
 
-/* Чуть больше воздуха для многострочных формул */
-.solution-text mjx-container {
-    margin: 10px 0;
-}
+      .qc-status-false {
+          background: #d62929;
+          color: #fff;
+          padding: 2px 8px;
+          border-radius: 5px;
+      }
 
-/* Чтобы шаги выглядели ровнее */
-.solution-step {
-    font-weight: 500;
-    margin-top: 6px;
-}
+      .qc-body {
+          margin-top: 10px;
+      }
+
+      .qc-number {
+          margin: 0;
+      }
+
+      .qc-question {
+          font-weight: 500;
+      }
+
+      .qc-field span {
+          opacity: .7;
+          margin-right: 4px;
+      }
+
+      .task-card {
+          padding: 15px;
+          border-radius: 10px;
+          margin-bottom: 18px;
+      }
+
+      /* ===== Форматирование LaTeX-формул в решениях ===== */
+      .math-block {
+          margin: 12px 0;
+          text-align: center;
+      }
+
+      /* Обертка для решения задачи */
+      .solution-text p {
+          margin-bottom: 8px;
+      }
+
+      /* Чуть больше воздуха для многострочных формул */
+      .solution-text mjx-container {
+          margin: 10px 0;
+      }
+
+      /* Чтобы шаги выглядели ровнее */
+      .solution-step {
+          font-weight: 500;
+          margin-top: 6px;
+      }
+
+      .task-neutral {
+          background: rgba(100, 100, 100, 0.05);
+          border-left: 5px solid #8c8c8c;
+          transition: 0.3s ease;
+      }
+
+      /* --- Корректные / неверные результаты --- */
+      .task-correct {
+          background: #102f10;
+          border-left: 5px solid #29d629;
+          animation: fadeIn 0.4s ease;
+      }
+
+      .task-wrong {
+          background: #3a1111;
+          border-left: 5px solid #d62929;
+          animation: fadeIn 0.4s ease;
+      }
+
+      @keyframes fadeIn {
+          from {
+              opacity: 0;
+              transform: translateY(5px);
+          }
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
+
+      /* --- Прогресс-бар выполнения --- */
+      .hw-progress {
+          height: 12px;
+          border-radius: 8px;
+          overflow: hidden;
+          background: #ddd;
+          margin-bottom: 12px;
+      }
+
+      .hw-progress-fill {
+          height: 100%;
+          transition: width 0.4s ease;
+          background: #4a8df0;
+      }
+
+      /* Тёмная тема */
+      [data-bs-theme="dark"] .task-neutral {
+          background: #222;
+          border-color: #555;
+      }
+
+      [data-bs-theme="dark"] .hw-progress {
+          background: #444;
+      }
+
+      [data-bs-theme="dark"] .hw-progress-fill {
+          background: #4a8df0;
+      }
 
   </style>
 
@@ -327,13 +405,83 @@
 </script>
 
 <script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { fontCache: 'global' }
-};
+    window.MathJax = {
+        tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},
+        svg: {fontCache: 'global'}
+    };
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<!-- Глобальная overlay-плашка -->
+<div id="hwOverlay" class="hw-overlay d-none">
+  <div class="hw-overlay-box">
+    <div class="spinner-border text-light mb-3" role="status"></div>
+    <div class="hw-overlay-text">Генерируем домашнее задание…</div>
+  </div>
+</div>
+
+<style>
+    .hw-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(3px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: 0.3s ease;
+    }
+
+    .hw-overlay-box {
+        text-align: center;
+        color: white;
+        font-size: 1.2rem;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const overlay = document.getElementById("hwOverlay");
+
+        document.querySelectorAll(".hw-generate-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+
+                // Мгновенная блокировка UI
+                document.querySelectorAll(".hw-generate-btn").forEach(b => {
+                    b.classList.remove("btn-warning");
+                    b.classList.add("btn-secondary");
+                    b.innerHTML = "⏳ Генерация…";
+                    b.setAttribute("disabled", "disabled");
+                });
+
+                // Показ overlay
+                overlay.classList.remove("d-none");
+
+                // Разрешаем переход (чтобы Django обработал запрос)
+                return true;
+            });
+        });
+
+    });
+</script>
 
 
 </body>
