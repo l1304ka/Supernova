@@ -91,11 +91,48 @@ def index(request):
 
         results = results.order_by("-completed_at")[:5]
 
+        student = user.student
+
+        all_homeworks = Homework.objects.filter(student=student).prefetch_related("tasks")
+
+        homework_in_progress = []  # некоторые решены, но не все
+        homework_done = []  # полностью выполненные (is_checked = True)
+
+        hw_waiting = []
+        for r in results:
+            if not hasattr(r, "homework") or r.homework is None:
+                hw_waiting.append(r)
+
+        for hw in all_homeworks:
+            tasks = list(hw.tasks.all())
+            total = len(tasks)
+            solved = len([t for t in tasks if t.is_correct is not False])
+            percent = int((solved / total) * 100) if total else 0
+
+            item = {
+                "hw": hw,
+                "total": total,
+                "solved": solved,
+                "percent": percent,
+            }
+
+            print(solved, total, hw.is_checked)
+
+            if hw.is_checked:
+                homework_done.append(item)
+            else:
+                item["solved"] = len([t for t in tasks if t.is_correct is not None])
+                homework_in_progress.append(item)
+
         return render(request, "index.html", {
             "results": results,
             "unfinished_tests": unfinished_tests,
             "available_tests": available_tests,
             "last_result": last_result,
+
+            "homework_list": homework_in_progress,  # 🟡 В процессе
+            "homework_done": homework_done,  # 🟢 Выполненные
+            "hw_waiting": hw_waiting,
         })
 
     # ─────────────────────────────────────────────

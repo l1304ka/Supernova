@@ -28,6 +28,65 @@
       </div>
     </div>
 
+    <h3 class="mt-5 mb-3">📝 Домашние задания</h3>
+
+    <!-- 🔥 1. ДЗ, которые нужно выполнить -->
+    <h5 class="mt-3 mb-2">📌 Нужно выполнить</h5>
+
+    {% if hw_waiting %}
+      <div class="list-group mb-4">
+        {% for r in hw_waiting %}
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <b>{{ r.assigned_topic.title }}</b><br>
+              <small>{{ r.test.lesson.subject.name }} — {{ r.completed_at|date:"d.m.Y H:i" }}</small>
+            </div>
+
+            <a href="{% url 'generate_homework' r.id %}" class="btn btn-warning btn-sm">
+              Сгенерировать ДЗ
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">Нет домашних заданий, которые требуют генерации.</p>
+    {% endif %}
+
+
+    <h5 class="mt-4 mb-2">🔄 В процессе</h5>
+
+
+    {% if homework_list %}
+      <div class="list-group mb-4">
+
+        {% for item in homework_list %}
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+
+            <div>
+              <b>{{ item.hw.topic.title }}</b><br>
+              <small class="text-muted">
+                {{ item.hw.created_at|date:"d.m.Y H:i" }}
+              </small><br>
+
+{#              <small class="text-muted">#}
+{#                Выполнено задач: {{ item.solved }} / {{ item.total }}#}
+{#              </small>#}
+            </div>
+
+            <a href="{% url 'homework_detail' item.hw.id %}"
+               class="btn btn-warning btn-sm">
+              Продолжить →
+            </a>
+
+          </div>
+        {% endfor %}
+
+      </div>
+    {% else %}
+      <p class="text-muted">Домашних заданий пока нет.</p>
+    {% endif %}
+
+    <hr>
     <!-- Доступные тесты -->
     <h3 class="mt-4 mb-3">📘 Доступные тесты</h3>
 
@@ -62,6 +121,7 @@
       <p class="text-muted">Нет новых тестов.</p>
     {% endif %}
 
+    <hr>
 
     <!-- Последние результаты -->
     <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
@@ -108,6 +168,45 @@
     {% else %}
       <p class="text-muted">Ещё нет результатов.</p>
     {% endif %}
+
+    <h3 class="mt-5 mb-3">📘 Выполненные домашние задания</h3>
+
+    {% if homework_done %}
+      <table class="custom-table mb-4">
+        <thead>
+        <tr>
+          <th>Дата</th>
+          <th>Тема</th>
+          <th>Задач</th>
+          <th>Правильных</th>
+          <th>Процент</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for item in homework_done %}
+          <tr>
+            <td>{{ item.hw.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ item.hw.topic.title }}</td>
+            <td>{{ item.total }}</td>
+            <td>{{ item.solved }}</td>
+            <td>{{ item.percent }}%</td>
+
+            <td>
+              <a href="{% url 'homework_detail' item.hw.id %}"
+                 class="btn btn-outline-secondary btn-sm">
+                Открыть →
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-muted">Пока нет выполненных ДЗ.</p>
+    {% endif %}
+
 
   </div>
 {% endblock %}

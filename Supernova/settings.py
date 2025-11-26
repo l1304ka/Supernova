@@ -23,7 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-(&%go_2*_h=kov36a4rogc21^5v3p@_1-pi)6_@2&be3(5%h^^'
-GENAI_API_KEY = os.getenv("GENAI_API_KEY")
+
+env_path = os.path.join(BASE_DIR, ".env")
+load_dotenv(env_path)
+GENAI_API_KEY = "AIzaSyCrG07W4bCGX7LTRhMIJ5_kDrfDI8ciGFw"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

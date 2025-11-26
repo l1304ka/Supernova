@@ -163,6 +163,8 @@
     color: #ff6b6b;
 }
 
+
+
 /* Текст внутри */
 .qc-body {
     padding-left: 4px;
@@ -182,6 +184,71 @@
     opacity: 0.8;
 }
 
+.qc-correct {
+  background: #102f10;
+  border-left: 5px solid #29d629;
+}
+.qc-wrong {
+  background: #3a1111;
+  border-left: 5px solid #d62929;
+}
+.qc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.qc-status-true {
+  background: #29d629;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+.qc-status-false {
+  background: #d62929;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+.qc-body {
+  margin-top: 10px;
+}
+.qc-number {
+  margin: 0;
+}
+.qc-question {
+  font-weight: 500;
+}
+.qc-field span {
+  opacity: .7;
+  margin-right: 4px;
+}
+.task-card {
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+}
+
+/* ===== Форматирование LaTeX-формул в решениях ===== */
+.math-block {
+    margin: 12px 0;
+    text-align: center;
+}
+
+/* Обертка для решения задачи */
+.solution-text p {
+    margin-bottom: 8px;
+}
+
+/* Чуть больше воздуха для многострочных формул */
+.solution-text mjx-container {
+    margin: 10px 0;
+}
+
+/* Чтобы шаги выглядели ровнее */
+.solution-step {
+    font-weight: 500;
+    margin-top: 6px;
+}
 
   </style>
 
@@ -258,6 +325,16 @@
         localStorage.setItem("theme", next);
     });
 </script>
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
 
 </body>
 </html>
