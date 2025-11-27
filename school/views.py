@@ -1,7 +1,10 @@
+import json
 import random
 from urllib import request
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
@@ -22,27 +25,128 @@ def index(request):
     if hasattr(user, 'teacher'):
         teacher = user.teacher
         classes = teacher.classes.all()
-        subjects = teacher.subjects.all()
         students = Student.objects.filter(classes__in=classes).distinct()
 
+        # --- Статистика тестов ---
         stats = []
         for s in students:
-            results = TestResult.objects.filter(student=s)
+            results = TestResult.objects.filter(student=s).order_by("-completed_at")
             avg_grade = round(sum(r.grade for r in results) / len(results), 2) if results else None
 
-            # first 5 results
-            # results = results.order_by("-completed_at")[:5]
             stats.append({
                 "student": s,
                 "results": results,
                 "avg_grade": avg_grade,
             })
 
+        # --- Статистика ДЗ ---
+        homeworks = Homework.objects.filter(student__in=students).prefetch_related("tasks")
+
+        hw_total = homeworks.count()
+        hw_checked = homeworks.filter(is_checked=True).count()
+        hw_in_progress = homeworks.filter(is_checked=False).count()
+
+        hw_percent_avg = HomeworkTask.objects.filter(
+            homework__student__in=students,
+            is_correct__isnull=False
+        ).aggregate(avg=Avg("is_correct"))["avg"] or 0
+
+        hw_percent_avg = round(hw_percent_avg * 100)
+
+        # по ученикам
+        hw_per_student = []
+        for s in students:
+            s_homeworks = Homework.objects.filter(student=s).prefetch_related("tasks")
+
+            total = s_homeworks.count()
+            done = s_homeworks.filter(is_checked=True).count()
+
+            tasks_total = HomeworkTask.objects.filter(homework__student=s, is_correct__isnull=False)
+            percent = 0
+            if tasks_total.exists():
+                percent = round(
+                    tasks_total.filter(is_correct=True).count() * 100 / tasks_total.count()
+                )
+
+            hw_per_student.append({
+                "student": s,
+                "total": total,
+                "done": done,
+                "percent": percent,
+            })
+
+        # ─────────────────────────────────────
+        # ЕДИНЫЙ СПИСОК СОБЫТИЙ (до 300 последних)
+        # ─────────────────────────────────────
+        event_list = []
+
+        # TEST RESULTS
+        test_results = TestResult.objects.filter(student__in=students).order_by("-completed_at")[:150]
+        for r in test_results:
+            event_list.append({
+                "type": "test",
+                "student": f"{r.student.name} {r.student.surname}",
+                "title": r.assigned_topic.title,
+                "grade": r.grade,
+                "date": r.completed_at,
+            })
+
+        # HOMEWORK CREATED
+        hw_created = Homework.objects.filter(student__in=students).order_by("-created_at")[:100]
+        for hw in hw_created:
+            event_list.append({
+                "type": "hw_created",
+                "student": f"{hw.student.name} {hw.student.surname}",
+                "title": hw.topic.title,
+                "date": hw.created_at,
+            })
+
+        # HOMEWORK CHECKED
+        hw_checked_list = Homework.objects.filter(student__in=students, is_checked=True).order_by("-created_at")[:100]
+        for hw in hw_checked_list:
+            tasks = hw.tasks.all()
+            correct = tasks.filter(is_correct=True).count()
+            total = tasks.count()
+            percent = int(correct * 100 / total) if total else 0
+
+            event_list.append({
+                "type": "hw_checked",
+                "student": f"{hw.student.name} {hw.student.surname}",
+                "title": hw.topic.title,
+                "score": f"{correct}/{total}",
+                "percent": percent,
+                "date": hw.created_at,
+            })
+
+        # Сортировка по дате и берём только 100
+        event_list = sorted(event_list, key=lambda x: x["date"], reverse=True)[:100]
+
+        # JSON для JS (пагинация, фильтрация)
+        recent_events_json = json.dumps([
+            {
+                "type": e["type"],
+                "student": e["student"],
+                "title": e["title"],
+                "grade": e.get("grade"),
+                "score": e.get("score"),
+                "percent": e.get("percent"),
+                "date": e["date"].isoformat(),
+            }
+            for e in event_list
+        ], cls=DjangoJSONEncoder)
+
         return render(request, "teacher_dashboard.html", {
             "teacher": teacher,
             "classes": classes,
-            "subjects": subjects,
             "stats": stats,
+
+            "hw_total": hw_total,
+            "hw_checked": hw_checked,
+            "hw_in_progress": hw_in_progress,
+            "hw_percent_avg": hw_percent_avg,
+            "hw_per_student": hw_per_student,
+
+            "recent_events_json": recent_events_json,
         })
 
     # ─────────────────────────────────────────────

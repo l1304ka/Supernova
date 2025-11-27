@@ -182,37 +182,42 @@
     <h3 class="mt-5 mb-3">📘 Выполненные домашние задания</h3>
 
     {% if homework_done %}
-      <table class="custom-table mb-4">
-        <thead>
-        <tr>
-          <th>Дата</th>
-          <th>Тема</th>
-          <th>Задач</th>
-          <th>Правильных</th>
-          <th>Процент</th>
-          <th></th>
-        </tr>
-        </thead>
+      {% for item in homework_done %}
+        <div class="hw-card mb-3">
 
-        <tbody>
-        {% for item in homework_done %}
-          <tr>
-            <td>{{ item.hw.created_at|date:"d.m.Y H:i" }}</td>
-            <td>{{ item.hw.topic.title }}</td>
-            <td>{{ item.total }}</td>
-            <td>{{ item.solved }}</td>
-            <td>{{ item.percent }}%</td>
+          <div class="d-flex justify-content-between">
+            <div class="hw-title">
+              Тема: {{ item.hw.topic.title }}
+            </div>
 
-            <td>
-              <a href="{% url 'homework_detail' item.hw.id %}"
-                 class="btn btn-outline-secondary btn-sm">
-                Открыть →
-              </a>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+            <a href="{% url 'homework_detail' item.hw.id %}"
+               class="btn btn-outline-primary btn-sm">
+              Открыть →
+            </a>
+          </div>
+
+          <div class="mt-1 text-muted">
+            Задач: {{ item.total }},
+            верно: {{ item.solved }}
+          </div>
+
+          <div class="hw-progress">
+            <div class="hw-bar
+  {% if item.percent < 40 %}hw-bar-red
+  {% elif item.percent < 70 %}hw-bar-yellow
+  {% else %}hw-bar-green
+  {% endif %}"
+                 style="width: {{ item.percent }}%;">
+            </div>
+
+          </div>
+
+          <div class="hw-footer">
+            {{ item.percent }}% · Выполнено: {{ item.hw.created_at|date:"d.m.Y H:i" }}
+          </div>
+
+        </div>
+      {% endfor %}
     {% else %}
       <p class="text-muted">Пока нет выполненных ДЗ.</p>
     {% endif %}

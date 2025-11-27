@@ -3,75 +3,226 @@
 {% block title %}Панель учителя{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+  <div class="container mt-4">
 
     <h2 class="mb-4">Здравствуйте, {{ teacher.name }} {{ teacher.surname }}!</h2>
 
     <!-- === БЛОК КЛАССОВ === -->
     <h3 class="mt-4">Ваши классы</h3>
     <div class="row">
-        {% for c in classes %}
+      {% for c in classes %}
         <div class="col-md-4">
-            <div class="card shadow-sm mb-3 p-3">
-                <h4>{{ c.name }}</h4>
-                <p class="mb-1">Учеников: {{ c.students.count }}</p>
-                <p>Всего тестов: {{ c.assigned_topics.count }}</p>
+          <div class="card shadow-sm mb-3 p-3">
+            <h4>{{ c.name }}</h4>
+            <p class="mb-1">Учеников: {{ c.students.count }}</p>
+            <p>Всего тестов: {{ c.assigned_topics.count }}</p>
 
-                <div class="d-flex gap-2">
-                    <a href="{% url 'class_journal' c.id %}" class="btn btn-primary btn-sm flex-grow-1">Журнал класса</a>
-                    <a href="{% url 'assign_homework_class' c.id %}" class="btn btn-outline-secondary btn-sm flex-grow-1">Выдать ДЗ</a>
-                </div>
+            <div class="d-flex gap-2">
+              <a href="{% url 'class_journal' c.id %}" class="btn btn-primary btn-sm flex-grow-1">Журнал класса</a>
+              <a href="{% url 'assign_homework_class' c.id %}" class="btn btn-outline-secondary btn-sm flex-grow-1">Выдать
+                ДЗ</a>
             </div>
+          </div>
         </div>
-        {% endfor %}
+      {% endfor %}
     </div>
 
     <!-- === БЛОК АКТИВНОСТИ === -->
-    <h3 class="mt-4">Последние события</h3>
-    {% if recent_events %}
-        <ul class="list-group shadow-sm">
-        {% for e in recent_events %}
-            <li class="list-group-item">{{ e }}</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p class="text-muted">Нет недавних событий</p>
-    {% endif %}
+    <h3 class="mt-4 mb-3">🕒 Последние события</h3>
 
-    <!-- === БЛОК СТАТИСТИКИ === -->
-    <h3 class="mt-5">Статистика по ученикам</h3>
+    <!-- Фильтры -->
+    <div class="event-tabs d-flex gap-2 mb-3">
+      <div class="event-tab active" data-type="all">
+        <span>Все</span>
+      </div>
 
-    <table class="custom-table table-striped shadow-sm">
-        <thead>
-            <tr>
-                <th style="width: 50px;">Класс</th>
-                <th>Ученик</th>
-                <th>Средний балл</th>
-                <th>Последний тест</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for s in stats %}
-            <tr>
-                <td class="text-center">{{ s.student|class_list }}</td>
-                <td>{{ s.student.surname }} {{ s.student.name }}</td>
-                <td>{% if s.avg_grade %}{{ s.avg_grade }}{% else %}—{% endif %}</td>
-                <td>
-                    {% if s.results %}
-                        {{ s.results.last.test.title }} — {{ s.results.last.grade }}
-                    {% else %}
-                        —
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'teacher_student_detail' s.student.id %}"
-                       class="btn btn-sm btn-outline-primary">Подробнее</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+      <div class="event-tab tab-test" data-type="test">
+        📝 Тесты
+      </div>
+
+      <div class="event-tab tab-hw-created" data-type="hw_created">
+        🧠 Выданное ДЗ
+      </div>
+
+      <div class="event-tab tab-hw-checked" data-type="hw_checked">
+        ✅ Выполненное ДЗ
+      </div>
+    </div>
+
+
+    <table class="custom-table event-table mb-4">
+      <thead>
+      <tr>
+        <th>Дата</th>
+        <th>Ученик</th>
+        <th>Тип</th>
+        <th>Детали</th>
+        <th>Результат</th>
+      </tr>
+      </thead>
+
+      <tbody id="events-body">
+      </tbody>
     </table>
 
-</div>
+    <div class="text-center mb-4">
+      <button id="load-more" class="btn btn-secondary btn-sm">Показать ещё</button>
+    </div>
+
+    <script>
+        const allEvents = {{ recent_events_json|safe }};
+    </script>
+
+    <script>
+        let filtered = [...allEvents];
+        let shown = 0;
+        const PAGE = 10;
+
+        function render(reset = false) {
+            const tbody = document.getElementById("events-body");
+            if (reset) {
+                tbody.innerHTML = "";
+                shown = 0;
+            }
+
+            const chunk = filtered.slice(shown, shown + PAGE);
+            shown += chunk.length;
+
+            chunk.forEach(e => {
+                tbody.innerHTML += `
+        <tr data-type="${e.type}">
+            <td>${new Date(e.date).toLocaleString("ru-RU")}</td>
+            <td>${e.student}</td>
+            <td>
+                ${e.type === "test" ? "📝 Тест" :
+                    e.type === "hw_created" ? "📘 Выдано ДЗ" :
+                        "✔ Проверено ДЗ"}
+            </td>
+            <td>
+                ${e.type === "test" ? `Прошёл тест «${e.title}»` :
+                    e.type === "hw_created" ? `Получил ДЗ «${e.title}»` :
+                        `Проверено ДЗ «${e.title}»`}
+            </td>
+           <td>
+    ${
+                    e.type === "test"
+                        ? `<span class="badge
+                    ${e.grade == 5 ? "bg-success" :
+                            e.grade == 4 ? "bg-primary" :
+                                e.grade == 3 ? "bg-warning text-dark" :
+                                    "bg-danger"}">
+                    ${e.grade}
+               </span>`
+                        : e.type === "hw_checked"
+                            ? `<span class="badge
+                    ${e.percent >= 80 ? "bg-success" :
+                                e.percent >= 60 ? "bg-primary" :
+                                    e.percent >= 30 ? "bg-warning text-dark" :
+                                        "bg-danger"}">
+                    ${e.score}
+               </span>`
+                            : "—"
+                }
+</td>
+
+        </tr>`;
+            });
+
+            document.getElementById("load-more").style.display =
+                shown < filtered.length ? "inline-block" : "none";
+        }
+
+        render(true);
+
+        // === ФИЛЬТРЫ ===
+        document.querySelectorAll(".event-tab").forEach(tab => {
+            tab.addEventListener("click", () => {
+
+                // переключение активного таба
+                document.querySelectorAll(".event-tab").forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+
+                const type = tab.dataset.type;
+
+                // фильтрация строк
+                document.querySelectorAll(".event-table tbody tr").forEach(row => {
+                    row.style.display =
+                        type === "all" || row.dataset.type === type
+                            ? ""
+                            : "none";
+                });
+            });
+        });
+
+
+        // === Показать ещё ===
+        document.getElementById("load-more").addEventListener("click", () => render());
+    </script>
+
+
+    <!-- === БЛОК СТАТИСТИКИ === -->
+    <h3 class="mt-5">Статистика по домашним заданиям</h3>
+
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card shadow-sm p-3">
+          <h5>Всего ДЗ</h5>
+          <p class="display-6">{{ hw_total }}</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm p-3">
+          <h5>Проверено</h5>
+          <p class="display-6">{{ hw_checked }}</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm p-3">
+          <h5>В процессе</h5>
+          <p class="display-6">{{ hw_in_progress }}</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm p-3">
+          <h5>Средний %</h5>
+          <p class="display-6">{{ hw_percent_avg }}%</p>
+        </div>
+      </div>
+    </div>
+
+    <h4 class="mt-4">По ученикам</h4>
+
+    <table class="custom-table mb-4">
+      <thead>
+      <tr>
+        <th>Ученик</th>
+        <th>Всего ДЗ</th>
+        <th>Проверено</th>
+        <th>Успеваемость</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for s in hw_per_student %}
+        <tr>
+          <td>{{ s.student.surname }} {{ s.student.name }}</td>
+          <td>{{ s.total }}</td>
+          <td>{{ s.done }}</td>
+          <td style="width: 250px;">
+            <div class="progress" style="height: 12px;">
+              <div class="progress-bar bg-success"
+                   role="progressbar"
+                   style="width: {{ s.percent }}%;"></div>
+            </div>
+            <small class="text-muted">{{ s.percent }}%</small>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
 {% endblock %}
+
