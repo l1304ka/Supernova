@@ -30,45 +30,49 @@
     <!-- === БЛОК АКТИВНОСТИ === -->
     <h3 class="mt-4 mb-3">🕒 Последние события</h3>
 
-    <!-- Фильтры -->
-    <div class="event-tabs d-flex gap-2 mb-3">
-      <div class="event-tab active" data-type="all">
-        <span>Все</span>
+    {% if not recent_events %}
+      <p class="text-muted">Событий пока нет.</p>
+    {% else %}
+      <!-- Фильтры -->
+      <div class="event-tabs d-flex gap-2 mb-3">
+        <div class="event-tab active" data-type="all">
+          <span>Все</span>
+        </div>
+
+        <div class="event-tab tab-test" data-type="test">
+          📝 Тесты
+        </div>
+
+        <div class="event-tab tab-hw-created" data-type="hw_created">
+          🧠 Выданное ДЗ
+        </div>
+
+        <div class="event-tab tab-hw-checked" data-type="hw_checked">
+          ✅ Выполненное ДЗ
+        </div>
       </div>
 
-      <div class="event-tab tab-test" data-type="test">
-        📝 Тесты
+
+      <table class="custom-table event-table mb-4">
+        <thead>
+        <tr>
+          <th>Дата</th>
+          <th>Ученик</th>
+          <th>Тип</th>
+          <th>Детали</th>
+          <th>Результат</th>
+        </tr>
+        </thead>
+
+        <tbody id="events-body">
+        </tbody>
+      </table>
+
+      <div class="text-center mb-4">
+        <button id="load-more" class="btn btn-secondary btn-sm">Показать ещё</button>
       </div>
 
-      <div class="event-tab tab-hw-created" data-type="hw_created">
-        🧠 Выданное ДЗ
-      </div>
-
-      <div class="event-tab tab-hw-checked" data-type="hw_checked">
-        ✅ Выполненное ДЗ
-      </div>
-    </div>
-
-
-    <table class="custom-table event-table mb-4">
-      <thead>
-      <tr>
-        <th>Дата</th>
-        <th>Ученик</th>
-        <th>Тип</th>
-        <th>Детали</th>
-        <th>Результат</th>
-      </tr>
-      </thead>
-
-      <tbody id="events-body">
-      </tbody>
-    </table>
-
-    <div class="text-center mb-4">
-      <button id="load-more" class="btn btn-secondary btn-sm">Показать ещё</button>
-    </div>
-
+    {% endif %}
     <script>
         const allEvents = {{ recent_events_json|safe }};
     </script>
@@ -160,40 +164,51 @@
     </script>
 
 
-    <!-- === БЛОК СТАТИСТИКИ === -->
-    <h3 class="mt-5">Статистика по домашним заданиям</h3>
+    <h3 class="mt-5 mb-3">📊 Общая статистика</h3>
 
-    <div class="row mb-4">
-      <div class="col-md-3">
-        <div class="card shadow-sm p-3">
-          <h5>Всего ДЗ</h5>
-          <p class="display-6">{{ hw_total }}</p>
+    {% if not test_completion_percent %}
+      <p class="text-muted">Статистика по домашним заданиям пока недоступна.</p>
+    {% else %}
+      <div class="row mb-4">
+
+        <!-- % решённых тестов -->
+        <div class="col-md-3">
+          <div class="card shadow-sm p-3">
+            <h5>Решено тестов</h5>
+            <p class="display-6">{{ test_completion_percent }}%</p>
+          </div>
         </div>
+
+        <!-- средняя оценка -->
+        <div class="col-md-3">
+          <div class="card shadow-sm p-3">
+            <h5>Средняя оценка</h5>
+            <p class="display-6">{{ avg_test_grade }}</p>
+          </div>
+        </div>
+
+        <!-- средний % тестов -->
+        <div class="col-md-3">
+          <div class="card shadow-sm p-3">
+            <h5>Средний % тестов</h5>
+            <p class="display-6">{{ avg_test_score }}%</p>
+          </div>
+        </div>
+
+        <!-- средний % ДЗ -->
+        <div class="col-md-3">
+          <div class="card shadow-sm p-3">
+            <h5>Успеваемость по ДЗ</h5>
+            <p class="display-6">{{ hw_percent_avg }}%</p>
+          </div>
+        </div>
+
       </div>
 
-      <div class="col-md-3">
-        <div class="card shadow-sm p-3">
-          <h5>Проверено</h5>
-          <p class="display-6">{{ hw_checked }}</p>
-        </div>
-      </div>
+    {% endif %}
 
-      <div class="col-md-3">
-        <div class="card shadow-sm p-3">
-          <h5>В процессе</h5>
-          <p class="display-6">{{ hw_in_progress }}</p>
-        </div>
-      </div>
 
-      <div class="col-md-3">
-        <div class="card shadow-sm p-3">
-          <h5>Средний %</h5>
-          <p class="display-6">{{ hw_percent_avg }}%</p>
-        </div>
-      </div>
-    </div>
-
-    <h4 class="mt-4">По ученикам</h4>
+    <h4 class="mt-4">Статистика по ученикам</h4>
 
     <table class="custom-table mb-4">
       <thead>

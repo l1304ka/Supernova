@@ -135,6 +135,35 @@ def index(request):
             for e in event_list
         ], cls=DjangoJSONEncoder)
 
+        # ===== ТЕСТЫ: ГЛОБАЛЬНАЯ СТАТИСТИКА =====
+        assigned = AssignedTopic.objects.filter(school_class__in=classes)
+        total_tests_assigned = assigned.count()
+
+        done_tests = TestResult.objects.filter(student__in=students).count()
+
+        if total_tests_assigned > 0:
+            test_completion_percent = round(done_tests * 100 / total_tests_assigned)
+        else:
+            test_completion_percent = 0
+
+        # средняя оценка
+        avg_test_grade = TestResult.objects.filter(student__in=students).aggregate(
+            g=Avg("grade")
+        )["g"]
+        if avg_test_grade:
+            avg_test_grade = round(avg_test_grade, 2)
+        else:
+            avg_test_grade = 0
+
+        # средний процент score по тестам
+        avg_test_score = TestResult.objects.filter(student__in=students).aggregate(
+            s=Avg("score")
+        )["s"]
+        if avg_test_score:
+            avg_test_score = round(avg_test_score)
+        else:
+            avg_test_score = 0
+
         return render(request, "teacher_dashboard.html", {
             "teacher": teacher,
             "classes": classes,
@@ -145,6 +174,10 @@ def index(request):
             "hw_in_progress": hw_in_progress,
             "hw_percent_avg": hw_percent_avg,
             "hw_per_student": hw_per_student,
+
+            "test_completion_percent": test_completion_percent,
+            "avg_test_grade": avg_test_grade,
+            "avg_test_score": avg_test_score,
 
             "recent_events_json": recent_events_json,
         })
@@ -579,7 +612,44 @@ def decrease_difficulty(d):
 def student_results(request):
     student = request.user.student
     results = TestResult.objects.filter(student=student).order_by("-completed_at")
-    return render(request, "student_results.html", {"results": results})
+
+    homeworks = Homework.objects.filter(student=student)
+
+    hw_total = homeworks.count()
+    hw_checked = homeworks.filter(is_checked=True).count()
+    hw_in_progress = homeworks.filter(is_checked=False).count()
+
+    # средний процент выполненных задач
+    tasks = HomeworkTask.objects.filter(homework__student=student, is_correct__isnull=False)
+    if tasks.exists():
+        hw_percent = round(tasks.filter(is_correct=True).count() * 100 / tasks.count())
+    else:
+        hw_percent = 0
+
+    homeworks = Homework.objects.filter(student=student).order_by("-created_at")
+
+    hw_list = []
+    for hw in homeworks:
+        tasks = hw.tasks.all()
+        total = tasks.count()
+        solved = tasks.filter(is_correct=True).count()
+        percent = round(solved * 100 / total) if total else 0
+
+        hw_list.append({
+            "hw": hw,
+            "total": total,
+            "solved": solved,
+            "percent": percent,
+        })
+
+    return render(request, "student_results.html", {
+        "results": results,
+        "hw_total": hw_total,
+        "hw_checked": hw_checked,
+        "hw_in_progress": hw_in_progress,
+        "hw_percent": hw_percent,
+        "hw_list": hw_list,
+    })
 
 
 @login_required
@@ -733,9 +803,42 @@ def teacher_student_detail(request, id):
 
     results = TestResult.objects.filter(student=student).order_by("-completed_at")
 
+    homeworks = Homework.objects.filter(student=student)
+
+    hw_total = homeworks.count()
+    hw_checked = homeworks.filter(is_checked=True).count()
+    hw_in_progress = homeworks.filter(is_checked=False).count()
+
+    tasks = HomeworkTask.objects.filter(homework__student=student, is_correct__isnull=False)
+    if tasks.exists():
+        hw_percent = round(tasks.filter(is_correct=True).count() * 100 / tasks.count())
+    else:
+        hw_percent = 0
+
+    homeworks = Homework.objects.filter(student=student).order_by("-created_at")
+
+    hw_list = []
+    for hw in homeworks:
+        tasks = hw.tasks.all()
+        total = tasks.count()
+        solved = tasks.filter(is_correct=True).count()
+        percent = round(solved * 100 / total) if total else 0
+
+        hw_list.append({
+            "hw": hw,
+            "total": total,
+            "solved": solved,
+            "percent": percent,
+        })
+
     return render(request, "teacher_student_detail.html", {
         "student": student,
         "results": results,
+        "hw_total": hw_total,
+    "hw_checked": hw_checked,
+    "hw_in_progress": hw_in_progress,
+    "hw_percent": hw_percent,
+        "hw_list": hw_list,
     })
 
 

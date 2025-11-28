@@ -1,62 +1,107 @@
 ﻿{% extends "base.html" %}
-{% block title %}Все результаты{% endblock %}
+{% block title %}Ученик {{ student.surname }}{% endblock %}
 
 {% block content %}
-
 <div class="container mt-4">
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="m-0">📘 История ваших тестов</h2>
-    <a href="/" class="btn btn-outline-secondary btn-sm">← На главную</a>
-  </div>
+  <h2>{{ student.surname }} {{ student.name }} {{ student.patronymic }}</h2>
 
-  {% if results %}
-    <div class="table-responsive">
-      <table class="custom-table table-striped shadow-sm custom-table">
-        <thead>
+  <a href="javascript:history.back()" class="btn btn-secondary mb-3">← Назад</a>
+
+  <div class="row">
+
+    <!-- ==== ЛЕВАЯ КОЛОНКА — ТЕСТЫ ==== -->
+    <div class="col-md-6">
+
+      <h4 class="mb-3">Результаты тестов</h4>
+
+      {% if results %}
+        <table class="custom-table table-striped shadow-sm">
+          <thead>
           <tr>
-            <th>Дата</th>
-            <th>Предмет</th>
-            <th>Тема</th>
+            <th>Название теста</th>
             <th>Оценка</th>
             <th>Балл (%)</th>
-            <th></th>
+            <th>Дата</th>
           </tr>
-        </thead>
+          </thead>
+          <tbody>
+          {% for r in results %}
+            <tr>
+              <td>{{ r.test.title }}</td>
+              <td>
+                <span class="badge
+                  {% if r.grade == 5 %}bg-success
+                  {% elif r.grade == 4 %}bg-primary
+                  {% elif r.grade == 3 %}bg-warning
+                  {% else %}bg-danger{% endif %}
+                ">{{ r.grade }}</span>
+              </td>
+              <td>{{ r.score }}</td>
+              <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted">У ученика пока нет результатов тестов.</p>
+      {% endif %}
 
-        <tbody>
-        {% for r in results %}
-          <tr>
-            <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
-            <td>{{ r.test.lesson.subject.name }}</td>
-            <td>{{ r.assigned_topic.title }}</td>
-
-            <td>
-              <span class="badge
-                {% if r.grade == 5 %}bg-success
-                {% elif r.grade == 4 %}bg-primary
-                {% elif r.grade == 3 %}bg-warning
-                {% else %}bg-danger{% endif %}
-              ">{{ r.grade }}</span>
-            </td>
-
-            <td>{{ r.score }}</td>
-
-            <td>
-              <a href="{% url 'test_result_detail' r.id %}" class="btn btn-outline-secondary btn-sm">
-                Открыть
-              </a>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
     </div>
 
-  {% else %}
-    <p class="text-muted">Вы ещё не прошли ни одного теста.</p>
-  {% endif %}
+
+    <div class="col-md-6">
+
+        <h4 class="mb-3">Домашние задания</h4>
+
+        {% if hw_list %}
+          <table class="custom-table shadow-sm">
+            <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Тема</th>
+              <th>Решено</th>
+              <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for item in hw_list %}
+              <tr>
+
+                <td>{{ item.hw.created_at|date:"d.m.Y H:i" }}</td>
+
+                <td>{{ item.hw.topic.title }}</td>
+
+                <td>
+            <span class="badge
+                  {% if item.percent >= 80 %}bg-success
+                  {% elif item.percent >= 60 %}bg-primary
+                  {% elif item.percent >= 30 %}bg-warning text-black
+                  {% else %}bg-danger{% endif %}
+                  ">
+                {{ item.percent }}%
+            </span>
+                </td>
+
+                <td>
+                  <a href="{% url 'homework_detail' item.hw.id %}"
+                     class="btn btn-sm btn-outline-secondary">
+                    Открыть →
+                  </a>
+                </td>
+
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+        {% else %}
+          <p class="text-muted">Домашних заданий ещё нет.</p>
+        {% endif %}
+      </div>
+
+  </div>
 
 </div>
-
 {% endblock %}
