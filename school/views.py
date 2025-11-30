@@ -5,7 +5,8 @@ from urllib import request
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, FloatField
+from django.db.models.functions import Cast
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
@@ -281,6 +282,64 @@ def index(request):
                 item["solved"] = len([t for t in tasks if t.is_correct is not None])
                 homework_in_progress.append(item)
 
+        # === TESTS ===
+        tests_total = assigned_topics.count()
+        tests_done = results.count()
+
+        avg_score = round(results.aggregate(Avg("score"))["score__avg"] or 0)
+        avg_grade = round(results.aggregate(Avg("grade"))["grade__avg"] or 0, 1)
+
+        # === HOMEWORK ===
+        hw_total = all_homeworks.count()
+        hw_done = all_homeworks.filter(is_checked=True).count()
+
+        hw_avg_percent = HomeworkTask.objects.filter(
+            homework__student=student,
+            is_correct__isnull=False
+        ).aggregate(avg=Avg(Cast("is_correct", FloatField())))["avg"]
+
+        hw_avg_percent = int(hw_avg_percent * 100) if hw_avg_percent else 0
+
+        hw_overdue = all_homeworks.filter(
+            deadline__lt=timezone.now(),
+            is_checked=False
+        ).count()
+
+        # === PER SUBJECT STATS ===
+        subject_stats = []
+        subjects = student.classes.values_list("subjects__name", flat=True).distinct()
+
+        for name in subjects:
+            subj_results = TestResult.objects.filter(
+                student=student,
+                test__lesson__subject__name=name
+            )
+
+            if subj_results.exists():
+                p = int(subj_results.aggregate(avg=Avg("score"))["avg"])
+            else:
+                p = 0
+
+            subject_stats.append({
+                "name": name,
+                "percent": p,
+            })
+
+        # История тестов (баллы)
+        tests_history = list(
+            TestResult.objects.filter(student=student)
+            .order_by("completed_at")
+            .values_list("score", flat=True)
+        )
+
+        # История ДЗ (в процентах)
+        hw_history = []
+        for hw in Homework.objects.filter(student=student).order_by("created_at"):
+            correct = hw.tasks.filter(is_correct=True).count()
+            total = hw.tasks.count()
+            percent = int(correct * 100 / total) if total else 0
+            hw_history.append(percent)
+
         return render(request, "index.html", {
             "results": results,
             "unfinished_tests": unfinished_tests,
@@ -290,6 +349,21 @@ def index(request):
             "homework_list": homework_in_progress,  # 🟡 В процессе
             "homework_done": homework_done,  # 🟢 Выполненные
             "hw_waiting": hw_waiting,  # 🟠 Ждущие генерации
+
+            "tests_total": tests_total,
+            "tests_done": tests_done,
+            "avg_score": avg_score,
+            "avg_grade": avg_grade,
+
+            "hw_total": hw_total,
+            "hw_done": hw_done,
+            "hw_avg_percent": hw_avg_percent,
+            "hw_overdue": hw_overdue,
+
+            "subject_stats": subject_stats,
+            "tests_history": tests_history,
+            "hw_history": hw_history,
+
         })
 
 

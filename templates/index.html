@@ -7,26 +7,90 @@
     <h2 class="mb-4">Привет, {{ request.user.student.name }}!</h2>
 
     <!-- Блок прогресса -->
-    <div class="card mb-4 shadow-sm">
-      <div class="card-body">
-        <h4 class="card-title mb-3">Ваш прогресс</h4>
-        <p>Пройдено тестов: <b>{{ results|length }}</b></p>
+    <div class="row g-4 mt-4">
 
-        {% if results %}
-          {% if last_result %}
-            <p class="mb-0">Последняя оценка:
-              <span class="badge
-                          {% if last_result.grade == 5 %}bg-success
-                          {% elif last_result.grade == 4 %}bg-primary
-                          {% elif last_result.grade == 3 %}bg-warning
-                          {% else %}bg-danger{% endif %}
-                      ">{{ last_result.grade }}</span>
-            </p>
-          {% endif %}
+      <!-- === Блок тестов === -->
+      <div class="col-md-4">
+        <div class="card shadow-sm p-3 h-100">
+          <h5 class="mb-3">📘 Тесты</h5>
 
-        {% endif %}
+          <p class="mb-1">
+            <span class="text-muted">Пройдено:</span>
+            <b>{{ tests_done }} / {{ tests_total }}</b>
+          </p>
+
+          <p class="mb-1">
+            <span class="text-muted">Средний балл:</span>
+            <b>{{ avg_score }}%</b>
+          </p>
+
+          <p class="mb-1">
+            <span class="text-muted">Средняя оценка:</span>
+            <span class="badge bg-primary">{{ avg_grade }}</span>
+          </p>
+
+          <div class="sparkline-wrapper">
+            <canvas id="testsChart"></canvas>
+          </div>
+
+
+        </div>
       </div>
+
+
+      <!-- === Блок домашек === -->
+      <div class="col-md-4">
+        <div class="card shadow-sm p-3 h-100">
+          <h5 class="mb-3">📝 Домашние задания</h5>
+
+          <p class="mb-1">
+            <span class="text-muted">Выполнено:</span>
+            <b>{{ hw_done }} / {{ hw_total }}</b>
+          </p>
+
+          <p class="mb-1">
+            <span class="text-muted">Средняя успеваемость:</span>
+            <b>{{ hw_avg_percent }}%</b>
+          </p>
+
+          <p class="mb-1">
+            <span class="text-muted">Просрочено:</span>
+            <span class="badge bg-danger">{{ hw_overdue }}</span>
+          </p>
+
+          <div class="sparkline-wrapper">
+            <canvas id="hwChart"></canvas>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- === Блок предметов === -->
+      <div class="col-md-4">
+        <div class="card shadow-sm p-3 h-100">
+          <h5 class="mb-3">📊 Средняя успеваемость по предметам</h5>
+
+          {% for subj in subject_stats %}
+            <div class="mb-2">
+              <b>{{ subj.name }}</b>
+              <div class="progress" style="height: 10px;">
+                <div class="progress-bar
+                            {% if subj.percent >= 80 %}bg-success
+                            {% elif subj.percent >= 60 %}bg-primary
+                            {% elif subj.percent >= 40 %}bg-warning
+                            {% else %}bg-danger{% endif %}"
+                     style="width: {{ subj.percent }}%;"></div>
+              </div>
+              <small class="text-muted">{{ subj.percent }}%</small>
+            </div>
+          {% endfor %}
+
+        </div>
+      </div>
+
     </div>
+
 
     <h3 class="mt-5 mb-3">📝 Домашние задания</h3>
 
@@ -41,9 +105,9 @@
               <b>{{ r.assigned_topic.title }}</b><br>
               <small>{{ r.test.lesson.subject.name }}: {{ r.test.lesson.title }}</small>
               {% if r.assigned_topic.deadline %}
-              | <small class="text-danger">
-              Дедлайн: {{ r.assigned_topic.deadline|date:"d.m.Y H:i" }}
-            </small>
+                | <small class="text-danger">
+                Дедлайн: {{ r.assigned_topic.deadline|date:"d.m.Y H:i" }}
+              </small>
               {% endif %}
 
             </div>
@@ -82,9 +146,9 @@
               <b>{{ item.hw.topic.title }}</b><br>
               <small>{{ item.lesson.subject.name }}: {{ item.lesson.title }}</small>
               {% if item.deadline %}
-              | <small class="text-danger">
-              Дедлайн: {{ item.deadline|date:"d.m.Y H:i" }}
-            </small>
+                | <small class="text-danger">
+                Дедлайн: {{ item.deadline|date:"d.m.Y H:i" }}
+              </small>
               {% endif %}
               <br>
 
@@ -258,4 +322,65 @@
           });
       });
   </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+
+          const testsData = {{ tests_history|safe }};
+          const hwData = {{ hw_history|safe }};
+
+          // === SPARKLINE STYLE ===
+          const chartOptions = {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {legend: {display: false}},
+              scales: {
+                  x: {display: false},
+                  y: {display: false}
+              },
+              elements: {
+                  line: {tension: 0.3, borderWidth: 2},
+                  point: {radius: 0}
+              }
+          };
+
+          // === TESTS CHART ===
+          if (testsData.length > 0) {
+              new Chart(document.getElementById("testsChart"), {
+                  type: "line",
+                  data: {
+                      labels: testsData.map((_, i) => i + 1),
+                      datasets: [{
+                          data: testsData,
+                          borderColor: "#4da3ff",
+                          backgroundColor: "rgba(77,163,255,0.2)",
+                          fill: true
+                      }]
+                  },
+                  options: chartOptions
+              });
+          }
+
+          // === HOMEWORK CHART ===
+          if (hwData.length > 0) {
+              new Chart(document.getElementById("hwChart"), {
+                  type: "line",
+                  data: {
+                      labels: hwData.map((_, i) => i + 1),
+                      datasets: [{
+                          data: hwData,
+                          borderColor: "#4da3ff",
+                          backgroundColor: "rgba(77,163,255,0.2)",
+                          fill: true
+                      }]
+                  },
+                  options: chartOptions
+              });
+          }
+
+      });
+  </script>
+
 {% endblock %}

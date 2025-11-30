@@ -70,6 +70,7 @@ class SchoolClass(models.Model):
     name = models.CharField(max_length=20)
     teachers = models.ManyToManyField(Teacher, related_name="classes")  # 🔹 связь "многие ко многим"4
     students = models.ManyToManyField('Student', related_name="classes")  # 🔹 связь "многие ко многим"
+    subjects = models.ManyToManyField(Subject, related_name="classes")  # 🔹 связь "многие ко многим"
 
     class Meta:
         verbose_name = "Класс"

@@ -374,7 +374,8 @@
       }
 
       .bg-warning {
-          color: #000; !important;
+          color: #000;
+      !important;
       }
 
       .hw-bar-red {
@@ -492,6 +493,18 @@
           background: #198754;
           color: #fff !important;
       }
+
+      .sparkline-wrapper {
+          height: 100%;
+          width: 100%;
+          position: relative;
+      }
+
+      .sparkline-wrapper canvas {
+          height: 100% !important;
+          width: 100% !important;
+      }
+
 
   </style>
 
@@ -658,7 +671,6 @@
 
     // Переключение темы
     document.getElementById("themeToggle").addEventListener("click", () => {
-        console.log(1111)
         const current = document.documentElement.getAttribute("data-bs-theme");
         const next = current === "light" ? "light" : "dark";
         updateThemeIcon(next);
