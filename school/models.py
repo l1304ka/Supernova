@@ -184,6 +184,7 @@ class AssignedTopic(models.Model):
     date_assigned = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     question_count = models.IntegerField(default=0)
+    deadline = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Назначенная тема"
@@ -191,6 +192,14 @@ class AssignedTopic(models.Model):
 
     def __str__(self):
         return f"{self.title}: {self.topic.name} → {self.school_class.name}"
+
+    @property
+    def subject(self):
+        return self.school_class.teachers.first().subjects.filter(topics=self.topic).first()
+
+    @property
+    def lesson(self):
+        return self.subject.lessons.filter(topics=self.topic).first()
 
 
 class StudentAnswer(models.Model):
@@ -235,6 +244,7 @@ class Homework(models.Model):
     tasks_count = models.PositiveIntegerField(default=3)
     created_at = models.DateTimeField(auto_now_add=True)
     is_checked = models.BooleanField(default=False)
+    deadline = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Домашнее задание"

@@ -2,74 +2,80 @@
 {% block title %}Выдать ДЗ — {{ school_class.name }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4" style="max-width: 600px;">
+  <div class="container mt-4" style="max-width: 600px;">
 
     <h2 class="mb-4">Выдать ДЗ классу {{ school_class.name }}</h2>
 
     <form method="post" class="card p-4 shadow-sm rounded-3">
-        {% csrf_token %}
+      {% csrf_token %}
 
-        <div class="mb-3">
-            <label class="form-label">Предмет</label>
-            <select id="subjectSelect" name="subject_id" class="form-select" required>
-                <option value="" selected disabled>Выберите предмет</option>
-                {% for s in subjects %}
-                    <option value="{{ s.id }}">{{ s.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">Предмет</label>
+        <select id="subjectSelect" name="subject_id" class="form-select" required>
+          <option value="" selected disabled>Выберите предмет</option>
+          {% for s in subjects %}
+            <option value="{{ s.id }}">{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-        <div class="mb-3">
-            <label class="form-label">Тема</label>
-            <select id="topicSelect" name="topic_id" class="form-select" required>
-                <option value="" selected disabled>Сначала выберите предмет</option>
-            </select>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label">Название задания</label>
-            <input type="text" name="title" class="form-control"
-                   placeholder="Например: Тест по теме «Линзы»" required>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">Тема</label>
+        <select id="topicSelect" name="topic_id" class="form-select" required>
+          <option value="" selected disabled>Сначала выберите предмет</option>
+        </select>
+      </div>
 
       <div class="mb-4">
-            <label class="form-label">Количество вопросов</label>
-            <input type="text" name="question_count" class="form-control"
-                    placeholder="Например: 10" required>
-        </div>
+        <label class="form-label">Название задания</label>
+        <input type="text" name="title" class="form-control"
+               placeholder="Например: Тест по теме «Линзы»" required>
+      </div>
 
-        <div class="d-flex gap-2">
-            <button class="btn btn-primary flex-grow-1">Назначить</button>
-            <a href="{% url 'class_journal' school_class.id %}" class="btn btn-outline-secondary flex-grow-1">
-                Отмена
-            </a>
-        </div>
+      <div class="mb-4">
+        <label class="form-label">Количество вопросов</label>
+        <input type="text" name="question_count" class="form-control"
+               placeholder="Например: 10" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Дедлайн</label>
+        <input type="datetime-local" name="deadline" class="form-control">
+      </div>
+
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary flex-grow-1">Назначить</button>
+        <a href="{% url 'class_journal' school_class.id %}" class="btn btn-outline-secondary flex-grow-1">
+          Отмена
+        </a>
+      </div>
     </form>
 
-</div>
+  </div>
 
-<script>
-document.getElementById("subjectSelect").addEventListener("change", async function() {
-    const subjectId = this.value;
-    const topicSelect = document.getElementById("topicSelect");
+  <script>
+      document.getElementById("subjectSelect").addEventListener("change", async function () {
+          const subjectId = this.value;
+          const topicSelect = document.getElementById("topicSelect");
 
-    topicSelect.innerHTML = "<option>Загрузка...</option>";
+          topicSelect.innerHTML = "<option>Загрузка...</option>";
 
-    const response = await fetch(`/get_topics_by_subject/?subject_id=${subjectId}`);
-    const data = await response.json();
+          const response = await fetch(`/get_topics_by_subject/?subject_id=${subjectId}`);
+          const data = await response.json();
 
-    topicSelect.innerHTML = "";
+          topicSelect.innerHTML = "";
 
-    if (data.topics && data.topics.length) {
-        data.topics.forEach(t => {
-            const o = document.createElement("option");
-            o.value = t.id;
-            o.textContent = t.name;
-            topicSelect.appendChild(o);
-        });
-    } else {
-        topicSelect.innerHTML = "<option disabled>Темы не найдены</option>";
-    }
-});
-</script>
+          if (data.topics && data.topics.length) {
+              data.topics.forEach(t => {
+                  const o = document.createElement("option");
+                  o.value = t.id;
+                  o.textContent = t.name;
+                  topicSelect.appendChild(o);
+              });
+          } else {
+              topicSelect.innerHTML = "<option disabled>Темы не найдены</option>";
+          }
+      });
+  </script>
 {% endblock %}

@@ -39,7 +39,13 @@
           <div class="list-group-item d-flex justify-content-between align-items-center">
             <div>
               <b>{{ r.assigned_topic.title }}</b><br>
-              <small>{{ r.test.lesson.subject.name }} — {{ r.completed_at|date:"d.m.Y H:i" }}</small>
+              <small>{{ r.test.lesson.subject.name }}: {{ r.test.lesson.title }}</small>
+              {% if r.assigned_topic.deadline %}
+              | <small class="text-danger">
+              Дедлайн: {{ r.assigned_topic.deadline|date:"d.m.Y H:i" }}
+            </small>
+              {% endif %}
+
             </div>
 
             {% if r.is_homework_generating %}
@@ -74,9 +80,13 @@
 
             <div>
               <b>{{ item.hw.topic.title }}</b><br>
-              <small class="text-muted">
-                {{ item.hw.created_at|date:"d.m.Y H:i" }}
-              </small><br>
+              <small>{{ item.lesson.subject.name }}: {{ item.lesson.title }}</small>
+              {% if item.deadline %}
+              | <small class="text-danger">
+              Дедлайн: {{ item.deadline|date:"d.m.Y H:i" }}
+            </small>
+              {% endif %}
+              <br>
 
               {#              <small class="text-muted">#}
               {#                Выполнено задач: {{ item.solved }} / {{ item.total }}#}
@@ -106,7 +116,13 @@
 
         {% for at in unfinished_tests %}
           <div class="d-flex justify-content-between mb-3">
-            <span>{{ at.title }} ({{ at.topic.name }})</span>
+            <span>{{ at.title }} <small>({{ at.subject }}: {{ at.lesson.title }})</small>
+              {% if at.deadline %}
+                | <small class="text-danger">
+                   Дедлайн: {{ at.deadline|date:"d.m.Y H:i" }}
+                  </small>
+              {% endif %}
+</span>
             <a href="{% url 'adaptive_test' at.id %}" class="btn btn-primary btn-sm">
               Продолжить
             </a>
@@ -121,7 +137,12 @@
           <div class="list-group-item d-flex justify-content-between align-items-center">
             <div>
               <b>{{ at.title }}</b><br>
-              <small>{{ at.topic.name }} — {{ at.school_class.name }}</small>
+              <small>{{ at.subject }}: {{ at.lesson.title }}</small>
+              {% if at.deadline %}
+                | <small class="text-danger">
+                Дедлайн: {{ at.deadline|date:"d.m.Y H:i" }}
+              </small>
+              {% endif %}
             </div>
             <a href="{% url 'adaptive_test' at.id %}" class="btn btn-success btn-sm">Пройти тест</a>
           </div>

@@ -19,6 +19,7 @@
                 <th>Название</th>
                 <th>Тема</th>
                 <th>Назначено</th>
+                <th>Дедлайн</th>
                 <th style="width: 100px"></th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
                 <td>{{ a.title }}</td>
                 <td>{{ a.topic.name }}</td>
                 <td>{{ a.date_assigned|date:"d.m.Y H:i" }}</td>
+                <td>{% if a.deadline %}{{ a.deadline|date:"d.m.Y H:i" }}{% else %} – {% endif %}</td>
                 <td>
                     <a href="{% url 'delete_assigned_topic' a.id %}"
                        class="btn btn-danger btn-sm"

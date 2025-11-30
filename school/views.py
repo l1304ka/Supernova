@@ -4,9 +4,11 @@ from urllib import request
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db import models
 from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.timezone import now
 
 from administrator.views import superuser_required
@@ -186,78 +188,96 @@ def index(request):
     # БЛОК ДЛЯ УЧЕНИКА
     # ─────────────────────────────────────────────
     elif hasattr(user, 'student'):
+        from django.utils import timezone
+        now = timezone.now()
+
         student = user.student
         classes = student.classes.all()
 
-        # Все назначенные темы
+        # Все назначенные темы (с учетом дедлайна)
         assigned_topics = AssignedTopic.objects.filter(
             school_class__in=classes,
             is_active=True
+        ).filter(
+            models.Q(deadline__isnull=True) | models.Q(deadline__gt=now)
         ).distinct()
 
+
         # Завершённые тесты
-        results = TestResult.objects.filter(
+        results_all = TestResult.objects.filter(
             student=student
         ).select_related("assigned_topic").order_by("-completed_at")
 
-        finished_ids = set(results.values_list("assigned_topic_id", flat=True))
+        finished_ids = set(results_all.values_list("assigned_topic_id", flat=True))
 
-        # ─────────────────────────────────────────────
-        # ЗАГРУЖАЕМ ВСЕ НЕЗАВЕРШЁННЫЕ ТЕСТЫ
-        # ─────────────────────────────────────────────
+        # Берем только последние 5
+        results = results_all[:5]
+        last_result = results_all.first() if results_all else None
+
+        # Незавершённые тесты
         adaptive_tests = request.session.get("adaptive_tests", {})
 
         unfinished_tests = []
         for assigned_id_str in adaptive_tests.keys():
             try:
-                unfinished_tests.append(
-                    AssignedTopic.objects.get(id=int(assigned_id_str))
-                )
+                assigned = AssignedTopic.objects.get(id=int(assigned_id_str))
+                if assigned.deadline is None or assigned.deadline > now:
+                    unfinished_tests.append(assigned)
             except AssignedTopic.DoesNotExist:
                 pass
 
         unfinished_ids = {u.id for u in unfinished_tests}
 
+        # Доступные тесты: не завершённые, не незавершённые и дедлайн не прошёл
+        available_tests = assigned_topics.exclude(
+            id__in=finished_ids | unfinished_ids
+        )
+        for t in available_tests:
+            print(t.deadline)
+
+
         # ─────────────────────────────────────────────
-        # ДОСТУПНЫЕ ТЕСТЫ
-        # исключаем завершённые и незавершённые
+        # ДОМАШНИЕ ЗАДАНИЯ (с дедлайном!)
         # ─────────────────────────────────────────────
-        available_tests = assigned_topics.exclude(id__in=finished_ids | unfinished_ids)
-
-        last_result = results.first() if results else None
-
-        results = results.order_by("-completed_at")[:5]
-
-        student = user.student
-
         all_homeworks = Homework.objects.filter(student=student).prefetch_related("tasks")
 
-        homework_in_progress = []  # некоторые решены, но не все
-        homework_done = []  # полностью выполненные (is_checked = True)
-
+        homework_in_progress = []
+        homework_done = []
         hw_waiting = []
-        for r in results:
-            if not hasattr(r, "homework") or r.homework is None:
-                hw_waiting.append(r)
 
+        # ДЗ, которые должны быть сгенерированы:
+        for r in results_all:
+            if not hasattr(r, "homework") or r.homework is None:
+                # Проверяем дедлайн самого AssignedTopic
+                assigned_topic = r.assigned_topic
+                if assigned_topic.deadline is None or assigned_topic.deadline > now:
+                    hw_waiting.append(r)
+
+        # Обрабатываем ДЗ
         for hw in all_homeworks:
+
+            # Пропускаем ДЗ, у которых прошёл дедлайн и они не проверены
+            if hw.deadline and hw.deadline < now and not hw.is_checked:
+                continue
+
             tasks = list(hw.tasks.all())
             total = len(tasks)
-            solved = len([t for t in tasks if t.is_correct is not False])
-            percent = int((solved / total) * 100) if total else 0
+            solved_raw = len([t for t in tasks if t.is_correct is not False])  # used earlier
+            percent = int((solved_raw / total) * 100) if total else 0
 
             item = {
                 "hw": hw,
+                "lesson": hw.topic.topic.lessons.first(),
                 "total": total,
-                "solved": solved,
+                "solved": solved_raw,
                 "percent": percent,
+                "deadline": hw.deadline
             }
-
-            print(solved, total, hw.is_checked)
 
             if hw.is_checked:
                 homework_done.append(item)
             else:
+                # показываем количество реально решённых
                 item["solved"] = len([t for t in tasks if t.is_correct is not None])
                 homework_in_progress.append(item)
 
@@ -269,8 +289,9 @@ def index(request):
 
             "homework_list": homework_in_progress,  # 🟡 В процессе
             "homework_done": homework_done,  # 🟢 Выполненные
-            "hw_waiting": hw_waiting,
+            "hw_waiting": hw_waiting,  # 🟠 Ждущие генерации
         })
+
 
     # ─────────────────────────────────────────────
     # НЕ студента и не учитель
@@ -780,13 +801,20 @@ def assign_homework_class(request, class_id):
         topic_id = request.POST.get("topic_id")
         title = request.POST.get("title", "")
         question_count = int(request.POST.get("question_count", "0"))
+        deadline_str = request.POST.get("deadline")
+        deadline = None
+
+        if deadline_str:
+            from django.utils.dateparse import parse_datetime
+            deadline = parse_datetime(deadline_str)
 
         AssignedTopic.objects.create(
             title=title,
             school_class=school_class,
             topic_id=topic_id,
             assigned_by=teacher,
-            question_count=question_count
+            question_count=question_count,
+            deadline=deadline
         )
 
         return redirect("class_journal", class_id=class_id)
@@ -835,9 +863,9 @@ def teacher_student_detail(request, id):
         "student": student,
         "results": results,
         "hw_total": hw_total,
-    "hw_checked": hw_checked,
-    "hw_in_progress": hw_in_progress,
-    "hw_percent": hw_percent,
+        "hw_checked": hw_checked,
+        "hw_in_progress": hw_in_progress,
+        "hw_percent": hw_percent,
         "hw_list": hw_list,
     })
 
@@ -848,6 +876,7 @@ def class_tests(request, class_id):
 
     # назначенные темы
     assigned = AssignedTopic.objects.filter(school_class=school_class)
+    assigned = assigned.order_by("-date_assigned")
 
     # все тесты, которые когда-либо проходили ученики класса
     test_results = TestResult.objects.filter(
@@ -868,6 +897,8 @@ def class_tests(request, class_id):
 
     for t in tests.values():
         t["students_count"] = len(t["results"])
+
+    tests = dict(sorted(tests.items(), key=lambda item: item[1]["test"].date_available, reverse=True))
 
     return render(request, "class_tests.html", {
         "school_class": school_class,
@@ -932,6 +963,7 @@ def generate_homework(request, result_id):
             topic=assigned,
             test_result=result,
             tasks_count=len(tasks_data),
+            deadline=assigned.deadline,
         )
 
         for i, t in enumerate(tasks_data, start=1):
