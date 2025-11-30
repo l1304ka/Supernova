@@ -4,9 +4,9 @@
 
 <a href="{% url 'admin_add_topic' %}" class="btn btn-success mb-3">Добавить тему</a>
 
-<table class="table table-striped shadow-sm">
+<table class="custom-table table-striped shadow-sm">
     <thead>
-        <tr><th>ID</th><th>Название</th><th>Подтемы</th><th></th></tr>
+        <tr><th>ID</th><th>Название</th><th>Подтемы</th><th width="200px">Управление</th></tr>
     </thead>
     <tbody>
         {% for t in topics %}

@@ -95,79 +95,84 @@
     <h3 class="mt-5 mb-3">📝 Домашние задания</h3>
 
     <!-- 🔥 1. ДЗ, которые нужно выполнить -->
-    <h5 class="mt-3 mb-2">📌 Нужно выполнить</h5>
+    {% if not hw_waiting and not homework_list %}
+      <p class="text-muted">Похоже, у вас нет текущих домашних заданий. Отличная работа!</p>
+    {% else %}
+      <h5 class="mt-3 mb-2">📌 Нужно выполнить</h5>
 
-    {% if hw_waiting %}
-      <div class="list-group mb-4">
-        {% for r in hw_waiting %}
-          <div class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <b>{{ r.assigned_topic.title }}</b><br>
-              <small>{{ r.test.lesson.subject.name }}: {{ r.test.lesson.title }}</small>
-              {% if r.assigned_topic.deadline %}
-                | <small class="text-danger">
-                Дедлайн: {{ r.assigned_topic.deadline|date:"d.m.Y H:i" }}
-              </small>
+      {% if hw_waiting %}
+        <div class="list-group mb-4">
+          {% for r in hw_waiting %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <b>{{ r.assigned_topic.title }}</b><br>
+                <small>{{ r.test.lesson.subject.name }}: {{ r.test.lesson.title }}</small>
+                {% if r.assigned_topic.deadline %}
+                  | <small class="text-danger">
+                  Дедлайн: {{ r.assigned_topic.deadline|date:"d.m.Y H:i" }}
+                </small>
+                {% endif %}
+
+              </div>
+
+              {% if r.is_homework_generating %}
+                <button class="btn btn-secondary btn-sm" disabled>
+                  ⏳ Генерация...
+                </button>
+              {% else %}
+                <a href="{% url 'generate_homework' r.id %}"
+                   class="btn btn-warning btn-sm hw-generate-btn"
+                   data-id="{{ r.id }}">
+                  Сгенерировать ДЗ
+                </a>
+
               {% endif %}
 
             </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">Нет домашних заданий, которые требуют генерации.</p>
+      {% endif %}
 
-            {% if r.is_homework_generating %}
-              <button class="btn btn-secondary btn-sm" disabled>
-                ⏳ Генерация...
-              </button>
-            {% else %}
-              <a href="{% url 'generate_homework' r.id %}"
-                 class="btn btn-warning btn-sm hw-generate-btn"
-                 data-id="{{ r.id }}">
-                Сгенерировать ДЗ
+
+      <h5 class="mt-4 mb-2">🔄 В процессе</h5>
+
+
+      {% if homework_list %}
+        <div class="list-group mb-4">
+
+          {% for item in homework_list %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+
+              <div>
+                <b>{{ item.hw.topic.title }}</b><br>
+                <small>{{ item.lesson.subject.name }}: {{ item.lesson.title }}</small>
+                {% if item.deadline %}
+                  | <small class="text-danger">
+                  Дедлайн: {{ item.deadline|date:"d.m.Y H:i" }}
+                </small>
+                {% endif %}
+                <br>
+
+                {#              <small class="text-muted">#}
+                {#                Выполнено задач: {{ item.solved }} / {{ item.total }}#}
+                {#              </small>#}
+              </div>
+
+              <a href="{% url 'homework_detail' item.hw.id %}"
+                 class="btn btn-warning btn-sm">
+                Продолжить →
               </a>
 
-            {% endif %}
-
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p class="text-muted">Нет домашних заданий, которые требуют генерации.</p>
-    {% endif %}
-
-
-    <h5 class="mt-4 mb-2">🔄 В процессе</h5>
-
-
-    {% if homework_list %}
-      <div class="list-group mb-4">
-
-        {% for item in homework_list %}
-          <div class="list-group-item d-flex justify-content-between align-items-center">
-
-            <div>
-              <b>{{ item.hw.topic.title }}</b><br>
-              <small>{{ item.lesson.subject.name }}: {{ item.lesson.title }}</small>
-              {% if item.deadline %}
-                | <small class="text-danger">
-                Дедлайн: {{ item.deadline|date:"d.m.Y H:i" }}
-              </small>
-              {% endif %}
-              <br>
-
-              {#              <small class="text-muted">#}
-              {#                Выполнено задач: {{ item.solved }} / {{ item.total }}#}
-              {#              </small>#}
             </div>
+          {% endfor %}
 
-            <a href="{% url 'homework_detail' item.hw.id %}"
-               class="btn btn-warning btn-sm">
-              Продолжить →
-            </a>
+        </div>
+      {% else %}
+        <p class="text-muted">Домашних заданий пока нет.</p>
+      {% endif %}
 
-          </div>
-        {% endfor %}
-
-      </div>
-    {% else %}
-      <p class="text-muted">Домашних заданий пока нет.</p>
     {% endif %}
 
     <hr>

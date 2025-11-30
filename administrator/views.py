@@ -19,27 +19,31 @@ def dashboard(request):
         "topics": Topic.objects.count(),
         "subtopics": SubTopic.objects.count(),
         "questions": Question.objects.count(),
+        "section": "dashboard"
     })
 
 
 @superuser_required
 def student_list(request):
     return render(request, "adminpanel/student_list.html", {
-        "students": Student.objects.all()
+        "students": Student.objects.all(),
+        "section": "students"
     })
 
 
 @superuser_required
 def teacher_list(request):
     return render(request, "adminpanel/teacher_list.html", {
-        "teachers": Teacher.objects.all()
+        "teachers": Teacher.objects.all(),
+        "section": "teachers"
     })
 
 
 @superuser_required
 def class_list(request):
     return render(request, "adminpanel/class_list.html", {
-        "classes": SchoolClass.objects.all()
+        "classes": SchoolClass.objects.all(),
+        "section": "classes"
     })
 
 
@@ -58,7 +62,9 @@ def add_student(request):
 
         return redirect("admin_students")
 
-    return render(request, "adminpanel/add_student.html")
+    return render(request, "adminpanel/add_student.html", {
+        "section": "students"
+    })
 
 
 @superuser_required
@@ -74,7 +80,9 @@ def add_teacher(request):
 
         return redirect("admin_teachers")
 
-    return render(request, "adminpanel/add_teacher.html")
+    return render(request, "adminpanel/add_teacher.html", {
+        "section": "teachers"
+    })
 
 
 @superuser_required
@@ -84,7 +92,9 @@ def add_class(request):
         school_class = SchoolClass.objects.create(name=name)
         return redirect("admin_classes")
 
-    return render(request, "adminpanel/add_class.html")
+    return render(request, "adminpanel/add_class.html", {
+        "section": "classes"
+    })
 
 
 @superuser_required

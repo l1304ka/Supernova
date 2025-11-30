@@ -4,9 +4,9 @@
 
 <a href="{% url 'admin_add_subtopic' %}" class="btn btn-success mb-3">Добавить подтему</a>
 
-<table class="table table-striped shadow-sm">
+<table class="custom-table table-striped shadow-sm">
     <thead>
-        <tr><th>ID</th><th>Название</th><th>Используется в темах</th><th></th></tr>
+        <tr><th>ID</th><th>Название</th><th>Используется в темах</th><th width="200px">Управление</th></tr>
     </thead>
     <tbody>
         {% for st in subtopics %}

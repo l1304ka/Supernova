@@ -4,15 +4,16 @@
 
 <a href="{% url 'admin_add_subject' %}" class="btn btn-success mb-3">Добавить предмет</a>
 
-<table class="table table-striped shadow-sm">
+<table class="custom-table table-striped shadow-sm">
     <thead>
-        <tr><th>ID</th><th>Название</th><th></th></tr>
+        <tr><th>ID</th><th>Название</th><th>Темы</th><th width="200px">Управление</th></tr>
     </thead>
     <tbody>
         {% for s in subjects %}
         <tr>
             <td>{{ s.id }}</td>
             <td>{{ s.name }}</td>
+            <td>{{ s.topics.count }}</td>
             <td>
                 <a href="{% url 'admin_edit_subject' s.id %}" class="btn btn-sm btn-primary">Изменить</a>
                 <a href="{% url 'admin_delete_subject' s.id %}" class="btn btn-sm btn-danger">Удалить</a>
