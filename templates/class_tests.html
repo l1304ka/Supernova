@@ -27,7 +27,7 @@
         {% for a in assigned %}
             <tr>
                 <td>{{ a.title }}</td>
-                <td>{{ a.topic.name }}</td>
+                <td>{{ a.lesson.title }}</td>
                 <td>{{ a.date_assigned|date:"d.m.Y H:i" }}</td>
                 <td>{% if a.deadline %}{{ a.deadline|date:"d.m.Y H:i" }}{% else %} – {% endif %}</td>
                 <td>

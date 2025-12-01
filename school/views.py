@@ -1,6 +1,5 @@
 import json
 import random
-from urllib import request
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.serializers.json import DjangoJSONEncoder
@@ -9,12 +8,11 @@ from django.db.models import Avg, FloatField
 from django.db.models.functions import Cast
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
 from django.utils.timezone import now
 
 from administrator.views import superuser_required
 from .ai_utils import generate_homework_tasks_gemini
-from .models import Test, TestResult, Student, Topic, Lesson, Subject, AssignedTopic, Question, StudentAnswer, Teacher, \
+from .models import Test, TestResult, Student, Lesson, Subject, AssignedTopic, Question, StudentAnswer, Teacher, \
     SchoolClass, Homework, HomeworkTask
 
 
@@ -100,7 +98,7 @@ def index(request):
             event_list.append({
                 "type": "hw_created",
                 "student": f"{hw.student.name} {hw.student.surname}",
-                "title": hw.topic.title,
+                "title": hw.lesson.title,
                 "date": hw.created_at,
             })
 
@@ -115,7 +113,7 @@ def index(request):
             event_list.append({
                 "type": "hw_checked",
                 "student": f"{hw.student.name} {hw.student.surname}",
-                "title": hw.topic.title,
+                "title": hw.lesson.title,
                 "score": f"{correct}/{total}",
                 "percent": percent,
                 "date": hw.created_at,
@@ -203,7 +201,6 @@ def index(request):
             models.Q(deadline__isnull=True) | models.Q(deadline__gt=now)
         ).distinct()
 
-
         # Завершённые тесты
         results_all = TestResult.objects.filter(
             student=student
@@ -236,7 +233,6 @@ def index(request):
         for t in available_tests:
             print(t.deadline)
 
-
         # ─────────────────────────────────────────────
         # ДОМАШНИЕ ЗАДАНИЯ (с дедлайном!)
         # ─────────────────────────────────────────────
@@ -268,7 +264,7 @@ def index(request):
 
             item = {
                 "hw": hw,
-                "lesson": hw.topic.topic.lessons.first(),
+                "lesson": hw.lesson,
                 "total": total,
                 "solved": solved_raw,
                 "percent": percent,
@@ -485,6 +481,24 @@ def shuffle_options(question):
 
 
 @login_required
+def get_lessons_by_subject(request):
+    """Возвращает уроки по выбранному предмету"""
+    subject_id = request.GET.get("subject_id")
+    if not subject_id:
+        return JsonResponse({"error": "no subject_id"}, status=400)
+
+    print(subject_id)
+    try:
+        subject = Subject.objects.get(id=subject_id)
+    except Subject.DoesNotExist:
+        return JsonResponse({"error": "subject not found"}, status=404)
+
+    lessons = subject.lessons.all().values("id", "title")
+    print(len(lessons))
+    return JsonResponse({"lessons": list(lessons)})
+
+
+@login_required
 def adaptive_test(request, test_id):
     student = request.user.student
     assigned = get_object_or_404(AssignedTopic, id=test_id, is_active=True)
@@ -537,11 +551,11 @@ def adaptive_test(request, test_id):
 
         # Генерируем первый вопрос
         qs = Question.objects.filter(
-            subtopic__topics=assigned.topic,
+            subtopic__topics__lessons=assigned.lesson,
             difficulty="medium"
         )
         if not qs.exists():
-            qs = Question.objects.filter(subtopic__topics=assigned.topic)
+            qs = Question.objects.filter(subtopic__topics__lessons=assigned.lesson,)
 
         q = random.choice(list(qs))
         data["asked"].append(q.id)
@@ -612,14 +626,11 @@ def adaptive_test(request, test_id):
             5
         )
 
-        lesson = assigned.topic.lessons.first()
-
         final_test = Test.objects.create(
-            lesson=lesson,
-            title=f"Адаптивный тест по теме: {assigned.topic.name}",
+            lesson=assigned.lesson,
+            title=assigned.lesson.title,
             date_available=now().date(),
             assigned_topic=assigned,
-            topic=assigned.topic,
             maximin_questions=assigned.question_count
         )
 
@@ -655,13 +666,13 @@ def adaptive_test(request, test_id):
     # ─────────────────────────────────────────────
 
     next_qs = Question.objects.filter(
-        subtopic__topics=assigned.topic,
+        subtopic__topics__lessons=assigned.lesson,
         difficulty=data["difficulty"]
     ).exclude(id__in=data["asked"])
 
     if not next_qs.exists():
         next_qs = Question.objects.filter(
-            subtopic__topics=assigned.topic
+            subtopic__topics__lessons=assigned.lesson,
         ).exclude(id__in=data["asked"])
 
     q = random.choice(list(next_qs))
@@ -872,7 +883,7 @@ def assign_homework_class(request, class_id):
     subjects = teacher.subjects.all()
 
     if request.method == "POST":
-        topic_id = request.POST.get("topic_id")
+        lesson_id = request.POST.get("lesson_id")
         title = request.POST.get("title", "")
         question_count = int(request.POST.get("question_count", "0"))
         deadline_str = request.POST.get("deadline")
@@ -885,7 +896,7 @@ def assign_homework_class(request, class_id):
         AssignedTopic.objects.create(
             title=title,
             school_class=school_class,
-            topic_id=topic_id,
+            lesson_id=lesson_id,
             assigned_by=teacher,
             question_count=question_count,
             deadline=deadline
@@ -1025,8 +1036,11 @@ def generate_homework(request, result_id):
         else:
             diff_hint = "чуть проще среднего уровня, чтобы закрепить базу"
 
+        topics_name = assigned.lesson.topics.all().values_list("name", flat=True)
+        topics_name = ", ".join(topics_name)
+
         tasks_data = generate_homework_tasks_gemini(
-            topic_name=assigned.topic.name,
+            topics_name=topics_name,
             tasks_count=tasks_count,
             difficulty_hint=diff_hint,
             score_percent=result.score,
@@ -1034,8 +1048,8 @@ def generate_homework(request, result_id):
 
         hw = Homework.objects.create(
             student=student,
-            topic=assigned,
             test_result=result,
+            lesson=assigned.lesson,
             tasks_count=len(tasks_data),
             deadline=assigned.deadline,
         )
@@ -1123,4 +1137,39 @@ def homework_result(request, homework_id):
         "tasks": tasks,
         "total": total,
         "correct": correct,
+    })
+
+
+@login_required
+def create_lesson(request):
+    user = request.user
+
+    if not hasattr(user, "teacher"):
+        return redirect("index")
+
+    teacher = user.teacher
+    subjects = teacher.subjects.all()
+
+    if request.method == "POST":
+        subject_id = request.POST.get("subject")
+        title = request.POST.get("title")
+        date = request.POST.get("date")
+        topic_ids = request.POST.getlist("topics")
+
+        if subject_id and title and date:
+            subject = Subject.objects.get(id=subject_id)
+
+            lesson = Lesson.objects.create(
+                subject=subject,
+                title=title,
+                date=date
+            )
+
+            if topic_ids:
+                lesson.topics.set(topic_ids)
+
+            return redirect("index")
+
+    return render(request, "create_lesson.html", {
+        "subjects": subjects,
     })

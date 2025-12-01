@@ -1,0 +1,62 @@
+﻿{% extends "base.html" %}
+{% block title %}Создание урока{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 600px;">
+
+    <h2 class="mb-4">Создать новый урок</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Предмет</label>
+            <select name="subject" id="subject-select" class="form-select" required>
+                <option value="">Выберите предмет</option>
+                {% for s in subjects %}
+                <option value="{{ s.id }}">{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Название урока</label>
+            <input type="text" name="title" class="form-control" placeholder="Например: Оптика. Лучи света" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Дата проведения</label>
+            <input type="date" name="date" class="form-control" required>
+        </div>
+
+        <!-- Темы -->
+        <div class="mb-3">
+            <label class="form-label">Темы урока</label>
+            <select name="topics" id="topics-select"
+                    class="form-select" multiple size="6">
+            </select>
+            <small class="text-muted">Можно выбрать несколько.</small>
+        </div>
+
+        <button class="btn btn-success">Создать урок</button>
+        <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Отмена</a>
+    </form>
+</div>
+
+<script>
+document.getElementById("subject-select").addEventListener("change", function () {
+    const subjectId = this.value;
+
+    fetch(`/get_topics_by_subject/?subject_id=${subjectId}`)
+        .then(r => r.json())
+        .then(data => {
+            const topicsSelect = document.getElementById("topics-select");
+            topicsSelect.innerHTML = "";
+
+            data.topics.forEach(t => {
+                topicsSelect.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+            });
+        });
+});
+</script>
+{% endblock %}

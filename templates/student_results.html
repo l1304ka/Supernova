@@ -2,55 +2,60 @@
 {% block title %}Ученик {{ student.surname }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+  <div class="container mt-4">
 
-  <h2>{{ student.surname }} {{ student.name }} {{ student.patronymic }}</h2>
+    <h2>{{ student.surname }} {{ student.name }} {{ student.patronymic }}</h2>
 
-  <a href="javascript:history.back()" class="btn btn-secondary mb-3">← Назад</a>
+    <a href="javascript:history.back()" class="btn btn-secondary mb-3">← Назад</a>
 
-  <div class="row">
+    <div class="row">
 
-    <!-- ==== ЛЕВАЯ КОЛОНКА — ТЕСТЫ ==== -->
-    <div class="col-md-6">
+      <!-- ==== ЛЕВАЯ КОЛОНКА — ТЕСТЫ ==== -->
+      <div class="col-md-6">
 
-      <h4 class="mb-3">Результаты тестов</h4>
+        <h4 class="mb-3">Результаты тестов</h4>
 
-      {% if results %}
-        <table class="custom-table table-striped shadow-sm">
-          <thead>
-          <tr>
-            <th>Название теста</th>
-            <th>Оценка</th>
-            <th>Балл (%)</th>
-            <th>Дата</th>
-          </tr>
-          </thead>
-          <tbody>
-          {% for r in results %}
+        {% if results %}
+          <table class="custom-table table-striped shadow-sm">
+            <thead>
             <tr>
-              <td>{{ r.test.title }}</td>
-              <td>
+              <th>Дата</th>
+              <th>Тема</th>
+              <th>Оценка</th>
+              <th style="width: 120px">Действие</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for r in results %}
+              <tr>
+                <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
+                <td>{{ r.test.title }}</td>
+                <td>
                 <span class="badge
                   {% if r.grade == 5 %}bg-success
                   {% elif r.grade == 4 %}bg-primary
                   {% elif r.grade == 3 %}bg-warning
                   {% else %}bg-danger{% endif %}
                 ">{{ r.grade }}</span>
-              </td>
-              <td>{{ r.score }}</td>
-              <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <p class="text-muted">Пока нет результатов тестов.</p>
-      {% endif %}
+                </td>
 
-    </div>
+                <td>
+                  <a href="{% url 'test_result_detail' r.id %}"
+                     class="btn btn-sm btn-outline-secondary">
+                    Открыть →
+                  </a>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="text-muted">Пока нет результатов тестов.</p>
+        {% endif %}
+
+      </div>
 
 
-    <div class="col-md-6">
+      <div class="col-md-6">
 
         <h4 class="mb-3">Домашние задания</h4>
 
@@ -61,7 +66,7 @@
               <th>Дата</th>
               <th>Тема</th>
               <th>Решено</th>
-              <th></th>
+              <th style="width: 120px">Действие</th>
             </tr>
             </thead>
 
@@ -71,7 +76,7 @@
 
                 <td>{{ item.hw.created_at|date:"d.m.Y H:i" }}</td>
 
-                <td>{{ item.hw.topic.title }}</td>
+                <td>{{ item.hw.lesson.title }}</td>
 
                 <td>
             <span class="badge
@@ -101,7 +106,7 @@
         {% endif %}
       </div>
 
-  </div>
+    </div>
 
-</div>
+  </div>
 {% endblock %}

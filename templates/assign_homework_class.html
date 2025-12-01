@@ -20,8 +20,8 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Тема</label>
-        <select id="topicSelect" name="topic_id" class="form-select" required>
+        <label class="form-label">Урок</label>
+        <select id="lessonSelect" name="lesson_id" class="form-select" required>
           <option value="" selected disabled>Сначала выберите предмет</option>
         </select>
       </div>
@@ -57,24 +57,32 @@
   <script>
       document.getElementById("subjectSelect").addEventListener("change", async function () {
           const subjectId = this.value;
-          const topicSelect = document.getElementById("topicSelect");
+          const topicSelect = document.getElementById("lessonSelect");
 
           topicSelect.innerHTML = "<option>Загрузка...</option>";
 
-          const response = await fetch(`/get_topics_by_subject/?subject_id=${subjectId}`);
+          const response = await fetch(`/get_lessons_by_subject/?subject_id=${subjectId}`);
           const data = await response.json();
 
           topicSelect.innerHTML = "";
 
-          if (data.topics && data.topics.length) {
-              data.topics.forEach(t => {
+          // if code 404
+          if (response.status === 404) {
+              topicSelect.innerHTML = "<option disabled>Предмет не найден</option>";
+              return;
+          }
+
+          console.log(data);
+
+          if (data.lessons && data.lessons.length) {
+              data.lessons.forEach(t => {
                   const o = document.createElement("option");
                   o.value = t.id;
-                  o.textContent = t.name;
+                  o.textContent = t.title;
                   topicSelect.appendChild(o);
               });
           } else {
-              topicSelect.innerHTML = "<option disabled>Темы не найдены</option>";
+              topicSelect.innerHTML = "<option disabled>Уроки не найдены</option>";
           }
       });
   </script>

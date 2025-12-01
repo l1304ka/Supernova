@@ -145,7 +145,6 @@ class Question(models.Model):
 class Test(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="tests")
     assigned_topic = models.ForeignKey('AssignedTopic', on_delete=models.SET_NULL, null=True, blank=True)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
     date_available = models.DateField()
     questions = models.ManyToManyField(Question, blank=True)
@@ -177,10 +176,10 @@ class TestResult(models.Model):
 
 
 class AssignedTopic(models.Model):
-    """Назначенная тема для класса (домашка / адаптивный тест)"""
+    """Назначенный урок для класса (адаптивный тест / ДЗ)"""
     title = models.CharField(max_length=150, blank=True)
     school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE, related_name="assigned_topics")
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="assigned_to_classes")
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="assigned_topics", null=True, blank=True)
     assigned_by = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="given_topics")
     date_assigned = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
@@ -188,19 +187,20 @@ class AssignedTopic(models.Model):
     deadline = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Назначенная тема"
-        verbose_name_plural = "Назначенные темы"
+        verbose_name = "Назначенный урок"
+        verbose_name_plural = "Назначенные уроки"
 
     def __str__(self):
-        return f"{self.title}: {self.topic.name} → {self.school_class.name}"
+        return f"{self.title or 'Урок'}: {self.lesson.title} → {self.school_class.name}"
 
     @property
     def subject(self):
-        return self.school_class.teachers.first().subjects.filter(topics=self.topic).first()
+        return self.lesson.subject
 
     @property
-    def lesson(self):
-        return self.subject.lessons.filter(topics=self.topic).first()
+    def topics(self):
+        return self.lesson.topics.all()
+
 
 
 class StudentAnswer(models.Model):
@@ -236,7 +236,8 @@ class StudentAnswer(models.Model):
 class Homework(models.Model):
     """Домашка, сгенерированная ИИ для конкретного результата теста ученика."""
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="homeworks")
-    topic = models.ForeignKey(AssignedTopic, on_delete=models.CASCADE, related_name="homeworks")
+    # topic = models.ForeignKey(AssignedTopic, on_delete=models.CASCADE, related_name="homeworks")
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="homeworks", null=True, blank=True)
     test_result = models.OneToOneField(
         TestResult,
         on_delete=models.CASCADE,
@@ -252,7 +253,7 @@ class Homework(models.Model):
         verbose_name_plural = "Домашние задания"
 
     def __str__(self):
-        return f"ДЗ {self.student} по {self.topic.topic.name} ({self.tasks_count} задач)"
+        return f"ДЗ {self.student} по {self.lesson.title} ({self.tasks_count} задач)"
 
 
 class HomeworkTask(models.Model):

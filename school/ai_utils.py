@@ -4,7 +4,7 @@ from google import genai
 from django.conf import settings
 
 
-def generate_homework_tasks_gemini(topic_name: str,
+def generate_homework_tasks_gemini(topics_name: str,
                                    tasks_count: int,
                                    difficulty_hint: str,
                                    score_percent: int) -> list[dict]:
@@ -22,7 +22,7 @@ def generate_homework_tasks_gemini(topic_name: str,
     prompt = f"""
     Ты — учитель физики 8 класса, который пишет строгие, ясные и короткие задачи без лишних слов.
 
-    Сгенерируй {tasks_count} НОВЫХ ЗАДАЧ по теме: "{topic_name}"
+    Сгенерируй {tasks_count} НОВЫХ ЗАДАЧ по теме: "{topics_name}"
     с учётом уровня ученика:
     - результат на тесте по теме: {score_percent}%
     - ориентировочная сложность: {difficulty_hint}
@@ -113,6 +113,8 @@ def generate_homework_tasks_gemini(topic_name: str,
         raw = raw.split("\n", 1)[-1]
         if raw.lower().startswith("json"):
             raw = raw[4:]
+
+    print(raw)
 
     # Иногда модель добавляет текст до или после JSON → очищаем
     try:

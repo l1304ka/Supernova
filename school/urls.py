@@ -7,6 +7,7 @@ urlpatterns = [
     path("test/<int:test_id>/result/", views.test_result, name="test_result"),
     path("assign_homework/", views.assign_homework, name="assign_homework"),
     path("get_topics_by_subject/", views.get_topics_by_subject, name="get_topics_by_subject"),  # ← новый
+    path("get_lessons_by_subject/", views.get_lessons_by_subject, name="get_lessons_by_subject"),  # ← новый
     path("adaptive_test<int:test_id>/", views.adaptive_test, name="adaptive_test"),  # ← новый
     path("results/", views.student_results, name="student_results"),
     path("adaptive/<int:test_id>/", views.adaptive_test, name="adaptive_test"),
@@ -26,4 +27,5 @@ urlpatterns = [
     path("homework/generate/<int:result_id>/", views.generate_homework, name="generate_homework"),
     path("homework/<int:homework_id>/", views.homework_detail, name="homework_detail"),
     path("homework/<int:homework_id>/result/", views.homework_result, name="homework_result"),
+    path("lesson/create/", views.create_lesson, name="create_lesson"),
 ]

@@ -5,8 +5,14 @@
 {% block content %}
   <div class="container mt-4">
 
-    <h2 class="mb-4">Здравствуйте, {{ teacher.name }} {{ teacher.surname }}!</h2>
-
+  <div class="row">
+    <h2 class="mb-4 col">Здравствуйте, {{ teacher.name }} {{ teacher.surname }}!</h2>
+    <div class="d-flex col justify-content-end mb-4">
+      <a href="{% url 'create_lesson' %}" class="btn btn-success">
+        ➕ Создать урок
+      </a>
+    </div>
+  </div>
     <!-- === БЛОК КЛАССОВ === -->
     <h3 class="mt-4">Ваши классы</h3>
     <div class="row">
@@ -27,6 +33,7 @@
       {% endfor %}
     </div>
 
+
     <!-- === БЛОК АКТИВНОСТИ === -->
     <h3 class="mt-4 mb-3">🕒 Последние события</h3>
 
@@ -34,7 +41,7 @@
       <p class="text-muted">Событий пока нет.</p>
     {% else %}
       <!-- Фильтры -->
-      <div class="event-tabs d-flex gap-2 mb-3">
+      <div class="event-tabs d-flex gap-3 mb-3">
         <div class="event-tab active" data-type="all">
           <span>Все</span>
         </div>
