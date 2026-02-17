@@ -94,6 +94,11 @@ def generate_homework_tasks_gemini(topics_name: str,
       }},
       ...
     ]
+    
+    ВАЖНОЕ ТРЕБОВАНИЕ К JSON:
+    - Весь ответ должен быть строго валидным JSON.
+    - Все обратные косые черты (backslash) в формулах LaTeX ДОЛЖНЫ быть дважды экранированы. 
+      Например, пиши "\\\\alpha" вместо "\\alpha" и "\\\\frac" вместо "\\frac", чтобы JSON не ломался.
 
     Количество объектов — ровно {tasks_count}.
     """
@@ -119,6 +124,7 @@ def generate_homework_tasks_gemini(topics_name: str,
         start = raw.find("[")
         end = raw.rfind("]") + 1
         cleaned = raw[start:end]
+        fixed_raw = cleaned.replace('\\', '\\\\')
         data = json.loads(cleaned)
 
     tasks = []

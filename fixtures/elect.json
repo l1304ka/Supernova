@@ -1,0 +1,602 @@
+[
+    {
+        "model": "school.question",
+        "pk": 120,
+        "fields": {
+            "subtopic": 13,
+            "text": "Как взаимодействуют два тела, имеющие положительные электрические заряды?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Отталкиваются",
+            "option_2": "Притягиваются",
+            "option_3": "Не взаимодействуют",
+            "option_4": "Сначала притягиваются, потом отталкиваются",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 121,
+        "fields": {
+            "subtopic": 13,
+            "text": "Частица, имеющая наименьший отрицательный заряд — это...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Электрон",
+            "option_2": "Протон",
+            "option_3": "Нейтрон",
+            "option_4": "Ион",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 122,
+        "fields": {
+            "subtopic": 13,
+            "text": "Атом в целом электронейтрален, потому что...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Число протонов в ядре равно числу электронов в оболочке",
+            "option_2": "В ядре нет заряженных частиц",
+            "option_3": "Электроны имеют положительный заряд",
+            "option_4": "Нейтроны нейтрализуют заряд электронов",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 123,
+        "fields": {
+            "subtopic": 13,
+            "text": "Вещества, через которые электрические заряды могут переходить от заряженного тела к незаряженному, называются...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Проводники",
+            "option_2": "Диэлектрики",
+            "option_3": "Изоляторы",
+            "option_4": "Полумагниты",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 124,
+        "fields": {
+            "subtopic": 13,
+            "text": "Прибор для обнаружения электрического заряда называется...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Электроскоп",
+            "option_2": "Гальванометр",
+            "option_3": "Амперметр",
+            "option_4": "Конденсатор",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 125,
+        "fields": {
+            "subtopic": 13,
+            "text": "Если тело потеряло несколько электронов, оно становится заряженным...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Положительно",
+            "option_2": "Отрицательно",
+            "option_3": "Нейтрально",
+            "option_4": "Его заряд не меняется",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 126,
+        "fields": {
+            "subtopic": 13,
+            "text": "Как называются атомы, потерявшие один или несколько электронов?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Положительные ионы",
+            "option_2": "Отрицательные ионы",
+            "option_3": "Изотопы",
+            "option_4": "Молекулы",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 127,
+        "fields": {
+            "subtopic": 13,
+            "text": "Что из перечисленного является хорошим диэлектриком?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Эбонит",
+            "option_2": "Медь",
+            "option_3": "Раствор соли",
+            "option_4": "Железо",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 128,
+        "fields": {
+            "subtopic": 14,
+            "text": "Электрическим током называется...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Упорядоченное движение заряженных частиц",
+            "option_2": "Хаотичное движение молекул",
+            "option_3": "Движение только положительных ионов",
+            "option_4": "Передача энергии от атома к атому",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 129,
+        "fields": {
+            "subtopic": 14,
+            "text": "Какая физическая величина измеряется в Амперах?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Сила тока",
+            "option_2": "Напряжение",
+            "option_3": "Электрический заряд",
+            "option_4": "Сопротивление",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 130,
+        "fields": {
+            "subtopic": 14,
+            "text": "Прибор для измерения напряжения на участке цепи — это...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Вольтметр",
+            "option_2": "Амперметр",
+            "option_3": "Омметр",
+            "option_4": "Ваттметр",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 131,
+        "fields": {
+            "subtopic": 14,
+            "text": "Как включается амперметр в электрическую цепь?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Последовательно с тем элементом, где измеряют ток",
+            "option_2": "Параллельно источнику тока",
+            "option_3": "Произвольным образом",
+            "option_4": "Только после нагрузки",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 132,
+        "fields": {
+            "subtopic": 14,
+            "text": "Какое действие тока используется в лампах накаливания?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Тепловое",
+            "option_2": "Химическое",
+            "option_3": "Магнитное",
+            "option_4": "Механическое",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 133,
+        "fields": {
+            "subtopic": 14,
+            "text": "Электрическое сопротивление проводника зависит от...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Длины, площади сечения и материала проводника",
+            "option_2": "Только от силы тока в цепи",
+            "option_3": "Только от напряжения на концах проводника",
+            "option_4": "От формы сечения (круг или квадрат)",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 134,
+        "fields": {
+            "subtopic": 14,
+            "text": "Носителями свободного заряда в металлах являются...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Электроны",
+            "option_2": "Протоны",
+            "option_3": "Положительные ионы",
+            "option_4": "Отрицательные ионы",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 135,
+        "fields": {
+            "subtopic": 14,
+            "text": "Удельное сопротивление вещества показывает...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Сопротивление проводника длиной 1 м и площадью сечения 1 мм²",
+            "option_2": "Общее сопротивление всей цепи",
+            "option_3": "Скорость движения электронов в веществе",
+            "option_4": "Сколько тепла выделяет проводник",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 136,
+        "fields": {
+            "subtopic": 15,
+            "text": "Согласно закону Ома для участка цепи, сила тока прямо пропорциональна...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Напряжению на концах участка",
+            "option_2": "Сопротивлению участка",
+            "option_3": "Времени прохождения тока",
+            "option_4": "Массе проводника",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 137,
+        "fields": {
+            "subtopic": 15,
+            "text": "Формула закона Ома записывается так:",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "I = U / R",
+            "option_2": "I = U * R",
+            "option_3": "R = I / U",
+            "option_4": "U = I / R",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 138,
+        "fields": {
+            "subtopic": 15,
+            "text": "Как изменится сила тока в цепи, если сопротивление увеличить в 2 раза при постоянном напряжении?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Уменьшится в 2 раза",
+            "option_2": "Увеличится в 2 раза",
+            "option_3": "Не изменится",
+            "option_4": "Уменьшится в 4 раза",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 139,
+        "fields": {
+            "subtopic": 15,
+            "text": "Напряжение на резисторе 10 В, его сопротивление 5 Ом. Чему равна сила тока?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "2 А",
+            "option_2": "50 А",
+            "option_3": "0.5 А",
+            "option_4": "15 А",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 140,
+        "fields": {
+            "subtopic": 15,
+            "text": "Какое напряжение нужно приложить к проводнику сопротивлением 100 Ом, чтобы сила тока в нем была 0,1 А?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "10 В",
+            "option_2": "1000 В",
+            "option_3": "1 В",
+            "option_4": "110 В",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 141,
+        "fields": {
+            "subtopic": 15,
+            "text": "График зависимости силы тока от напряжения называется...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Вольт-амперная характеристика",
+            "option_2": "Электрограмма",
+            "option_3": "Синусоида тока",
+            "option_4": "Характеристика мощности",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 142,
+        "fields": {
+            "subtopic": 15,
+            "text": "Единица измерения электрического сопротивления называется...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Ом",
+            "option_2": "Вольт",
+            "option_3": "Ампер",
+            "option_4": "Кулон",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 143,
+        "fields": {
+            "subtopic": 15,
+            "text": "Если напряжение на участке цепи увеличить в 3 раза, как изменится его сопротивление?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Не изменится (сопротивление зависит от свойств проводника)",
+            "option_2": "Увеличится в 3 раза",
+            "option_3": "Уменьшится в 3 раза",
+            "option_4": "Станет равным нулю",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 144,
+        "fields": {
+            "subtopic": 16,
+            "text": "При последовательном соединении проводников общая сила тока в цепи...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Одинакова на всех участках",
+            "option_2": "Равна сумме токов на участках",
+            "option_3": "Увеличивается к концу цепи",
+            "option_4": "Зависит от расположения источника",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 145,
+        "fields": {
+            "subtopic": 16,
+            "text": "При последовательном соединении двух резисторов общее сопротивление равно...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Сумме их сопротивлений (R1 + R2)",
+            "option_2": "Произведению их сопротивлений",
+            "option_3": "Разности их сопротивлений",
+            "option_4": "Среднему арифметическому",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 146,
+        "fields": {
+            "subtopic": 16,
+            "text": "Какая величина остается одинаковой для всех потребителей при параллельном соединении?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Напряжение",
+            "option_2": "Сила тока",
+            "option_3": "Сопротивление",
+            "option_4": "Заряд",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 147,
+        "fields": {
+            "subtopic": 16,
+            "text": "Две лампы по 100 Ом соединены параллельно. Чему равно их общее сопротивление?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "50 Ом",
+            "option_2": "200 Ом",
+            "option_3": "100 Ом",
+            "option_4": "1 Ом",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 148,
+        "fields": {
+            "subtopic": 16,
+            "text": "В квартире все электроприборы соединены...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Параллельно",
+            "option_2": "Последовательно",
+            "option_3": "Смешанно (но большинство последовательно)",
+            "option_4": "Без использования проводников",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 149,
+        "fields": {
+            "subtopic": 16,
+            "text": "Почему при выкручивании одной лампочки в последовательной гирлянде гаснут все остальные?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Цепь размыкается, и ток перестает течь",
+            "option_2": "Резко падает напряжение",
+            "option_3": "Остальные лампочки перегорают от перегрузки",
+            "option_4": "Возрастает сопротивление до бесконечности",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 150,
+        "fields": {
+            "subtopic": 16,
+            "text": "Общая сила тока в неразветвленной части цепи при параллельном соединении равна...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Сумме токов в отдельных ветвях",
+            "option_2": "Току в самой длинной ветви",
+            "option_3": "Разности токов в ветвях",
+            "option_4": "Всегда 1 Амперу",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 151,
+        "fields": {
+            "subtopic": 16,
+            "text": "При параллельном соединении добавление нового резистора...",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Уменьшает общее сопротивление цепи",
+            "option_2": "Увеличивает общее сопротивление цепи",
+            "option_3": "Не меняет общего сопротивления",
+            "option_4": "Меняет только напряжение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 152,
+        "fields": {
+            "subtopic": 17,
+            "text": "Работа электрического тока на участке цепи равна...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Произведению напряжения, силы тока и времени (U * I * t)",
+            "option_2": "Отношению напряжения к силе тока",
+            "option_3": "Произведению мощности на сопротивление",
+            "option_4": "Сумме всех зарядов",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 153,
+        "fields": {
+            "subtopic": 17,
+            "text": "Мощность электрического тока измеряется в...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Ваттах (Вт)",
+            "option_2": "Джоулях (Дж)",
+            "option_3": "Вольтах (В)",
+            "option_4": "Амперах (А)",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 154,
+        "fields": {
+            "subtopic": 17,
+            "text": "Согласно закону Джоуля-Ленца, количество теплоты, выделяемое проводником с током, пропорционально...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Квадрату силы тока, сопротивлению и времени",
+            "option_2": "Напряжению и массе проводника",
+            "option_3": "Только силе тока и его длине",
+            "option_4": "Объему проводника",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 155,
+        "fields": {
+            "subtopic": 17,
+            "text": "Для измерения работы тока в быту используют...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Электрический счетчик",
+            "option_2": "Стабилизатор напряжения",
+            "option_3": "Трансформатор",
+            "option_4": "Реостат",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 156,
+        "fields": {
+            "subtopic": 17,
+            "text": "Какая мощность у электрочайника, если при напряжении 220 В через него течет ток 5 А?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "1100 Вт",
+            "option_2": "44 Вт",
+            "option_3": "225 Вт",
+            "option_4": "2200 Вт",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 157,
+        "fields": {
+            "subtopic": 17,
+            "text": "Короткое замыкание происходит, когда...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Сопротивление нагрузки становится очень малым",
+            "option_2": "Напряжение падает до нуля",
+            "option_3": "В цепь включают слишком много приборов параллельно",
+            "option_4": "Обрывается нулевой провод",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 158,
+        "fields": {
+            "subtopic": 17,
+            "text": "Плавкий предохранитель защищает цепь тем, что...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Разрушается (плавится) при превышении допустимой силы тока",
+            "option_2": "Накапливает лишнюю энергию в себе",
+            "option_3": "Повышает сопротивление всей цепи",
+            "option_4": "Снижает напряжение до безопасного уровня",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 159,
+        "fields": {
+            "subtopic": 17,
+            "text": "Единица работы электрического тока в системе СИ — это...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Джоуль",
+            "option_2": "Ватт",
+            "option_3": "Ватт-час",
+            "option_4": "Кулон-вольт",
+            "correct_answer": "1"
+        }
+    }
+]

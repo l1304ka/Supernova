@@ -1,0 +1,157 @@
+[
+  {
+    "model": "school.subtopic",
+    "pk": 1,
+    "fields": { "name": "Источники света и прямолинейное распространение света" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 2,
+    "fields": { "name": "Закон отражения света и плоское зеркало" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 3,
+    "fields": { "name": "Преломление света. Показатель преломления" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 4,
+    "fields": { "name": "Световые явления: тени и затмения" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 5,
+    "fields": { "name": "Линзы. Оптическая сила линзы" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 6,
+    "fields": { "name": "Оптические приборы и глаз" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 7,
+    "fields": { "name": "Внутренняя энергия и способы её изменения" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 8,
+    "fields": { "name": "Виды теплопередачи: теплопроводность, конвекция, излучение" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 9,
+    "fields": { "name": "Количество теплоты. Удельная теплоёмкость и теплота сгорания" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 10,
+    "fields": { "name": "Плавление, отвердевание и удельная теплота плавления" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 11,
+    "fields": { "name": "Испарение, конденсация и кипение" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 12,
+    "fields": { "name": "Влажность воздуха и тепловые двигатели" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 13,
+    "fields": { "name": "Электрический заряд. Строение атома. Проводники" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 14,
+    "fields": { "name": "Электрический ток. Сила тока, напряжение, сопротивление" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 15,
+    "fields": { "name": "Закон Ома для участка цепи" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 16,
+    "fields": { "name": "Последовательное и параллельное соединение проводников" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 17,
+    "fields": { "name": "Работа и мощность тока. Закон Джоуля-Ленца" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 18,
+    "fields": { "name": "Магнитное поле. Магнитные линии. Опыт Эрстеда" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 19,
+    "fields": { "name": "Электромагниты и их применение" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 20,
+    "fields": { "name": "Постоянные магниты. Магнитное поле Земли" }
+  },
+  {
+    "model": "school.subtopic",
+    "pk": 21,
+    "fields": { "name": "Действие магнитного поля на проводник. Электродвигатель" }
+  },
+
+  {
+    "model": "school.topic",
+    "pk": 1,
+    "fields": {
+      "name": "Тепловые явления",
+      "subtopics": [7, 8, 9]
+    }
+  },
+  {
+    "model": "school.topic",
+    "pk": 2,
+    "fields": {
+      "name": "Изменение агрегатных состояний вещества",
+      "subtopics": [10, 11, 12]
+    }
+  },
+  {
+    "model": "school.topic",
+    "pk": 3,
+    "fields": {
+      "name": "Электрические явления",
+      "subtopics": [13, 14, 15, 16, 17]
+    }
+  },
+  {
+    "model": "school.topic",
+    "pk": 4,
+    "fields": {
+      "name": "Магнитные явления",
+      "subtopics": [18, 19, 20, 21]
+    }
+  },
+  {
+    "model": "school.topic",
+    "pk": 5,
+    "fields": {
+      "name": "Световые явления",
+      "subtopics": [1, 2, 3, 4, 5, 6]
+    }
+  },
+
+  {
+    "model": "school.subject",
+    "pk": 1,
+    "fields": {
+      "name": "Физика 8 класс",
+      "topics": [1, 2, 3, 4, 5]
+    }
+  }
+]
