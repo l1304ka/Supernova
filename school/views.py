@@ -321,6 +321,8 @@ def index(request):
                 "percent": p,
             })
 
+        #todo: СТАТИСТИКА У УЧЕНИКА ПО ПРЕДМЕТАМ ОТДЕЛЬНО
+
         # История тестов (баллы)
         tests_history = list(
             TestResult.objects.filter(student=student)

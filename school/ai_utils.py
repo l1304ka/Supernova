@@ -1,5 +1,4 @@
-﻿# school/ai_utils.py
-import json
+﻿import json
 from google import genai
 from django.conf import settings
 
@@ -99,7 +98,6 @@ def generate_homework_tasks_gemini(topics_name: str,
     Количество объектов — ровно {tasks_count}.
     """
 
-    # Запрос к модели
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=prompt
@@ -107,7 +105,6 @@ def generate_homework_tasks_gemini(topics_name: str,
 
     raw = response.text.strip()
 
-    # Удаляем ```json код-блоки, если появились
     if raw.startswith("```"):
         raw = raw.strip("`")
         raw = raw.split("\n", 1)[-1]
@@ -116,11 +113,9 @@ def generate_homework_tasks_gemini(topics_name: str,
 
     print(raw)
 
-    # Иногда модель добавляет текст до или после JSON → очищаем
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
-        # fallback – вытаскиваем всё между [ и ]
         start = raw.find("[")
         end = raw.rfind("]") + 1
         cleaned = raw[start:end]

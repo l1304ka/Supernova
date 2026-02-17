@@ -18,25 +18,25 @@ urlpatterns = [
     path("subjects/<int:id>/edit/", views.edit_subject, name="admin_edit_subject"),
     path("subjects/<int:id>/delete/", views.delete_subject, name="admin_delete_subject"),
 
-# TOPICS
-path("topics/", views.topic_list, name="admin_topics"),
-path("topics/add/", views.add_topic, name="admin_add_topic"),
-path("topics/<int:id>/edit/", views.edit_topic, name="admin_edit_topic"),
-path("topics/<int:id>/delete/", views.delete_topic, name="admin_delete_topic"),
+    # TOPICS
+    path("topics/", views.topic_list, name="admin_topics"),
+    path("topics/add/", views.add_topic, name="admin_add_topic"),
+    path("topics/<int:id>/edit/", views.edit_topic, name="admin_edit_topic"),
+    path("topics/<int:id>/delete/", views.delete_topic, name="admin_delete_topic"),
 
-# SUBTOPICS
-path("subtopics/", views.subtopic_list, name="admin_subtopics"),
-path("subtopics/add/", views.add_subtopic, name="admin_add_subtopic"),
-path("subtopics/<int:id>/edit/", views.edit_subtopic, name="admin_edit_subtopic"),
-path("subtopics/<int:id>/delete/", views.delete_subtopic, name="admin_delete_subtopic"),
+    # SUBTOPICS
+    path("subtopics/", views.subtopic_list, name="admin_subtopics"),
+    path("subtopics/add/", views.add_subtopic, name="admin_add_subtopic"),
+    path("subtopics/<int:id>/edit/", views.edit_subtopic, name="admin_edit_subtopic"),
+    path("subtopics/<int:id>/delete/", views.delete_subtopic, name="admin_delete_subtopic"),
 
-path("classes/<int:id>/assign-teachers/", views.assign_teachers, name="admin_assign_teachers"),
-path("classes/<int:id>/assign-students/", views.assign_students, name="admin_assign_students"),
+    path("classes/<int:id>/assign-teachers/", views.assign_teachers, name="admin_assign_teachers"),
+    path("classes/<int:id>/assign-students/", views.assign_students, name="admin_assign_students"),
 
-# QUESTIONS
-path("questions/", views.question_list, name="admin_questions"),
-path("questions/add/", views.add_question, name="admin_add_question"),
-path("questions/<int:id>/edit/", views.edit_question, name="admin_edit_question"),
-path("questions/<int:id>/delete/", views.delete_question, name="admin_delete_question"),
+    # QUESTIONS
+    path("questions/", views.question_list, name="admin_questions"),
+    path("questions/add/", views.add_question, name="admin_add_question"),
+    path("questions/<int:id>/edit/", views.edit_question, name="admin_edit_question"),
+    path("questions/<int:id>/delete/", views.delete_question, name="admin_delete_question"),
 
 ]
