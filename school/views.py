@@ -279,7 +279,10 @@ def index(request):
                 homework_in_progress.append(item)
 
         # === TESTS ===
-        tests_total = assigned_topics.count()
+        tests_total = AssignedTopic.objects.filter(
+            school_class__in=classes,
+            is_active=True
+        ).count()
         tests_done = results.count()
 
         avg_score = round(results.aggregate(Avg("score"))["score__avg"] or 0)
