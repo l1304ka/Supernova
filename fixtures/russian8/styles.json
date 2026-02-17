@@ -1,0 +1,602 @@
+[
+    {
+        "model": "school.question",
+        "pk": 440,
+        "fields": {
+            "subtopic": 31,
+            "text": "Для какого стиля речи характерны точность, логичность, использование терминов и отсутствие эмоциональности?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Научный стиль",
+            "option_2": "Разговорный стиль",
+            "option_3": "Публицистический стиль",
+            "option_4": "Художественный стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 441,
+        "fields": {
+            "subtopic": 31,
+            "text": "В каком стиле речи чаще всего используются стандартные обороты (клише), такие как «в соответствии с приказом», «в целях улучшения»?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Официально-деловой стиль",
+            "option_2": "Научный стиль",
+            "option_3": "Публицистический стиль",
+            "option_4": "Разговорный стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 442,
+        "fields": {
+            "subtopic": 31,
+            "text": "Основная задача этого стиля — воздействие на слушателя или читателя, призыв к действию, обсуждение общественно важных проблем. О каком стиле речь?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Публицистический стиль",
+            "option_2": "Официально-деловой стиль",
+            "option_3": "Научный стиль",
+            "option_4": "Художественный стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 443,
+        "fields": {
+            "subtopic": 31,
+            "text": "К какому жанру научного стиля относится краткое изложение содержания статьи или книги?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Аннотация",
+            "option_2": "Репортаж",
+            "option_3": "Заявление",
+            "option_4": "Рассказ",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 444,
+        "fields": {
+            "subtopic": 31,
+            "text": "Какой стиль речи используется в учебниках, энциклопедиях и диссертациях?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Научный стиль",
+            "option_2": "Официально-деловой стиль",
+            "option_3": "Художественный стиль",
+            "option_4": "Разговорный стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 445,
+        "fields": {
+            "subtopic": 31,
+            "text": "Укажите жанр официально-делового стиля:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Автобиография",
+            "option_2": "Очерк",
+            "option_3": "Интервью",
+            "option_4": "Басня",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 446,
+        "fields": {
+            "subtopic": 31,
+            "text": "Для публицистического стиля характерно...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Сочетание логичности и эмоциональности, использование риторических вопросов",
+            "option_2": "Полное отсутствие личного отношения автора",
+            "option_3": "Использование только узкоспециальных терминов",
+            "option_4": "Обилие диалектизмов и просторечных слов",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 447,
+        "fields": {
+            "subtopic": 31,
+            "text": "В каком стиле речи недопустимо использование многозначных слов и эпитетов?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Официально-деловой стиль",
+            "option_2": "Художественный стиль",
+            "option_3": "Разговорный стиль",
+            "option_4": "Публицистический стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 448,
+        "fields": {
+            "subtopic": 31,
+            "text": "К какому стилю относится текст Конституции РФ?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Официально-деловой стиль",
+            "option_2": "Научный стиль",
+            "option_3": "Публицистический стиль",
+            "option_4": "Художественный стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 449,
+        "fields": {
+            "subtopic": 31,
+            "text": "Какая функция является основной для научного стиля?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Информативная (сообщение знаний)",
+            "option_2": "Эстетическая",
+            "option_3": "Коммуникативная (общение)",
+            "option_4": "Волюнтативная (приказ)",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 450,
+        "fields": {
+            "subtopic": 32,
+            "text": "В каком стиле речи широко используются средства художественной выразительности (метафоры, эпитеты, сравнения)?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Художественный стиль",
+            "option_2": "Научный стиль",
+            "option_3": "Разговорный стиль",
+            "option_4": "Официально-деловой стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 451,
+        "fields": {
+            "subtopic": 32,
+            "text": "Для разговорного стиля характерны...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Неполные предложения, эмоциональная лексика, диалог",
+            "option_2": "Строгий порядок слов, отсутствие местоимений",
+            "option_3": "Сложные синтаксические конструкции и термины",
+            "option_4": "Только письменная форма реализации",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 452,
+        "fields": {
+            "subtopic": 32,
+            "text": "Какой стиль речи может сочетать в себе элементы всех остальных стилей?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Художественный стиль",
+            "option_2": "Разговорный стиль",
+            "option_3": "Научный стиль",
+            "option_4": "Официально-деловой стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 453,
+        "fields": {
+            "subtopic": 32,
+            "text": "Укажите признак разговорного стиля:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Непринужденность и спонтанность",
+            "option_2": "Нормативность и сухость",
+            "option_3": "Доказательность и аргументированность",
+            "option_4": "Обязательное наличие клише",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 454,
+        "fields": {
+            "subtopic": 32,
+            "text": "В каком стиле речи автор создает вымышленный мир и образы?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Художественный стиль",
+            "option_2": "Публицистический стиль",
+            "option_3": "Научный стиль",
+            "option_4": "Разговорный стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 455,
+        "fields": {
+            "subtopic": 32,
+            "text": "Какой тип речи используется для рассказа о событиях, происходящих последовательно во времени?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Повествование",
+            "option_2": "Описание",
+            "option_3": "Рассуждение",
+            "option_4": "Диалог",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 456,
+        "fields": {
+            "subtopic": 32,
+            "text": "Какой тип речи отвечает на вопрос «КАК ВЫГЛЯДИТ ПРЕДМЕТ?»",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Описание",
+            "option_2": "Повествование",
+            "option_3": "Рассуждение",
+            "option_4": "Объяснение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 457,
+        "fields": {
+            "subtopic": 32,
+            "text": "Какой тип речи строится по схеме: тезис — аргументы — вывод?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Рассуждение",
+            "option_2": "Описание",
+            "option_3": "Повествование",
+            "option_4": "Инструкция",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 458,
+        "fields": {
+            "subtopic": 32,
+            "text": "Если к тексту можно сделать только один кадр (фотографию), то это тип речи...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Описание",
+            "option_2": "Повествование",
+            "option_3": "Рассуждение",
+            "option_4": "Репортаж",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 459,
+        "fields": {
+            "subtopic": 32,
+            "text": "Если текст напоминает сменяющие друг друга кадры киноленты, то это тип речи...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Повествование",
+            "option_2": "Описание",
+            "option_3": "Рассуждение",
+            "option_4": "Рецензия",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 460,
+        "fields": {
+            "subtopic": 32,
+            "text": "К какому типу речи относится текст, объясняющий причины какого-либо явления?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Рассуждение",
+            "option_2": "Повествование",
+            "option_3": "Описание",
+            "option_4": "Зарисовка",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 461,
+        "fields": {
+            "subtopic": 31,
+            "text": "Укажите жанр публицистического стиля:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Репортаж",
+            "option_2": "Доклад",
+            "option_3": "Приказ",
+            "option_4": "Роман",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 462,
+        "fields": {
+            "subtopic": 32,
+            "text": "В каком типе речи чаще всего используются глаголы со значением движения и последовательности действий?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Повествование",
+            "option_2": "Описание",
+            "option_3": "Рассуждение",
+            "option_4": "Монолог",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 463,
+        "fields": {
+            "subtopic": 32,
+            "text": "В каком типе речи преобладают имена прилагательные и причастия?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Описание",
+            "option_2": "Повествование",
+            "option_3": "Рассуждение",
+            "option_4": "Спор",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 464,
+        "fields": {
+            "subtopic": 31,
+            "text": "Слово «АПРОБАЦИЯ» скорее всего встретится в тексте...",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Научного стиля",
+            "option_2": "Разговорного стиля",
+            "option_3": "Художественного стиля",
+            "option_4": "Публицистического стиля",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 465,
+        "fields": {
+            "subtopic": 31,
+            "text": "Для официально-делового стиля характерно использование...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Отглагольных существительных",
+            "option_2": "Междометий",
+            "option_3": "Ласкательных суффиксов",
+            "option_4": "Образных метафор",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 466,
+        "fields": {
+            "subtopic": 31,
+            "text": "К какому стилю относится газетная заметка о спортивном матче?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Публицистический стиль",
+            "option_2": "Научный стиль",
+            "option_3": "Разговорный стиль",
+            "option_4": "Официально-деловой стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 467,
+        "fields": {
+            "subtopic": 32,
+            "text": "Основная форма существования разговорного стиля — это...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Устная",
+            "option_2": "Письменная",
+            "option_3": "Печатная",
+            "option_4": "Электронная",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 468,
+        "fields": {
+            "subtopic": 32,
+            "text": "Жанр художественного стиля, имеющий небольшой объем и посвященный одному событию:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Рассказ",
+            "option_2": "Повесть",
+            "option_3": "Эпопея",
+            "option_4": "Статья",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 469,
+        "fields": {
+            "subtopic": 31,
+            "text": "Что является «визитной карточкой» научного стиля?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Терминология",
+            "option_2": "Обращения",
+            "option_3": "Восклицания",
+            "option_4": "Разговорные частицы",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 470,
+        "fields": {
+            "subtopic": 31,
+            "text": "В каком стиле часто используются побудительные предложения, призывающие к гражданской ответственности?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Публицистический стиль",
+            "option_2": "Научный стиль",
+            "option_3": "Официально-деловой стиль",
+            "option_4": "Разговорный стиль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 471,
+        "fields": {
+            "subtopic": 32,
+            "text": "Укажите пример предложения в разговорном стиле:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Ну, ты заходи, если что!",
+            "option_2": "Прошу Вас предоставить справку.",
+            "option_3": "Вода кипит при 100 градусах.",
+            "option_4": "Наступила золотая осень.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 472,
+        "fields": {
+            "subtopic": 32,
+            "text": "Найдите предложение из художественного стиля:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Деревья в инее стояли, словно в сказке.",
+            "option_2": "Иней — это вид атмосферных осадков.",
+            "option_3": "При обнаружении инея на лобовом стекле очистите его.",
+            "option_4": "Смотри, сколько инея намело!",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 473,
+        "fields": {
+            "subtopic": 31,
+            "text": "Какая черта лишняя для научного стиля?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Субъективность и личные эмоции",
+            "option_2": "Логическая последовательность",
+            "option_3": "Обобщенность понятий",
+            "option_4": "Доказательность выводов",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 474,
+        "fields": {
+            "subtopic": 32,
+            "text": "Рассуждение как тип речи обычно начинается с...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Тезиса (положения, которое нужно доказать)",
+            "option_2": "Примера из жизни",
+            "option_3": "Описания внешности героя",
+            "option_4": "Перечисления событий",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 475,
+        "fields": {
+            "subtopic": 31,
+            "text": "Слово «ПРОШУ» является ключевым для жанров...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Официально-делового стиля (заявление)",
+            "option_2": "Научного стиля (статья)",
+            "option_3": "Художественного стиля (ода)",
+            "option_4": "Публицистического стиля (фельетон)",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 476,
+        "fields": {
+            "subtopic": 32,
+            "text": "Укажите тип речи текста: «Вчера я пошел в школу, встретил друга, и мы вместе решили зайти в библиотеку».",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Повествование",
+            "option_2": "Описание",
+            "option_3": "Рассуждение",
+            "option_4": "Доклад",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 477,
+        "fields": {
+            "subtopic": 32,
+            "text": "Укажите тип речи текста: «Книга — наш учитель, потому что в ней собрана мудрость поколений».",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Рассуждение",
+            "option_2": "Описание",
+            "option_3": "Повествование",
+            "option_4": "Очерк",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 478,
+        "fields": {
+            "subtopic": 32,
+            "text": "Укажите тип речи текста: «Небо было серым, тяжелым, с низкими рваными облаками».",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Описание",
+            "option_2": "Повествование",
+            "option_3": "Рассуждение",
+            "option_4": "Анализ",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 479,
+        "fields": {
+            "subtopic": 32,
+            "text": "Что объединяет все функциональные стили речи?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Опора на единый литературный язык",
+            "option_2": "Наличие сюжета и героев",
+            "option_3": "Обязательное использование рифмы",
+            "option_4": "Запрет на использование глаголов",
+            "correct_answer": "1"
+        }
+    }
+]

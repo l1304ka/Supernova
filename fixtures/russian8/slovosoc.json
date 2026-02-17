@@ -1,0 +1,602 @@
+[
+    {
+        "model": "school.question",
+        "pk": 200,
+        "fields": {
+            "subtopic": 22,
+            "text": "Что такое словосочетание?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Два или несколько слов, связанных между собой по смыслу и грамматически",
+            "option_2": "Законченная мысль, имеющая интонацию завершения",
+            "option_3": "Главные члены предложения (подлежащее и сказуемое)",
+            "option_4": "Просто набор любых слов, стоящих рядом",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 201,
+        "fields": {
+            "subtopic": 22,
+            "text": "Из каких частей состоит словосочетание?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Из главного и зависимого слова",
+            "option_2": "Из двух равноправных слов",
+            "option_3": "Из подлежащего и дополнения",
+            "option_4": "Из предлога и существительного",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 202,
+        "fields": {
+            "subtopic": 22,
+            "text": "Какое из сочетаний слов НЕ является словосочетанием?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Наступила осень (грамматическая основа)",
+            "option_2": "Золотая осень",
+            "option_3": "Идти по лесу",
+            "option_4": "Очень красиво",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 203,
+        "fields": {
+            "subtopic": 22,
+            "text": "Тип связи, при котором зависимое слово ставится в тех же формах (род, число, падеж), что и главное, называется...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Согласование",
+            "option_2": "Управление",
+            "option_3": "Примыкание",
+            "option_4": "Присоединение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 204,
+        "fields": {
+            "subtopic": 22,
+            "text": "В каком словосочетании тип связи — СОГЛАСОВАНИЕ?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Интересная книга",
+            "option_2": "Читать книгу",
+            "option_3": "Очень интересно",
+            "option_4": "Страница книги",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 205,
+        "fields": {
+            "subtopic": 22,
+            "text": "Тип связи, при котором главное слово требует от зависимого определенного падежа, называется...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Управление",
+            "option_2": "Согласование",
+            "option_3": "Примыкание",
+            "option_4": "Уподобление",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 206,
+        "fields": {
+            "subtopic": 22,
+            "text": "В каком словосочетании тип связи — УПРАВЛЕНИЕ?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Встретить друга",
+            "option_2": "Верный друг",
+            "option_3": "Улыбаться весело",
+            "option_4": "Твой друг",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 207,
+        "fields": {
+            "subtopic": 22,
+            "text": "Тип связи, при котором зависимое слово связано с главным только по смыслу (неизменяемое слово), называется...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Примыкание",
+            "option_2": "Согласование",
+            "option_3": "Управление",
+            "option_4": "Слияние",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 208,
+        "fields": {
+            "subtopic": 22,
+            "text": "В каком словосочетании тип связи — ПРИМЫКАНИЕ?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Бежать быстро",
+            "option_2": "Быстрый бег",
+            "option_3": "Ускорить бег",
+            "option_4": "Бег по дорожке",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 209,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите словосочетание, которое НЕ является именным (главное слово — не имя):",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Громко кричать",
+            "option_2": "Деревянный стол",
+            "option_3": "Второй класс",
+            "option_4": "Кто-то из нас",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 210,
+        "fields": {
+            "subtopic": 22,
+            "text": "Какое из сочетаний слов является глагольным словосочетанием?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Смотреть фильм",
+            "option_2": "Просмотр фильма",
+            "option_3": "Интересный фильм",
+            "option_4": "Фильм ужасов",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 211,
+        "fields": {
+            "subtopic": 22,
+            "text": "Слова какой части речи чаще всего выступают в роли зависимого при ПРИМЫКАНИИ?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Наречия, деепричастия, инфинитивы",
+            "option_2": "Прилагательные, причастия",
+            "option_3": "Существительные, местоимения",
+            "option_4": "Числительные, союзы",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 212,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите пример словосочетания со связью СОГЛАСОВАНИЕ, где зависимое слово — местоимение:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Моя комната",
+            "option_2": "Убрать в комнате",
+            "option_3": "Комната брата",
+            "option_4": "Чистая комната",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 213,
+        "fields": {
+            "subtopic": 22,
+            "text": "Замените словосочетание «каменный дом» (согласование) синонимичным со связью УПРАВЛЕНИЕ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Дом из камня",
+            "option_2": "Каменное здание",
+            "option_3": "Строить дом",
+            "option_4": "Дом в камне",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 214,
+        "fields": {
+            "subtopic": 22,
+            "text": "Замените словосочетание «радостно сообщил» (примыкание) синонимичным со связью УПРАВЛЕНИЕ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Сообщил с радостью",
+            "option_2": "Радостное сообщение",
+            "option_3": "Весело сообщил",
+            "option_4": "Радовался сообщению",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 215,
+        "fields": {
+            "subtopic": 22,
+            "text": "Какое сочетание слов НЕ является словосочетанием?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Около леса (предлог с существительным)",
+            "option_2": "Гулять в лесу",
+            "option_3": "Хвойный лес",
+            "option_4": "Выйти из леса",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 216,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите словосочетание со связью ПРИМЫКАНИЕ, где зависимое слово — инфинитив:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Желание учиться",
+            "option_2": "Начать урок",
+            "option_3": "Учиться хорошо",
+            "option_4": "Способный ученик",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 217,
+        "fields": {
+            "subtopic": 22,
+            "text": "В каком словосочетании допущена ошибка в УПРАВЛЕНИИ?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Оплатить за проезд (нужно: оплатить проезд)",
+            "option_2": "Уверенность в победе",
+            "option_3": "Вера в победу",
+            "option_4": "Скучаю по вам",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 218,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите ряд, в котором все словосочетания со связью СОГЛАСОВАНИЕ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Летний вечер, летящая птица, первый снег",
+            "option_2": "Свет лампы, бежать быстро, книга друга",
+            "option_3": "Стакан воды, верный путь, очень тихо",
+            "option_4": "Второй дом, смотреть вдаль, ждать брата",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 219,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите ряд, в котором все словосочетания со связью УПРАВЛЕНИЕ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Любить Родину, кусок хлеба, вера в успех",
+            "option_2": "Родные края, серый хлеб, успешный человек",
+            "option_3": "Жить дружно, идти пешком, говорить громко",
+            "option_4": "Твое право, сидеть прямо, выйти в поле",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 220,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите словосочетание со связью ПРИМЫКАНИЕ, где зависимое слово — деепричастие:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Шел оглядываясь",
+            "option_2": "Быстро бежал",
+            "option_3": "Книга брата",
+            "option_4": "Шел по дороге",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 221,
+        "fields": {
+            "subtopic": 22,
+            "text": "Какое из этих сочетаний слов является ФРАЗЕОЛОГИЗМОМ (и в синтаксисе считается одним членом предложения)?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Бить баклуши",
+            "option_2": "Разбить вазу",
+            "option_3": "Деревянная посуда",
+            "option_4": "Громко спорить",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 222,
+        "fields": {
+            "subtopic": 22,
+            "text": "В словосочетании «её тетрадь» тип связи — это...",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Примыкание (притяжательное местоимение её/его/их не изменяется)",
+            "option_2": "Согласование",
+            "option_3": "Управление",
+            "option_4": "Здесь нет связи",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 223,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите именное словосочетание со связью УПРАВЛЕНИЕ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Поездка в горы",
+            "option_2": "Горная поездка",
+            "option_3": "Поехать в горы",
+            "option_4": "Очень высоко",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 224,
+        "fields": {
+            "subtopic": 22,
+            "text": "Как называются словосочетания, состоящие из двух значимых слов?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Простые",
+            "option_2": "Сложные",
+            "option_3": "Грамматические",
+            "option_4": "Неделимые",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 225,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите ПРАВИЛЬНОЕ утверждение о словосочетании:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Словосочетание называет предметы, действия, признаки более точно, чем отдельное слово",
+            "option_2": "Словосочетание всегда выражает законченную мысль",
+            "option_3": "Словосочетание имеет интонацию сообщения",
+            "option_4": "В словосочетании не может быть предлогов",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 226,
+        "fields": {
+            "subtopic": 22,
+            "text": "Найдите «лишнее» словосочетание по типу связи:",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Почитать газету (управление)",
+            "option_2": "Свежая газета (согласование)",
+            "option_3": "Интересная книга (согласование)",
+            "option_4": "Зимняя стужа (согласование)",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 227,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите словосочетание со связью ПРИМЫКАНИЕ, где зависимое слово — сравнительная степень прилагательного:",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Стал сильнее",
+            "option_2": "Очень сильный",
+            "option_3": "Сила воли",
+            "option_4": "Сильнейший атлет",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 228,
+        "fields": {
+            "subtopic": 22,
+            "text": "Какое словосочетание является НЕДЕЛИМЫМ (синтаксически цельным)?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Два ученика",
+            "option_2": "Красивые ученики",
+            "option_3": "Ученики школы",
+            "option_4": "Учить правила",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 229,
+        "fields": {
+            "subtopic": 22,
+            "text": "В каком ряду во всех словосочетаниях зависимое слово является существительным?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Дом у дороги, крыша сарая, чтение книги",
+            "option_2": "Смелый поступок, идти быстро, мой ответ",
+            "option_3": "Пятый этаж, летящий мяч, ждать друга",
+            "option_4": "Грустная песня, петь громко, очень жаль",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 230,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите словосочетание, в котором главное слово — НАРЕЧИЕ:",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Весьма интересно",
+            "option_2": "Интересный рассказ",
+            "option_3": "Рассказывать интересно",
+            "option_4": "Интересоваться наукой",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 231,
+        "fields": {
+            "subtopic": 22,
+            "text": "Замените словосочетание «лесной запах» (согласование) синонимичным со связью УПРАВЛЕНИЕ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Запах леса",
+            "option_2": "Запах из леса",
+            "option_3": "Лесистый запах",
+            "option_4": "Пахнуть лесом",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 232,
+        "fields": {
+            "subtopic": 22,
+            "text": "При изменении формы главного слова при УПРАВЛЕНИИ, форма зависимого слова...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Остается неизменной",
+            "option_2": "Меняется так же",
+            "option_3": "Становится начальной формой",
+            "option_4": "Меняется только число",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 233,
+        "fields": {
+            "subtopic": 22,
+            "text": "В каком словосочетании тип связи — СОГЛАСОВАНИЕ?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Наше дело",
+            "option_2": "Сделать дело",
+            "option_3": "Дело мастера",
+            "option_4": "Мастер на все руки",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 234,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите словосочетание со связью УПРАВЛЕНИЕ, в котором есть предлог:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Разговор о будущем",
+            "option_2": "Слушать музыку",
+            "option_3": "Рисовать красками",
+            "option_4": "Читать вслух",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 235,
+        "fields": {
+            "subtopic": 22,
+            "text": "В каком ряду представлены только словосочетания (не предложения и не основы)?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Верный путь, ждать ответа, пойти гулять",
+            "option_2": "Птицы поют, яркое солнце, дует ветер",
+            "option_3": "Урок начался, тихий шепот, из-за туч",
+            "option_4": "Буду петь, более высокий, около дома",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 236,
+        "fields": {
+            "subtopic": 22,
+            "text": "Укажите словосочетание, где зависимое слово — причастие:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Улыбающийся ребенок",
+            "option_2": "Веселый ребенок",
+            "option_3": "Ребенок смеется",
+            "option_4": "Смех ребенка",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 237,
+        "fields": {
+            "subtopic": 22,
+            "text": "Найдите словосочетание со связью ПРИМЫКАНИЕ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Яйцо всмятку (существительное + неизменяемое наречие)",
+            "option_2": "Вареное яйцо",
+            "option_3": "Варить яйцо",
+            "option_4": "Скорлупа яйца",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 238,
+        "fields": {
+            "subtopic": 22,
+            "text": "Какое из словосочетаний является СОСТАВНЫМ (состоит из 3 и более значимых слов)?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Интересная книга о путешествиях",
+            "option_2": "Читать книгу",
+            "option_3": "Очень интересно",
+            "option_4": "Книга брата",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 239,
+        "fields": {
+            "subtopic": 22,
+            "text": "Выберите верное утверждение о ПРИМЫКАНИИ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Слова связываются только по смыслу и интонационно",
+            "option_2": "Зависимое слово согласуется в роде и числе",
+            "option_3": "Главное слово всегда выражено глаголом",
+            "option_4": "Зависимое слово должно стоять в косвенном падеже",
+            "correct_answer": "1"
+        }
+    }
+]

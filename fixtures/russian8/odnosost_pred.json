@@ -1,0 +1,602 @@
+[
+    {
+        "model": "school.question",
+        "pk": 320,
+        "fields": {
+            "subtopic": 27,
+            "text": "Какое предложение называется односоставным?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Предложение, грамматическая основа которого состоит из одного главного члена",
+            "option_2": "Предложение, в котором нет второстепенных членов",
+            "option_3": "Предложение, состоящее только из одного слова",
+            "option_4": "Предложение, в котором есть и подлежащее, и сказуемое",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 321,
+        "fields": {
+            "subtopic": 27,
+            "text": "Как называются односоставные предложения с главным членом — сказуемым, в которых действие совершается определенным лицом (я, ты, мы, вы)?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Определенно-личные",
+            "option_2": "Неопределенно-личные",
+            "option_3": "Безличные",
+            "option_4": "Назывные",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 322,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите ОПРЕДЕЛЕННО-ЛИЧНОЕ предложение:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Люблю грозу в начале мая.",
+            "option_2": "В дверь постучали.",
+            "option_3": "Светает.",
+            "option_4": "Тихая ночь.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 323,
+        "fields": {
+            "subtopic": 27,
+            "text": "В какой форме стоит глагол-сказуемое в определенно-личных предложениях?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "1-е или 2-е лицо ед. или мн. числа",
+            "option_2": "3-е лицо множественного числа",
+            "option_3": "Прошедшее время множественного числа",
+            "option_4": "Инфинитив",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 324,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите НЕОПРЕДЕЛЕННО-ЛИЧНОЕ предложение:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "В школе готовятся к празднику.",
+            "option_2": "Иду по лесу.",
+            "option_3": "Мне не спится.",
+            "option_4": "Зима.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 325,
+        "fields": {
+            "subtopic": 27,
+            "text": "В предложении «Цыплят по осени считают» сказуемое является...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Обобщенно-личным",
+            "option_2": "Безличным",
+            "option_3": "Определенно-личным",
+            "option_4": "Назывным",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 326,
+        "fields": {
+            "subtopic": 27,
+            "text": "Какое предложение называется БЕЗЛИЧНЫМ?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Предложение, в котором действие без действующего лица",
+            "option_2": "Предложение, в котором нет сказуемого",
+            "option_3": "Предложение, в котором лицо мыслится неопределенно",
+            "option_4": "Предложение, в котором есть только подлежащее",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 327,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите БЕЗЛИЧНОЕ предложение:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "На улице похолодало.",
+            "option_2": "Выйди на улицу.",
+            "option_3": "Строят новые дома.",
+            "option_4": "Золотая осень.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 328,
+        "fields": {
+            "subtopic": 27,
+            "text": "Какое предложение называется НАЗЫВНЫМ?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Предложение, имеющее один главный член — подлежащее",
+            "option_2": "Предложение, в котором сказуемое выражено существительным",
+            "option_3": "Предложение без второстепенных членов",
+            "option_4": "Предложение, называющее действие",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 329,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите НАЗЫВНОЕ предложение:",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Вечер. Штиль. Берег моря.",
+            "option_2": "Вечереет.",
+            "option_3": "Мы гуляли вечером.",
+            "option_4": "Позвони мне вечером.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 330,
+        "fields": {
+            "subtopic": 27,
+            "text": "Может ли назывное предложение быть распространенным?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Да, оно может содержать определения",
+            "option_2": "Нет, оно состоит только из одного слова",
+            "option_3": "Да, если в нем есть обстоятельства места",
+            "option_4": "Только если оно восклицательное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 331,
+        "fields": {
+            "subtopic": 27,
+            "text": "В каком предложении сказуемое выражено словом НЕТ?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "У меня нет времени.",
+            "option_2": "Нет — это отрицательный ответ.",
+            "option_3": "Я сказал «нет».",
+            "option_4": "Нет счастья без труда.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 332,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «В дверь постучали трижды».",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Неопределенно-личное",
+            "option_2": "Определенно-личное",
+            "option_3": "Безличное",
+            "option_4": "Двусоставное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 333,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «Береги честь смолоду».",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Обобщенно-личное",
+            "option_2": "Безличное",
+            "option_3": "Назывное",
+            "option_4": "Двусоставное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 334,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите БЕЗЛИЧНОЕ предложение, описывающее состояние природы:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Подморозило.",
+            "option_2": "Мне холодно.",
+            "option_3": "Скоро зима.",
+            "option_4": "Наступили холода.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 335,
+        "fields": {
+            "subtopic": 27,
+            "text": "В каком односоставном предложении сказуемое выражено КАТЕГОРИЕЙ СОСТОЯНИЯ?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "В лесу было тихо.",
+            "option_2": "Тихий лес спал.",
+            "option_3": "Лес затих.",
+            "option_4": "Вокруг стояла тишина.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 336,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «Не забыть мне этой встречи».",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Безличное",
+            "option_2": "Определенно-личное",
+            "option_3": "Неопределенно-личное",
+            "option_4": "Назывное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 337,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите предложение, которое НЕ является односоставным:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Он не пришел на встречу.",
+            "option_2": "Его не было на встрече.",
+            "option_3": "Ждали его долго.",
+            "option_4": "Ждать бесполезно.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 338,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите ОПРЕДЕЛЕННО-ЛИЧНОЕ предложение в будущем времени:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Завтра напишу тебе письмо.",
+            "option_2": "Завтра мне напишут письмо.",
+            "option_3": "Письмо будет написано завтра.",
+            "option_4": "Завтра будет письмо.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 339,
+        "fields": {
+            "subtopic": 27,
+            "text": "В предложении «Нам подарили билеты» сказуемое является...",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Неопределенно-личным",
+            "option_2": "Определенно-личным",
+            "option_3": "Безличным",
+            "option_4": "Назывным",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 340,
+        "fields": {
+            "subtopic": 27,
+            "text": "Чем выражен главный член в назывном предложении?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Существительным в именительном падеже",
+            "option_2": "Существительным в любом падеже",
+            "option_3": "Местоимением-существительным",
+            "option_4": "Глаголом",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 341,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «Хочу поехать в горы».",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Определенно-личное",
+            "option_2": "Неопределенно-личное",
+            "option_3": "Безличное",
+            "option_4": "Двусоставное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 342,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите БЕЗЛИЧНОЕ предложение со словом КРАТКОЙ ФОРМЫ причастия:",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "В комнате накурено.",
+            "option_2": "Комната проветрена.",
+            "option_3": "Окно открыто.",
+            "option_4": "Письмо получено.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 343,
+        "fields": {
+            "subtopic": 27,
+            "text": "Найдите односоставное предложение в составе сложного: «Когда стемнело, мы зажгли свет».",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Стемнело",
+            "option_2": "Мы зажгли свет",
+            "option_3": "Когда стемнело",
+            "option_4": "В этом предложении нет односоставных частей",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 344,
+        "fields": {
+            "subtopic": 27,
+            "text": "Как изменится тип предложения «Я иду», если убрать подлежащее?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Станет определенно-личным",
+            "option_2": "Станет неопределенно-личным",
+            "option_3": "Станет безличным",
+            "option_4": "Никак не изменится",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 345,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «В дверь стучат».",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Неопределенно-личное",
+            "option_2": "Определенно-личное",
+            "option_3": "Назывное",
+            "option_4": "Безличное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 346,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите односоставное предложение, выражающее ВОЛЕИЗЪЯВЛЕНИЕ (приказ, просьбу):",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Принеси мне книгу.",
+            "option_2": "Ты принесешь книгу.",
+            "option_3": "Пусть он принесет книгу.",
+            "option_4": "Книга принесена.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 347,
+        "fields": {
+            "subtopic": 27,
+            "text": "Какое предложение описывает состояние человека?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Ему стало грустно.",
+            "option_2": "Он грустит.",
+            "option_3": "Грустный вид.",
+            "option_4": "Грусть — это эмоция.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 348,
+        "fields": {
+            "subtopic": 27,
+            "text": "Найдите предложение, в котором подлежащее выражено отрицательным местоимением, но оно ДВУСОСТАВНОЕ:",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Никто не ответил.",
+            "option_2": "Ответа нет.",
+            "option_3": "Мне не ответили.",
+            "option_4": "Отвечать нечего.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 349,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «Ледяной ветер».",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Назывное",
+            "option_2": "Безличное",
+            "option_3": "Определенно-личное",
+            "option_4": "Двусоставное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 350,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите предложение с «лишним» второстепенным членом для назывного предложения (обстоятельство места превращает его в двусоставное):",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Аптека за углом.",
+            "option_2": "Зимняя аптека.",
+            "option_3": "Старая аптека.",
+            "option_4": "Вот и аптека.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 351,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «Пахнет сеном над лугами».",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Безличное",
+            "option_2": "Назывное",
+            "option_3": "Неопределенно-личное",
+            "option_4": "Определенно-личное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 352,
+        "fields": {
+            "subtopic": 27,
+            "text": "Какое из этих предложений НЕ ЯВЛЯЕТСЯ безличным?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Я хочу спать.",
+            "option_2": "Мне хочется спать.",
+            "option_3": "Хочется спать.",
+            "option_4": "Не спится.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 353,
+        "fields": {
+            "subtopic": 27,
+            "text": "В каком стиле речи чаще всего используются НАЗЫВНЫЕ предложения?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Художественном и публицистическом",
+            "option_2": "Официально-деловом",
+            "option_3": "Научном",
+            "option_4": "Разговорном",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 354,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите односоставное предложение со сказуемым в форме повелительного наклонения:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Не шумите!",
+            "option_2": "Они шумят.",
+            "option_3": "Шуметь запрещено.",
+            "option_4": "Шум в классе.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 355,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «Грибов в этом году много».",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Безличное",
+            "option_2": "Назывное",
+            "option_3": "Неопределенно-личное",
+            "option_4": "Двусоставное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 356,
+        "fields": {
+            "subtopic": 27,
+            "text": "Найдите предложение, где есть ПОДЛЕЖАЩЕЕ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Наступила тишина.",
+            "option_2": "Стало тихо.",
+            "option_3": "Тихо.",
+            "option_4": "Тише!",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 357,
+        "fields": {
+            "subtopic": 27,
+            "text": "Определите тип предложения: «Тебя вызывают к директору».",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Неопределенно-личное",
+            "option_2": "Определенно-личное",
+            "option_3": "Безличное",
+            "option_4": "Назывное",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 358,
+        "fields": {
+            "subtopic": 27,
+            "text": "Укажите предложение, в котором сказуемое выражено словом МОЖНО:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Здесь можно отдохнуть.",
+            "option_2": "Я могу отдохнуть.",
+            "option_3": "Отдых — это важно.",
+            "option_4": "Отдыхай!",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 359,
+        "fields": {
+            "subtopic": 27,
+            "text": "Найдите односоставное предложение, состоящее из УКАЗАТЕЛЬНОЙ частицы и существительного:",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Вот и дом.",
+            "option_2": "Дом был старый.",
+            "option_3": "Я вижу дом.",
+            "option_4": "В доме тихо.",
+            "correct_answer": "1"
+        }
+    }
+]

@@ -1,0 +1,602 @@
+[
+    {
+        "model": "school.question",
+        "pk": 280,
+        "fields": {
+            "subtopic": 26,
+            "text": "Второстепенный член предложения, который отвечает на вопросы косвенных падежей, называется...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Дополнение",
+            "option_2": "Определение",
+            "option_3": "Обстоятельство",
+            "option_4": "Приложение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 281,
+        "fields": {
+            "subtopic": 26,
+            "text": "Как называется дополнение, выраженное существительным в винительном падеже БЕЗ предлога?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Прямое дополнение",
+            "option_2": "Косвенное дополнение",
+            "option_3": "Обстоятельственное дополнение",
+            "option_4": "Согласованное дополнение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 282,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите предложение с ПРЯМЫМ дополнением:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Я читаю интересную книгу.",
+            "option_2": "Я любуюсь книгой.",
+            "option_3": "Я думаю о книге.",
+            "option_4": "Я подошел к книге.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 283,
+        "fields": {
+            "subtopic": 26,
+            "text": "В каком предложении выделенное слово является КОСВЕННЫМ дополнением?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Мы гордимся нашей страной.",
+            "option_2": "Мы любим нашу страну.",
+            "option_3": "Мы посетили столицу.",
+            "option_4": "Мы увидели горы.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 284,
+        "fields": {
+            "subtopic": 26,
+            "text": "Второстепенный член предложения, который обозначает признак предмета и отвечает на вопросы КАКОЙ? ЧЕЙ?, называется...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Определение",
+            "option_2": "Дополнение",
+            "option_3": "Обстоятельство",
+            "option_4": "Сказуемое",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 285,
+        "fields": {
+            "subtopic": 26,
+            "text": "Как называется определение, связанное с определяемым словом способом согласования (в роде, числе и падеже)?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Согласованное",
+            "option_2": "Несогласованное",
+            "option_3": "Приложение",
+            "option_4": "Примыкающее",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 286,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите предложение с НЕСОГЛАСОВАННЫМ определением:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "На столе стояла ваза из стекла.",
+            "option_2": "На столе стояла стеклянная ваза.",
+            "option_3": "Яркое солнце светило в окно.",
+            "option_4": "Первый снег выпал ночью.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 287,
+        "fields": {
+            "subtopic": 26,
+            "text": "Определение, выраженное существительным, которое дает другое название предмету, называется...",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Приложение",
+            "option_2": "Дополнение",
+            "option_3": "Обстоятельство",
+            "option_4": "Подлежащее",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 288,
+        "fields": {
+            "subtopic": 26,
+            "text": "Найдите ПРИЛОЖЕНИЕ в предложении: «Озеро Байкал славится своей чистотой».",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Байкал",
+            "option_2": "Озеро",
+            "option_3": "Славится",
+            "option_4": "Чистотой",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 289,
+        "fields": {
+            "subtopic": 26,
+            "text": "В каком случае приложение пишется через дефис?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Город-герой",
+            "option_2": "Озеро Рица",
+            "option_3": "Река Волга",
+            "option_4": "Девочка Маша",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 290,
+        "fields": {
+            "subtopic": 26,
+            "text": "Второстепенный член предложения, обозначающий место, время, способ действия, называется...",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Обстоятельство",
+            "option_2": "Дополнение",
+            "option_3": "Определение",
+            "option_4": "Приложение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 291,
+        "fields": {
+            "subtopic": 26,
+            "text": "Определите вид обстоятельства в предложении: «Мы приехали ВЧЕРА».",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Времени",
+            "option_2": "Места",
+            "option_3": "Образа действия",
+            "option_4": "Цели",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 292,
+        "fields": {
+            "subtopic": 26,
+            "text": "Определите вид обстоятельства: «Они шли МЕДЛЕННО».",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Образа действия",
+            "option_2": "Причины",
+            "option_3": "Места",
+            "option_4": "Времени",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 293,
+        "fields": {
+            "subtopic": 26,
+            "text": "Определите вид обстоятельства: «Он уехал В ГОРОД».",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Места",
+            "option_2": "Цели",
+            "option_3": "Причины",
+            "option_4": "Меры и степени",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 294,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите предложение с обстоятельством ЦЕЛИ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Он пришел поговорить.",
+            "option_2": "Он пришел из-за болезни.",
+            "option_3": "Он пришел вечером.",
+            "option_4": "Он пришел быстро.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 295,
+        "fields": {
+            "subtopic": 26,
+            "text": "Определите вид обстоятельства: «Она ОЧЕНЬ устала».",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Меры и степени",
+            "option_2": "Времени",
+            "option_3": "Уступки",
+            "option_4": "Образа действия",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 296,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите предложение с обстоятельством ПРИЧИНЫ:",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "От страха он задрожал.",
+            "option_2": "Он пошел в магазин за хлебом.",
+            "option_3": "Он долго читал.",
+            "option_4": "В лесу было тихо.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 297,
+        "fields": {
+            "subtopic": 26,
+            "text": "В каком предложении обстоятельство выражено ДЕЕПРИЧАСТНЫМ ОБОРОТОМ?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Прочитав книгу, я лег спать.",
+            "option_2": "Я очень люблю читать книги.",
+            "option_3": "Книга, прочитанная мной, была интересной.",
+            "option_4": "Он читал книгу долго.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 298,
+        "fields": {
+            "subtopic": 26,
+            "text": "Чем выражено определение в предложении: «Её глаза сияли»?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Притяжательным местоимением",
+            "option_2": "Прилагательным",
+            "option_3": "Существительным",
+            "option_4": "Причастием",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 299,
+        "fields": {
+            "subtopic": 26,
+            "text": "Каким членом предложения является ИНФИНИТИВ в предложении: «У меня возникло ЖЕЛАНИЕ УЕХАТЬ»?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Несогласованное определение",
+            "option_2": "Часть сказуемого",
+            "option_3": "Дополнение",
+            "option_4": "Обстоятельство цели",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 300,
+        "fields": {
+            "subtopic": 26,
+            "text": "Найдите предложение, в котором слово ГРОМКО является обстоятельством:",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Птицы пели громко.",
+            "option_2": "Громкое пение мешало спать.",
+            "option_3": "Пение птиц было громким.",
+            "option_4": "Я слышал гром птиц.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 301,
+        "fields": {
+            "subtopic": 26,
+            "text": "Каким членом предложения является выделенное слово: «Нам подали ЯИЧНИЦУ ПО-ОДЕССКИ»?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Несогласованное определение",
+            "option_2": "Обстоятельство образа действия",
+            "option_3": "Прямое дополнение",
+            "option_4": "Приложение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 302,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите предложение с приложением, которое пишется в КАВЫЧКАХ:",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Мы читали роман «Дубровский».",
+            "option_2": "Художник Репин написал много картин.",
+            "option_3": "Город Москва очень красив.",
+            "option_4": "Сторож-старик сидел у ворот.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 303,
+        "fields": {
+            "subtopic": 26,
+            "text": "Определите вид обстоятельства: «В ПУСТЫНЕ очень жарко».",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Места",
+            "option_2": "Причины",
+            "option_3": "Цели",
+            "option_4": "Образа действия",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 304,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите предложение с ПРЯМЫМ дополнением при отрицании (в род. падеже):",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Я не слышал этого голоса.",
+            "option_2": "Я не видел его вчера.",
+            "option_3": "Я не верю другу.",
+            "option_4": "Я не был в театре.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 305,
+        "fields": {
+            "subtopic": 26,
+            "text": "В каком предложении выделенное слово — ОБСТОЯТЕЛЬСТВО УСЛОВИЯ?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "При желании можно добиться многого.",
+            "option_2": "Он замолчал от волнения.",
+            "option_3": "Я пришел поздравить вас.",
+            "option_4": "Несмотря на дождь, мы вышли.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 306,
+        "fields": {
+            "subtopic": 26,
+            "text": "Какое слово является дополнением в предложении: «Старик ловил неводом рыбу»?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Рыбу",
+            "option_2": "Старик",
+            "option_3": "Ловил",
+            "option_4": "Неводом",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 307,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите предложение с обстоятельством УСТУПКИ:",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Вопреки прогнозу, было тепло.",
+            "option_2": "Благодаря помощи, мы успели.",
+            "option_3": "Из-за тумана ничего не было видно.",
+            "option_4": "Для успеха нужно трудиться.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 308,
+        "fields": {
+            "subtopic": 26,
+            "text": "В каком предложении обстоятельство выражено фразеологизмом?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Он работал спустя рукава.",
+            "option_2": "Он работал очень усердно.",
+            "option_3": "Он работал на заводе.",
+            "option_4": "Он работал до вечера.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 309,
+        "fields": {
+            "subtopic": 26,
+            "text": "Каким членом предложения является слово МАЛИНОВЫЙ в словосочетании «МАЛИНОВЫЙ звон»?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Определение",
+            "option_2": "Дополнение",
+            "option_3": "Обстоятельство",
+            "option_4": "Приложение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 310,
+        "fields": {
+            "subtopic": 26,
+            "text": "Найдите предложение, в котором допущена ошибка в согласовании ПРИЛОЖЕНИЯ (геогр. название):",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "На озере Байкале было холодно.",
+            "option_2": "В городе Москве много мостов.",
+            "option_3": "У реки Волги стоят города.",
+            "option_4": "На острове Крит тепло.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 311,
+        "fields": {
+            "subtopic": 26,
+            "text": "Какое обстоятельство отвечает на вопросы ОТЧЕГО? ПО КАКОЙ ПРИЧИНЕ?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Причины",
+            "option_2": "Цели",
+            "option_3": "Условия",
+            "option_4": "Места",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 312,
+        "fields": {
+            "subtopic": 26,
+            "text": "Найдите «четвертое лишнее» (вид обстоятельства):",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Вчера (времени)",
+            "option_2": "Утром (времени)",
+            "option_3": "Зимой (времени)",
+            "option_4": "Дома (места)",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 313,
+        "fields": {
+            "subtopic": 26,
+            "text": "В каком предложении обстоятельство МЕРЫ выражено количественным числительным?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Он опоздал на десять минут.",
+            "option_2": "Он опоздал надолго.",
+            "option_3": "Он опоздал сильно.",
+            "option_4": "Он опоздал из-за пробок.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 314,
+        "fields": {
+            "subtopic": 26,
+            "text": "Чем выражено определение в предложении «ЛЮБИМЫЙ город может спать спокойно»?",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Причастием",
+            "option_2": "Прилагательным",
+            "option_3": "Местоимением",
+            "option_4": "Числительным",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 315,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите предложение, в котором обстоятельство МЕСТА стоит в самом начале:",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "В лесу раздавался топор дровосека.",
+            "option_2": "Топор дровосека раздавался в лесу.",
+            "option_3": "Раздавался в лесу топор дровосека.",
+            "option_4": "Громко раздавался топор дровосека.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 316,
+        "fields": {
+            "subtopic": 26,
+            "text": "Каким членом предложения является выделенное слово: «К нам пришел ПОЧТАЛЬОН»?",
+            "difficulty": "very_easy",
+            "is_open": false,
+            "option_1": "Подлежащее",
+            "option_2": "Дополнение",
+            "option_3": "Обстоятельство",
+            "option_4": "Приложение",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 317,
+        "fields": {
+            "subtopic": 26,
+            "text": "В каком предложении дополнение выражено СОБСТВЕННЫМ ИМЕНЕМ?",
+            "difficulty": "easy",
+            "is_open": false,
+            "option_1": "Я встретил Петра.",
+            "option_2": "Петр встретил меня.",
+            "option_3": "Мы любим свой город.",
+            "option_4": "Книга лежала на столе.",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 318,
+        "fields": {
+            "subtopic": 26,
+            "text": "Укажите вид обстоятельства: «Он крикнул ВО ВСЁ ГОРЛО».",
+            "difficulty": "medium",
+            "is_open": false,
+            "option_1": "Образа действия",
+            "option_2": "Места",
+            "option_3": "Цели",
+            "option_4": "Времени",
+            "correct_answer": "1"
+        }
+    },
+    {
+        "model": "school.question",
+        "pk": 319,
+        "fields": {
+            "subtopic": 26,
+            "text": "Каким членом предложения является слово ТРИ в предложении «Я купил ТРИ апельсина»?",
+            "difficulty": "hard",
+            "is_open": false,
+            "option_1": "Часть дополнения",
+            "option_2": "Определение",
+            "option_3": "Обстоятельство меры",
+            "option_4": "Подлежащее",
+            "correct_answer": "1"
+        }
+    }
+]
