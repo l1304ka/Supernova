@@ -1,89 +1,159 @@
 {% extends "base.html" %}
-{% block title %}Тесты класса {{ school_class.name }}{% endblock %}
+{% block title %}Тесты — {{ school_class.name }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 pb-5">
 
-    <h2>Тесты класса {{ school_class.name }}</h2>
+  <!-- Шапка -->
+  <div class="mb-5">
+    <a href="{% url 'class_journal' school_class.id %}" class="back-link">← Журнал</a>
+    <div class="eyebrow mt-3">Класс {{ school_class.name }}</div>
+    <h2 class="page-heading">Тесты</h2>
+  </div>
 
-    <a href="{% url 'class_journal' school_class.id %}" class="btn btn-secondary mb-3">← Назад</a>
-
-
-    <!-- Назначенные темы -->
-    <h3>Назначенные темы</h3>
-
+  <!-- Назначенные темы -->
+  <div class="mb-5">
+    <h3 class="sec-h mb-3">Назначенные задания</h3>
     {% if assigned %}
-    <table class="custom-table table-striped shadow-sm">
-        <thead>
-            <tr>
-                <th>Название</th>
-                <th>Тема</th>
-                <th>Назначено</th>
-                <th>Дедлайн</th>
-                <th style="width: 100px"></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for a in assigned %}
-            <tr>
-                <td>{{ a.title }}</td>
-                <td>{{ a.lesson.title }}</td>
-                <td>{{ a.date_assigned|date:"d.m.Y H:i" }}</td>
-                <td>{% if a.deadline %}{{ a.deadline|date:"d.m.Y H:i" }}{% else %} – {% endif %}</td>
-                <td>
-                    <a href="{% url 'delete_assigned_topic' a.id %}"
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('Удалить назначенную тему?')">
-                       Удалить
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="scard">
+      <div style="overflow-x:auto;">
+        <table class="etable">
+          <thead>
+          <tr>
+            <th>Название</th>
+            <th>Урок</th>
+            <th>Назначено</th>
+            <th>Дедлайн</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for a in assigned %}
+          <tr>
+            <td style="font-weight:700;">{{ a.title }}</td>
+            <td style="opacity:.6;">{{ a.lesson.title }}</td>
+            <td style="opacity:.5; font-size:.82rem; white-space:nowrap;">{{ a.date_assigned|date:"d.m.Y H:i" }}</td>
+            <td style="white-space:nowrap;">
+              {% if a.deadline %}
+                <span style="color:#e74c3c; font-weight:600; font-size:.85rem;">{{ a.deadline|date:"d.m.Y H:i" }}</span>
+              {% else %}
+                <span style="opacity:.3;">—</span>
+              {% endif %}
+            </td>
+            <td style="text-align:right;">
+              <a href="{% url 'delete_assigned_topic' a.id %}"
+                 class="abtn abtn-danger"
+                 onclick="return confirm('Удалить назначенную тему?')">Удалить</a>
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
     {% else %}
-        <p class="text-muted">Нет назначенных тем.</p>
+    <div class="empty-box">
+      <div style="font-size:1.8rem; margin-bottom:8px;">📋</div>
+      <div class="empty-title">Нет назначенных заданий</div>
+    </div>
     {% endif %}
+  </div>
 
-
-
-    <!-- Тесты, созданные системой -->
-    <h3 class="mt-5">Пройденные тесты</h3>
-
+  <!-- Пройденные тесты -->
+  <div class="mb-5">
+    <h3 class="sec-h mb-3">Пройденные тесты</h3>
     {% if tests %}
-    <table class="custom-table table-striped shadow-sm">
-        <thead>
-            <tr>
-                <th>Название теста</th>
-                <th>Проходили</th>
-                <th>Даты</th>
-                <th style="width: 100px"></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for t in tests %}
-            <tr>
-                <td>{{ t.test.assigned_topic.title }}</td>
-                <td>{{ t.students_count }} учен.</td>
-                <td>
-                    {% for r in t.results %}
-                        {{ r.student.surname }}: {{ r.completed_at|date:"d.m.Y H:i" }}<br>
-                    {% endfor %}
-                </td>
-                <td>
-                    <a href="{% url 'delete_test' t.test.id %}"
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('Удалить тест и все результаты?')">
-                       Удалить
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="scard">
+      <div style="overflow-x:auto;">
+        <table class="etable">
+          <thead>
+          <tr>
+            <th>Задание</th>
+            <th>Сдали</th>
+            <th>Результаты</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for t in tests %}
+          <tr>
+            <td style="font-weight:700;">{{ t.test.assigned_topic.title }}</td>
+            <td>
+              <span class="cnt-badge">{{ t.students_count }}</span>
+            </td>
+            <td>
+              <div class="results-row">
+                {% for r in t.results %}
+                <span class="result-chip">
+                  <span style="opacity:.6; font-size:.75rem;">{{ r.student.surname }}</span>
+                  <span class="gbadge gbadge-{{ r.grade }}" style="font-size:.75rem; height:22px; min-width:24px;">{{ r.grade }}</span>
+                </span>
+                {% endfor %}
+              </div>
+            </td>
+            <td style="text-align:right;">
+              <a href="{% url 'delete_test' t.test.id %}"
+                 class="abtn abtn-danger"
+                 onclick="return confirm('Удалить тест и все результаты?')">Удалить</a>
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
     {% else %}
-        <p class="text-muted">Ученики ещё не проходили тесты.</p>
+    <div class="empty-box">
+      <div style="font-size:1.8rem; margin-bottom:8px;">📝</div>
+      <div class="empty-title">Ученики ещё не проходили тесты</div>
+    </div>
     {% endif %}
+  </div>
 
 </div>
+
+<style>
+.eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.35}
+.page-heading{font-size:1.8rem;font-weight:800;margin-bottom:0}
+.sec-h{font-size:1.15rem;font-weight:800}
+.back-link{font-size:.85rem;opacity:.4;text-decoration:none;color:inherit;transition:opacity .15s}
+.back-link:hover{opacity:.8;color:inherit}
+
+.scard{border-radius:12px;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+[data-bs-theme="light"] .scard{border-color:rgba(0,0,0,.09);background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.05)}
+
+.etable{width:100%;border-collapse:collapse;font-size:.88rem}
+.etable th{padding:11px 18px;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.35;border-bottom:1px solid rgba(255,255,255,.07)}
+[data-bs-theme="light"] .etable th{border-color:rgba(0,0,0,.07)}
+.etable td{padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+[data-bs-theme="light"] .etable td{border-color:rgba(0,0,0,.05)}
+.etable tbody tr:last-child td{border-bottom:none}
+.etable tbody tr:hover td{background:rgba(255,255,255,.025)}
+[data-bs-theme="light"] .etable tbody tr:hover td{background:#f7f8fa}
+
+.gbadge{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:28px;padding:0 8px;border-radius:7px;font-weight:900;font-size:.9rem}
+.gbadge-5{background:rgba(46,204,113,.2);color:#2ecc71}
+.gbadge-4{background:rgba(74,141,240,.2);color:#4a8df0}
+.gbadge-3{background:rgba(241,196,15,.2);color:#c9a800}
+.gbadge-2{background:rgba(231,76,60,.2);color:#e74c3c}
+
+.cnt-badge{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 8px;border-radius:7px;background:rgba(255,255,255,.08);font-weight:700;font-size:.85rem}
+[data-bs-theme="light"] .cnt-badge{background:rgba(0,0,0,.07)}
+
+.results-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.result-chip{display:flex;align-items:center;gap:4px;font-size:.82rem}
+
+.abtn{flex-shrink:0;border-radius:9px;padding:6px 14px;font-size:.8rem;font-weight:700;text-decoration:none;transition:.12s;white-space:nowrap;cursor:pointer;display:inline-block;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:inherit}
+[data-bs-theme="light"] .abtn{background:#f0f0f0;border-color:rgba(0,0,0,.1);color:#333}
+.abtn:hover{background:rgba(255,255,255,.13);color:inherit}
+[data-bs-theme="light"] .abtn:hover{background:#e4e4e4;color:#333}
+.abtn-primary{background:#4a8df0;border-color:#4a8df0;color:#fff}
+.abtn-primary:hover{background:#3a7de0;border-color:#3a7de0;color:#fff}
+.abtn-danger{background:rgba(231,76,60,.12);border-color:rgba(231,76,60,.3);color:#e74c3c}
+.abtn-danger:hover{background:rgba(231,76,60,.22);color:#e74c3c}
+
+.empty-box{text-align:center;padding:40px;border-radius:12px;border:1px dashed rgba(255,255,255,.1)}
+[data-bs-theme="light"] .empty-box{border-color:rgba(0,0,0,.1);background:#fafafa}
+.empty-title{font-weight:700;font-size:.95rem;opacity:.45}
+</style>
 {% endblock %}

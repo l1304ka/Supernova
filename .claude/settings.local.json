@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"D:\\\\Projects\\\\Django\\\\Supernova\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(python manage.py makemigrations school --name appeal_models)",
+      "Bash(pip install *)",
+      "Bash(venv\\\\Scripts\\\\python.exe manage.py makemigrations school --name appeal_models)"
+    ]
+  }
+}

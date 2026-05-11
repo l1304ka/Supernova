@@ -323,13 +323,27 @@ def index(request):
             )
 
             if subj_results.exists():
-                p = int(subj_results.aggregate(avg=Avg("score"))["avg"])
+                p = int(subj_results.aggregate(avg=Avg("score"))["avg"] or 0)
+                g = round(subj_results.aggregate(avg=Avg("grade"))["avg"] or 0, 1)
             else:
                 p = 0
+                g = 0
+
+            hw_tasks = HomeworkTask.objects.filter(
+                homework__student=student,
+                homework__lesson__subject__name=name,
+                is_correct__isnull=False
+            )
+            if hw_tasks.exists():
+                hw_p = int(hw_tasks.filter(is_correct=True).count() * 100 / hw_tasks.count())
+            else:
+                hw_p = 0
 
             subject_stats.append({
                 "name": name,
                 "percent": p,
+                "avg_grade": g,
+                "hw_percent": hw_p,
             })
 
         #todo: СТАТИСТИКА У УЧЕНИКА ПО ПРЕДМЕТАМ ОТДЕЛЬНО
@@ -1086,11 +1100,10 @@ def generate_homework(request, result_id):
 
 @login_required
 def homework_detail(request, homework_id):
-    hw = get_object_or_404(
-        Homework,
-        id=homework_id,
-        student__user=request.user
-    )
+    if hasattr(request.user, 'teacher'):
+        hw = get_object_or_404(Homework, id=homework_id)
+    else:
+        hw = get_object_or_404(Homework, id=homework_id, student__user=request.user)
     tasks = list(hw.tasks.order_by("order"))
 
     if request.method == "POST":
@@ -1269,3 +1282,18 @@ def resolve_appeal(request, appeal_id):
         "appeal": appeal,
         "appeal_tasks": appeal_tasks,
     })
+
+
+# ── Error handlers ──────────────────────────────────────────
+
+def error_400(request, exception=None):
+    return render(request, "400.html", status=400)
+
+def error_403(request, exception=None):
+    return render(request, "403.html", status=403)
+
+def error_404(request, exception=None):
+    return render(request, "404.html", status=404)
+
+def error_500(request):
+    return render(request, "500.html", status=500)

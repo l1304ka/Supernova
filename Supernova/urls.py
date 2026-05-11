@@ -16,10 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from school import views as school_views
+
+handler400 = school_views.error_400
+handler403 = school_views.error_403
+handler404 = school_views.error_404
+handler500 = school_views.error_500
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('school.urls')),
     path("admin-panel/", include("administrator.urls")),
     path("accounts/", include("account.urls")),
+    # preview error pages in development
+    path('error/400/', school_views.error_400),
+    path('error/403/', school_views.error_403),
+    path('error/404/', school_views.error_404),
+    path('error/500/', school_views.error_500),
 ]

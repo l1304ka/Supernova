@@ -1,109 +1,160 @@
 {% extends "base.html" %}
-{% block title %}Ученик {{ student.surname }}{% endblock %}
+{% block title %}{{ student.surname }} {{ student.name }}{% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
+<div class="container mt-4 pb-5">
 
-    <h2>{{ student.surname }} {{ student.name }}</h2>
+  <!-- Шапка -->
+  <div class="mb-5">
+    <a href="javascript:history.back()" class="back-link">← Назад</a>
+    <div class="eyebrow mt-3">Профиль ученика</div>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-1">
+      <h2 class="page-heading">{{ student.surname }} {{ student.name }}</h2>
+      <div class="kpi-row">
+        <div class="kpi-pill">
+          <span class="kpi-num">{{ hw_total }}</span>
+          <span class="kpi-lbl">Всего ДЗ</span>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-num">{{ hw_checked }}</span>
+          <span class="kpi-lbl">Проверено</span>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-num">{{ hw_percent }}%</span>
+          <span class="kpi-lbl">Успеваемость</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <a href="javascript:history.back()" class="btn btn-secondary mb-3">← Назад</a>
+  <div class="row g-4">
 
-    <div class="row">
-
-      <!-- ==== ЛЕВАЯ КОЛОНКА — ТЕСТЫ ==== -->
-      <div class="col-md-6">
-
-        <h4 class="mb-3">Результаты тестов</h4>
-
-        {% if results %}
-          <table class="custom-table table-striped shadow-sm">
+    <!-- Тесты -->
+    <div class="col-lg-6">
+      <h3 class="sec-h mb-3">Результаты тестов</h3>
+      {% if results %}
+      <div class="scard">
+        <div style="overflow-x:auto;">
+          <table class="etable">
             <thead>
             <tr>
-              <th>Название теста</th>
+              <th>Задание</th>
               <th>Оценка</th>
-              <th>Балл (%)</th>
+              <th>Балл</th>
               <th>Дата</th>
             </tr>
             </thead>
             <tbody>
             {% for r in results %}
-              <tr>
-                <td>{{ r.test.title }}</td>
-                <td>
-                <span class="badge
-                  {% if r.grade == 5 %}bg-success
-                  {% elif r.grade == 4 %}bg-primary
-                  {% elif r.grade == 3 %}bg-warning
-                  {% else %}bg-danger{% endif %}
-                ">{{ r.grade }}</span>
-                </td>
-                <td>{{ r.score }}</td>
-                <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        {% else %}
-          <p class="text-muted">У ученика пока нет результатов тестов.</p>
-        {% endif %}
-
-      </div>
-
-
-      <!-- ==== ПРАВАЯ КОЛОНКА — СТАТИСТИКА ДЗ ==== -->
-      <div class="col-md-6">
-
-        <h4 class="mb-3">Домашние задания</h4>
-
-        {% if hw_list %}
-          <table class="custom-table shadow-sm">
-            <thead>
             <tr>
-              <th>Дата</th>
-              <th>Тема</th>
-              <th>Решено</th>
-              <th></th>
+              <td style="font-weight:600; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ r.test.title }}</td>
+              <td><span class="gbadge gbadge-{{ r.grade }}">{{ r.grade }}</span></td>
+              <td style="opacity:.6; font-size:.85rem;">{{ r.score }}%</td>
+              <td style="opacity:.45; font-size:.8rem; white-space:nowrap;">{{ r.completed_at|date:"d.m.Y" }}</td>
             </tr>
-            </thead>
-
-            <tbody>
-            {% for item in hw_list %}
-              <tr>
-
-                <td>{{ item.hw.created_at|date:"d.m.Y H:i" }}</td>
-
-                <td>{{ item.hw.lesson.title }}</td>
-
-                <td>
-            <span class="badge
-                  {% if item.percent >= 80 %}bg-success
-                  {% elif item.percent >= 60 %}bg-primary
-                  {% elif item.percent >= 30 %}bg-warning text-black
-                  {% else %}bg-danger{% endif %}
-                  ">
-                {{ item.percent }}%
-            </span>
-                </td>
-
-                <td>
-                  <a href="{% url 'homework_detail' item.hw.id %}"
-                     class="btn btn-sm btn-outline-secondary">
-                    Открыть →
-                  </a>
-                </td>
-
-              </tr>
             {% endfor %}
             </tbody>
           </table>
-
-        {% else %}
-          <p class="text-muted">Домашних заданий ещё нет.</p>
-        {% endif %}
+        </div>
       </div>
+      {% else %}
+      <div class="empty-box">
+        <div style="font-size:1.8rem; margin-bottom:8px;">📝</div>
+        <div class="empty-title">Нет результатов тестов</div>
+      </div>
+      {% endif %}
+    </div>
 
-
+    <!-- Домашние задания -->
+    <div class="col-lg-6">
+      <h3 class="sec-h mb-3">Домашние задания</h3>
+      {% if hw_list %}
+      <div class="scard">
+        {% for item in hw_list %}
+        <div class="hw-row">
+          <div class="hw-row-body">
+            <div class="hw-row-title">{{ item.hw.lesson.title }}</div>
+            <div class="hw-row-sub">{{ item.hw.created_at|date:"d.m.Y" }}</div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="hw-bar-wrap">
+              <div class="mbar">
+                <div class="mbar-fill {% if item.percent >= 80 %}mbar-green{% elif item.percent >= 60 %}mbar-blue{% elif item.percent >= 30 %}mbar-yellow{% else %}mbar-red{% endif %}" style="width:{{ item.percent }}%;"></div>
+              </div>
+              <div style="font-size:.75rem; opacity:.45; text-align:right; margin-top:3px;">{{ item.percent }}%</div>
+            </div>
+            <a href="{% url 'homework_detail' item.hw.id %}" class="abtn">→</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-box">
+        <div style="font-size:1.8rem; margin-bottom:8px;">📖</div>
+        <div class="empty-title">Домашних заданий нет</div>
+      </div>
+      {% endif %}
     </div>
 
   </div>
+</div>
+
+<style>
+.eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.35}
+.page-heading{font-size:1.8rem;font-weight:800;margin-bottom:0}
+.sec-h{font-size:1.15rem;font-weight:800}
+.back-link{font-size:.85rem;opacity:.4;text-decoration:none;color:inherit;transition:opacity .15s}
+.back-link:hover{opacity:.8;color:inherit}
+
+.kpi-row{display:flex;gap:8px;flex-wrap:wrap}
+.kpi-pill{display:flex;flex-direction:column;align-items:center;padding:10px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);min-width:86px;gap:3px}
+[data-bs-theme="light"] .kpi-pill{border-color:rgba(0,0,0,.1);background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+.kpi-num{font-size:1.4rem;font-weight:900;line-height:1}
+.kpi-lbl{font-size:.72rem;font-weight:600;opacity:.45;white-space:nowrap}
+
+.scard{border-radius:12px;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+[data-bs-theme="light"] .scard{border-color:rgba(0,0,0,.09);background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.05)}
+
+.etable{width:100%;border-collapse:collapse;font-size:.88rem}
+.etable th{padding:10px 16px;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.35;border-bottom:1px solid rgba(255,255,255,.07)}
+[data-bs-theme="light"] .etable th{border-color:rgba(0,0,0,.07)}
+.etable td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+[data-bs-theme="light"] .etable td{border-color:rgba(0,0,0,.05)}
+.etable tbody tr:last-child td{border-bottom:none}
+.etable tbody tr:hover td{background:rgba(255,255,255,.025)}
+[data-bs-theme="light"] .etable tbody tr:hover td{background:#f7f8fa}
+
+.gbadge{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:26px;padding:0 7px;border-radius:7px;font-weight:900;font-size:.88rem}
+.gbadge-5{background:rgba(46,204,113,.2);color:#2ecc71}
+.gbadge-4{background:rgba(74,141,240,.2);color:#4a8df0}
+.gbadge-3{background:rgba(241,196,15,.2);color:#c9a800}
+.gbadge-2{background:rgba(231,76,60,.2);color:#e74c3c}
+
+.hw-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .12s}
+[data-bs-theme="light"] .hw-row{border-color:rgba(0,0,0,.05)}
+.hw-row:last-child{border-bottom:none}
+.hw-row:hover{background:rgba(255,255,255,.025)}
+[data-bs-theme="light"] .hw-row:hover{background:#f7f8fa}
+.hw-row-body{flex:1;min-width:0}
+.hw-row-title{font-weight:700;font-size:.88rem;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hw-row-sub{font-size:.76rem;opacity:.4}
+.hw-bar-wrap{width:90px}
+
+.mbar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+[data-bs-theme="light"] .mbar{background:rgba(0,0,0,.08)}
+.mbar-fill{height:100%;border-radius:3px;transition:width .5s}
+.mbar-green{background:#2ecc71}
+.mbar-blue{background:#4a8df0}
+.mbar-yellow{background:#f1c40f}
+.mbar-red{background:#e74c3c}
+
+.abtn{flex-shrink:0;border-radius:9px;padding:6px 14px;font-size:.82rem;font-weight:700;text-decoration:none;transition:.12s;white-space:nowrap;cursor:pointer;display:inline-block;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:inherit}
+[data-bs-theme="light"] .abtn{background:#f0f0f0;border-color:rgba(0,0,0,.1);color:#333}
+.abtn:hover{background:rgba(255,255,255,.13);color:inherit}
+[data-bs-theme="light"] .abtn:hover{background:#e4e4e4;color:#333}
+
+.empty-box{text-align:center;padding:36px;border-radius:12px;border:1px dashed rgba(255,255,255,.1)}
+[data-bs-theme="light"] .empty-box{border-color:rgba(0,0,0,.1);background:#fafafa}
+.empty-title{font-weight:700;font-size:.95rem;opacity:.45}
+</style>
 {% endblock %}

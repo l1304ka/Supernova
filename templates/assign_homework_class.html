@@ -2,88 +2,128 @@
 {% block title %}Выдать ДЗ — {{ school_class.name }}{% endblock %}
 
 {% block content %}
-  <div class="container mt-4" style="max-width: 600px;">
+<div class="container mt-4 pb-5" style="max-width:640px;">
 
-    <h2 class="mb-4">Выдать ДЗ классу {{ school_class.name }}</h2>
-
-    <form method="post" class="card p-4 shadow-sm rounded-3">
-      {% csrf_token %}
-
-      <div class="mb-3">
-        <label class="form-label">Предмет</label>
-        <select id="subjectSelect" name="subject_id" class="form-select" required>
-          <option value="" selected disabled>Выберите предмет</option>
-          {% for s in subjects %}
-            <option value="{{ s.id }}">{{ s.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Урок</label>
-        <select id="lessonSelect" name="lesson_id" class="form-select" required>
-          <option value="" selected disabled>Сначала выберите предмет</option>
-        </select>
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label">Название задания</label>
-        <input type="text" name="title" class="form-control"
-               placeholder="Например: Тест по теме «Линзы»" required>
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label">Количество вопросов</label>
-        <input type="text" name="question_count" class="form-control"
-               placeholder="Например: 10" required>
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label">Дедлайн</label>
-        <input type="datetime-local" name="deadline" class="form-control">
-      </div>
-
-
-      <div class="d-flex gap-2">
-        <button class="btn btn-primary flex-grow-1">Назначить</button>
-        <a href="{% url 'class_journal' school_class.id %}" class="btn btn-outline-secondary flex-grow-1">
-          Отмена
-        </a>
-      </div>
-    </form>
-
+  <!-- Шапка -->
+  <div class="mb-4">
+    <a href="{% url 'class_journal' school_class.id %}" class="back-link">← Назад</a>
+    <div class="eyebrow mt-3">Класс {{ school_class.name }}</div>
+    <h2 class="page-heading">Выдать задание</h2>
   </div>
 
-  <script>
-      document.getElementById("subjectSelect").addEventListener("change", async function () {
-          const subjectId = this.value;
-          const topicSelect = document.getElementById("lessonSelect");
+  <form method="post" id="assign-form">
+    {% csrf_token %}
 
-          topicSelect.innerHTML = "<option>Загрузка...</option>";
+    <!-- Предмет -->
+    <div class="fcard mb-3">
+      <div class="fcard-label">Предмет</div>
+      <select id="subjectSelect" name="subject_id" class="finput" required>
+        <option value="">Выберите предмет</option>
+        {% for s in subjects %}
+          <option value="{{ s.id }}">{{ s.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-          const response = await fetch(`/get_lessons_by_subject/?subject_id=${subjectId}`);
-          const data = await response.json();
+    <!-- Урок -->
+    <div class="fcard mb-3">
+      <div class="fcard-label">Урок</div>
+      <select id="lessonSelect" name="lesson_id" class="finput" required>
+        <option value="">Сначала выберите предмет</option>
+      </select>
+    </div>
 
-          topicSelect.innerHTML = "";
+    <!-- Название задания -->
+    <div class="fcard mb-3">
+      <div class="fcard-label">Название задания</div>
+      <input type="text" name="title" class="finput"
+             placeholder="Например: Тест по теме «Линзы»" required>
+    </div>
 
-          // if code 404
-          if (response.status === 404) {
-              topicSelect.innerHTML = "<option disabled>Предмет не найден</option>";
-              return;
-          }
+    <!-- Кол-во вопросов + дедлайн в одной строке -->
+    <div class="row g-3 mb-4">
+      <div class="col-6">
+        <div class="fcard h-100">
+          <div class="fcard-label">Количество вопросов</div>
+          <input type="number" name="question_count" class="finput"
+                 placeholder="10" min="1" max="50" required>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="fcard h-100">
+          <div class="fcard-label">Дедлайн <span class="fcard-opt">(необязательно)</span></div>
+          <input type="datetime-local" name="deadline" class="finput">
+        </div>
+      </div>
+    </div>
 
-          console.log(data);
+    <!-- Кнопки -->
+    <div class="d-flex gap-3 align-items-center">
+      <button type="submit" class="abtn abtn-primary abtn-lg">Назначить задание</button>
+      <a href="{% url 'class_journal' school_class.id %}" class="abtn">Отмена</a>
+    </div>
+  </form>
 
-          if (data.lessons && data.lessons.length) {
-              data.lessons.forEach(t => {
-                  const o = document.createElement("option");
-                  o.value = t.id;
-                  o.textContent = t.title;
-                  topicSelect.appendChild(o);
-              });
-          } else {
-              topicSelect.innerHTML = "<option disabled>Уроки не найдены</option>";
-          }
-      });
-  </script>
+</div>
+
+<style>
+.eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.35}
+.page-heading{font-size:1.8rem;font-weight:800;margin-bottom:0}
+.back-link{font-size:.85rem;opacity:.4;text-decoration:none;color:inherit;transition:opacity .15s}
+.back-link:hover{opacity:.8;color:inherit}
+
+.fcard{border-radius:12px;border:1px solid rgba(255,255,255,.08);padding:16px 18px}
+[data-bs-theme="light"] .fcard{border-color:rgba(0,0,0,.09);background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.fcard-label{font-size:.78rem;font-weight:700;opacity:.45;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.fcard-opt{text-transform:none;letter-spacing:0;font-weight:500;opacity:.7}
+
+.finput{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:9px;padding:10px 14px;font-size:.95rem;color:inherit;outline:none;transition:border-color .15s;appearance:none;-webkit-appearance:none}
+[data-bs-theme="light"] .finput{background:#f8f9fa;border-color:rgba(0,0,0,.12);color:#212529}
+.finput:focus{border-color:#4a8df0}
+.finput option{background:#1e2130;color:#fff}
+[data-bs-theme="light"] .finput option{background:#fff;color:#212529}
+.finput:disabled{opacity:.4;cursor:not-allowed}
+
+.abtn{flex-shrink:0;border-radius:9px;padding:8px 18px;font-size:.88rem;font-weight:700;text-decoration:none;transition:.12s;white-space:nowrap;cursor:pointer;display:inline-block;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:inherit}
+[data-bs-theme="light"] .abtn{background:#f0f0f0;border-color:rgba(0,0,0,.1);color:#333}
+.abtn:hover{background:rgba(255,255,255,.13);color:inherit}
+[data-bs-theme="light"] .abtn:hover{background:#e4e4e4;color:#333}
+.abtn-primary{background:#4a8df0;border-color:#4a8df0;color:#fff}
+.abtn-primary:hover{background:#3a7de0;border-color:#3a7de0;color:#fff}
+.abtn-lg{padding:10px 28px;font-size:.95rem}
+</style>
+
+<script>
+  document.getElementById("subjectSelect").addEventListener("change", async function () {
+    const subjectId = this.value;
+    const lessonSelect = document.getElementById("lessonSelect");
+
+    lessonSelect.innerHTML = "<option>Загрузка…</option>";
+    lessonSelect.disabled = true;
+
+    if (!subjectId) {
+      lessonSelect.innerHTML = "<option value=''>Сначала выберите предмет</option>";
+      lessonSelect.disabled = false;
+      return;
+    }
+
+    const response = await fetch(`/get_lessons_by_subject/?subject_id=${subjectId}`);
+    const data = await response.json();
+
+    lessonSelect.disabled = false;
+    lessonSelect.innerHTML = "";
+
+    if (response.status === 404 || !data.lessons || !data.lessons.length) {
+      lessonSelect.innerHTML = "<option disabled>Уроков не найдено</option>";
+      return;
+    }
+
+    data.lessons.forEach(t => {
+      const o = document.createElement("option");
+      o.value = t.id;
+      o.textContent = t.title;
+      lessonSelect.appendChild(o);
+    });
+  });
+</script>
 {% endblock %}

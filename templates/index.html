@@ -1,391 +1,331 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
+<div class="container mt-4 pb-5">
 
-    <h2 class="mb-4">Привет, {{ request.user.student.name }}!</h2>
-
-    <!-- Блок прогресса -->
-    <div class="row g-4 mt-4">
-
-      <!-- === Блок тестов === -->
-      <div class="col-md-4">
-        <div class="card shadow-sm p-3 h-100">
-          <h5 class="mb-3">📘 Тесты</h5>
-
-          <p class="mb-1">
-            <span class="text-muted">Пройдено:</span>
-            <b>{{ tests_done }} / {{ tests_total }}</b>
-          </p>
-
-          <p class="mb-1">
-            <span class="text-muted">Средний балл:</span>
-            <b>{{ avg_score }}%</b>
-          </p>
-
-          <p class="mb-1">
-            <span class="text-muted">Средняя оценка:</span>
-            <span class="badge bg-primary">{{ avg_grade }}</span>
-          </p>
-
-          <div class="sparkline-wrapper">
-            <canvas id="testsChart"></canvas>
-          </div>
-
-
+  <!-- HERO -->
+  <div class="mb-5">
+    <div class="eyebrow">Личный кабинет</div>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-1 mb-4">
+      <h2 class="hero-name">Привет, {{ request.user.student.name }}! 👋</h2>
+      <div class="kpi-row">
+        <div class="kpi-pill">
+          <span class="kpi-num">{{ avg_grade }}</span>
+          <span class="kpi-lbl">Средняя оценка</span>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-num">{{ hw_avg_percent }}%</span>
+          <span class="kpi-lbl">Успеваемость ДЗ</span>
         </div>
       </div>
-
-
-      <!-- === Блок домашек === -->
-      <div class="col-md-4">
-        <div class="card shadow-sm p-3 h-100">
-          <h5 class="mb-3">📝 Домашние задания</h5>
-
-          <p class="mb-1">
-            <span class="text-muted">Выполнено:</span>
-            <b>{{ hw_done }} / {{ hw_total }}</b>
-          </p>
-
-          <p class="mb-1">
-            <span class="text-muted">Средняя успеваемость:</span>
-            <b>{{ hw_avg_percent }}%</b>
-          </p>
-
-          <p class="mb-1">
-            <span class="text-muted">Просрочено:</span>
-            <span class="badge bg-danger">{{ hw_overdue }}</span>
-          </p>
-
-          <div class="sparkline-wrapper">
-            <canvas id="hwChart"></canvas>
-          </div>
-
-        </div>
-      </div>
-
-
-      <!-- === Блок предметов === -->
-      <div class="col-md-4">
-        <div class="card shadow-sm p-3 h-100">
-          <h5 class="mb-3">📊 Средняя успеваемость по предметам</h5>
-
-          {% for subj in subject_stats %}
-            <div class="mb-2">
-              <b>{{ subj.name }}</b>
-              <div class="progress" style="height: 10px;">
-                <div class="progress-bar
-                            {% if subj.percent >= 80 %}bg-success
-                            {% elif subj.percent >= 60 %}bg-primary
-                            {% elif subj.percent >= 40 %}bg-warning
-                            {% else %}bg-danger{% endif %}"
-                     style="width: {{ subj.percent }}%;"></div>
-              </div>
-              <small class="text-muted">{{ subj.percent }}%</small>
-            </div>
-          {% endfor %}
-
-        </div>
-      </div>
-
     </div>
 
-
-    <h3 class="mt-5 mb-3">📝 Домашние задания</h3>
-
-    <!-- 🔥 1. ДЗ, которые нужно выполнить -->
-    {% if not hw_waiting and not homework_list %}
-      <p class="text-muted">Похоже, у вас нет текущих домашних заданий. Отличная работа!</p>
-    {% else %}
-      <h5 class="mt-3 mb-2">📌 Нужно выполнить</h5>
-
-      {% if hw_waiting %}
-        <div class="list-group mb-4">
-          {% for r in hw_waiting %}
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <b>{{ r.assigned_topic.title }}</b><br>
-                <small>{{ r.test.lesson.subject.name }}: {{ r.test.lesson.title }}</small>
-                {% if r.assigned_topic.deadline %}
-                  | <small class="text-danger">
-                  Дедлайн: {{ r.assigned_topic.deadline|date:"d.m.Y H:i" }}
-                </small>
-                {% endif %}
-
-              </div>
-
-              {% if r.is_homework_generating %}
-                <button class="btn btn-secondary btn-sm" disabled>
-                  ⏳ Генерация...
-                </button>
-              {% else %}
-                <a href="{% url 'generate_homework' r.id %}"
-                   class="btn btn-warning btn-sm hw-generate-btn"
-                   data-id="{{ r.id }}">
-                  Сгенерировать ДЗ
-                </a>
-
-              {% endif %}
-
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="text-muted">Нет домашних заданий, которые требуют генерации.</p>
-      {% endif %}
-
-
-      <h5 class="mt-4 mb-2">🔄 В процессе</h5>
-
-
-      {% if homework_list %}
-        <div class="list-group mb-4">
-
-          {% for item in homework_list %}
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-
-              <div>
-                <b>{{ item.hw.lesson.title }}</b><br>
-                <small>{{ item.lesson.subject.name }}: {{ item.lesson.title }}</small>
-                {% if item.deadline %}
-                  | <small class="text-danger">
-                  Дедлайн: {{ item.deadline|date:"d.m.Y H:i" }}
-                </small>
-                {% endif %}
-                <br>
-
-                {#              <small class="text-muted">#}
-                {#                Выполнено задач: {{ item.solved }} / {{ item.total }}#}
-                {#              </small>#}
-              </div>
-
-              <a href="{% url 'homework_detail' item.hw.id %}"
-                 class="btn btn-warning btn-sm">
-                Продолжить →
-              </a>
-
-            </div>
-          {% endfor %}
-
-        </div>
-      {% else %}
-        <p class="text-muted">Домашних заданий пока нет.</p>
-      {% endif %}
-
-    {% endif %}
-
-    <hr>
-    <!-- Доступные тесты -->
-    <h3 class="mt-4 mb-3">📘 Доступные тесты</h3>
-
-    {% if unfinished_tests %}
-      <div class="alert alert-warning shadow-sm pb-0">
-        <h5 class="mb-3">Есть незавершённые тесты:</h5>
-
-        {% for at in unfinished_tests %}
-          <div class="d-flex justify-content-between mb-3">
-            <span>{{ at.title }} <small>({{ at.subject }}: {{ at.lesson.title }})</small>
-              {% if at.deadline %}
-                | <small class="text-danger">
-                   Дедлайн: {{ at.deadline|date:"d.m.Y H:i" }}
-                  </small>
-              {% endif %}
-</span>
-            <a href="{% url 'adaptive_test' at.id %}" class="btn btn-primary btn-sm">
-              Продолжить
-            </a>
+    <!-- Per-subject row -->
+    {% if subject_stats %}
+    <div class="subj-row">
+      {% for s in subject_stats %}
+      <div class="subj-chip">
+        <div class="subj-name">{{ s.name }}</div>
+        <div class="subj-grid">
+          <div class="subj-cell">
+            <div class="subj-lbl">Успеваемость по тестам</div>
+            <div class="subj-val">{{ s.percent }}%</div>
           </div>
-        {% endfor %}
+          <div class="subj-cell">
+            <div class="subj-lbl">Успеваемость по ДЗ</div>
+            <div class="subj-val">{{ s.hw_percent }}%</div>
+          </div>
+          <div class="subj-cell">
+            <div class="subj-lbl">Средняя оценка</div>
+            <div class="subj-val {% if s.avg_grade >= 5 %}g5{% elif s.avg_grade >= 4 %}g4{% elif s.avg_grade >= 3 %}g3{% elif s.avg_grade > 0 %}g2{% endif %}">{{ s.avg_grade }}</div>
+          </div>
+        </div>
       </div>
-    {% endif %}
-
-    {% if available_tests %}
-      <div class="list-group mb-4">
-        {% for at in available_tests %}
-          <div class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <b>{{ at.title }}</b><br>
-              <small>{{ at.subject }}: {{ at.lesson.title }}</small>
-              {% if at.deadline %}
-                | <small class="text-danger">
-                Дедлайн: {{ at.deadline|date:"d.m.Y H:i" }}
-              </small>
-              {% endif %}
-            </div>
-            <a href="{% url 'adaptive_test' at.id %}" class="btn btn-success btn-sm">Пройти тест</a>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p class="text-muted">Нет новых тестов.</p>
-    {% endif %}
-
-    <hr>
-
-    <!-- Последние результаты -->
-    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
-      <h3 class="m-0">📊 Последние результаты</h3>
-      <a href="{% url 'student_results' %}" class="btn btn-sm btn-outline-primary">
-        Все результаты →
-      </a>
-    </div>
-
-    {% if results %}
-      <table class="custom-table">
-        <thead>
-        <tr>
-          <th>Дата</th>
-          <th>Предмет</th>
-          <th>Тема</th>
-          <th>Оценка</th>
-          <th>Балл (%)</th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for r in results %}
-          <tr>
-            <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
-            <td>{{ r.test.lesson.subject.name }}</td>
-            <td>{{ r.assigned_topic.title }}</td>
-
-            <td>
-              <span class="badge
-                  {% if r.grade == 5 %}bg-success
-                  {% elif r.grade == 4 %}bg-primary
-                  {% elif r.grade == 3 %}bg-warning
-                  {% else %}bg-danger{% endif %}
-              ">{{ r.grade }}</span>
-            </td>
-
-            <td>{{ r.score }}</td>
-            <td><a href="{% url 'test_result_detail' r.id %}" class="btn btn-outline-secondary btn-sm">Открыть</a></td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <p class="text-muted">Ещё нет результатов.</p>
-    {% endif %}
-
-    <h3 class="mt-5 mb-3">📘 Выполненные домашние задания</h3>
-
-    {% if homework_done %}
-      {% for item in homework_done %}
-        <div class="hw-card mb-3">
-
-          <div class="d-flex justify-content-between">
-            <div class="hw-title">
-              Тема: {{ item.hw.lesson.title }}
-            </div>
-
-            <a href="{% url 'homework_detail' item.hw.id %}"
-               class="btn btn-outline-primary btn-sm">
-              Открыть →
-            </a>
-          </div>
-
-          <div class="mt-1 text-muted">
-            Задач: {{ item.total }},
-            верно: {{ item.solved }}
-          </div>
-
-          <div class="hw-progress">
-            <div class="hw-bar
-  {% if item.percent < 40 %}hw-bar-red
-  {% elif item.percent < 70 %}hw-bar-yellow
-  {% else %}hw-bar-green
-  {% endif %}"
-                 style="width: {{ item.percent }}%;">
-            </div>
-
-          </div>
-
-          <div class="hw-footer">
-            {{ item.percent }}% · Выполнено: {{ item.hw.created_at|date:"d.m.Y H:i" }}
-          </div>
-
-        </div>
       {% endfor %}
-    {% else %}
-      <p class="text-muted">Пока нет выполненных ДЗ.</p>
+    </div>
     {% endif %}
-
-
   </div>
 
-  <script>
-      document.addEventListener("DOMContentLoaded", () => {
-          document.querySelectorAll(".hw-generate-btn").forEach(btn => {
-              btn.addEventListener("click", () => {
-                  btn.innerHTML = "⏳ Генерация...";
-                  btn.classList.remove("btn-warning");
-                  btn.classList.add("btn-secondary");
-                  btn.setAttribute("disabled", "disabled");
-              });
-          });
-      });
-  </script>
+  <!-- НУЖНО СДЕЛАТЬ -->
+  {% if hw_waiting or homework_list %}
+  <div class="mb-5">
+    <h3 class="sec-h">Нужно сделать</h3>
+    <div class="lblock">
+      {% for r in hw_waiting %}
+      <div class="lrow">
+        <div class="lrow-body">
+          <div class="lrow-title">{{ r.assigned_topic.title }}</div>
+          <div class="lrow-sub">{{ r.test.lesson.subject.name }} · {{ r.test.lesson.title }}{% if r.assigned_topic.deadline %} · <span class="deadline">до {{ r.assigned_topic.deadline|date:"d.m H:i" }}</span>{% endif %}</div>
+        </div>
+        {% if r.is_homework_generating %}
+          <span class="abtn abtn-dim">⏳ Генерация…</span>
+        {% else %}
+          <a href="{% url 'generate_homework' r.id %}" class="abtn abtn-primary hw-generate-btn" data-id="{{ r.id }}">Создать ДЗ</a>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% for item in homework_list %}
+      <div class="lrow">
+        <div class="lrow-body">
+          <div class="lrow-title">{{ item.hw.lesson.title }}</div>
+          <div class="lrow-sub">{{ item.lesson.subject.name }}{% if item.deadline %} · <span class="deadline">до {{ item.deadline|date:"d.m H:i" }}</span>{% endif %}</div>
+        </div>
+        <a href="{% url 'homework_detail' item.hw.id %}" class="abtn abtn-primary">Продолжить →</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- ТЕСТЫ -->
+  {% if unfinished_tests or available_tests %}
+  <div class="mb-5">
+    <h3 class="sec-h">
+      Доступные тесты
+      {% if available_tests %}<span class="sec-cnt">{{ available_tests|length }}</span>{% endif %}
+    </h3>
+    <div class="lblock">
+      {% for at in unfinished_tests %}
+      <div class="lrow">
+        <div class="lrow-body">
+          <div class="lrow-title">{{ at.title }} <span class="tag tag-yellow ms-1">не завершён</span></div>
+          <div class="lrow-sub">{{ at.subject }} · {{ at.lesson.title }}{% if at.deadline %} · <span class="deadline">до {{ at.deadline|date:"d.m H:i" }}</span>{% endif %}</div>
+        </div>
+        <a href="{% url 'adaptive_test' at.id %}" class="abtn abtn-primary">Продолжить →</a>
+      </div>
+      {% endfor %}
+      {% for at in available_tests %}
+      <div class="lrow">
+        <div class="lrow-body">
+          <div class="lrow-title">{{ at.title }}</div>
+          <div class="lrow-sub">{{ at.subject }} · {{ at.lesson.title }}{% if at.deadline %} · <span class="deadline">до {{ at.deadline|date:"d.m H:i" }}</span>{% endif %}</div>
+        </div>
+        <a href="{% url 'adaptive_test' at.id %}" class="abtn abtn-primary">Пройти →</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
-  <script>
-      document.addEventListener("DOMContentLoaded", function () {
+  {% if not hw_waiting and not homework_list and not unfinished_tests and not available_tests %}
+  <div class="empty-box mb-5">
+    <div style="font-size:2rem; margin-bottom:8px;">✅</div>
+    <div class="empty-title">Всё сделано!</div>
+    <div class="empty-sub">Новых заданий нет</div>
+  </div>
+  {% endif %}
 
-          const testsData = {{ tests_history|safe }};
-          const hwData = {{ hw_history|safe }};
+  <!-- СТАТИСТИКА -->
+  <div class="row g-3 mb-5">
+    <div class="col-md-4">
+      <div class="scard h-100">
+        <div class="scard-hd">Тесты</div>
+        <div class="scard-body">
+          <div class="srow"><span>Пройдено</span><b>{{ tests_done }} из {{ tests_total }}</b></div>
+          <div class="srow"><span>Средний балл</span><b>{{ avg_score }}%</b></div>
+          <div class="srow">
+            <span>Средняя оценка</span>
+            <span class="gbadge gbadge-{% if avg_grade >= 5 %}5{% elif avg_grade >= 4 %}4{% elif avg_grade >= 3 %}3{% else %}2{% endif %}">{{ avg_grade }}</span>
+          </div>
+          <div class="sparkwrap mt-3"><canvas id="testsChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="scard h-100">
+        <div class="scard-hd">Домашние задания</div>
+        <div class="scard-body">
+          <div class="srow"><span>Выполнено</span><b>{{ hw_done }} из {{ hw_total }}</b></div>
+          <div class="srow"><span>Успеваемость</span><b>{{ hw_avg_percent }}%</b></div>
+          <div class="srow"><span>Просрочено</span>
+            {% if hw_overdue %}<span class="gbadge gbadge-2">{{ hw_overdue }}</span>{% else %}<b>0</b>{% endif %}
+          </div>
+          <div class="sparkwrap mt-3"><canvas id="hwChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="scard h-100">
+        <div class="scard-hd">По предметам</div>
+        <div class="scard-body">
+          {% for subj in subject_stats %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1" style="font-size:.86rem;">
+              <span style="font-weight:600;">{{ subj.name }}</span>
+              <div class="d-flex gap-2">
+                <span style="opacity:.45; font-size:.8rem;">ДЗ {{ subj.hw_percent }}%</span>
+                <span class="gbadge gbadge-{% if subj.avg_grade >= 5 %}5{% elif subj.avg_grade >= 4 %}4{% elif subj.avg_grade >= 3 %}3{% elif subj.avg_grade > 0 %}2{% else %}2{% endif %}" style="font-size:.75rem; padding:0 5px; height:20px;">{{ subj.avg_grade }}</span>
+              </div>
+            </div>
+            <div class="mbar">
+              <div class="mbar-fill {% if subj.percent >= 80 %}mbar-green{% elif subj.percent >= 50 %}mbar-blue{% elif subj.percent >= 30 %}mbar-yellow{% else %}mbar-red{% endif %}" style="width:{{ subj.percent }}%;"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
 
-          // === SPARKLINE STYLE ===
-          const chartOptions = {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {legend: {display: false}},
-              scales: {
-                  x: {display: false},
-                  y: {display: false}
-              },
-              elements: {
-                  line: {tension: 0.3, borderWidth: 2},
-                  point: {radius: 0}
-              }
-          };
+  <!-- ПОСЛЕДНИЕ РЕЗУЛЬТАТЫ -->
+  <div class="d-flex align-items-baseline gap-3 mb-3">
+    <h3 class="sec-h mb-0">Последние результаты</h3>
+    <a href="{% url 'student_results' %}" class="sh-link">Все →</a>
+  </div>
+  {% if results %}
+  <div class="lblock mb-5">
+    {% for r in results %}
+    <div class="lrow">
+      <div class="lrow-body">
+        <div class="lrow-title">{{ r.assigned_topic.title }}</div>
+        <div class="lrow-sub">{{ r.test.lesson.subject.name }} · {{ r.completed_at|date:"d.m.Y H:i" }}</div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="gbadge gbadge-{{ r.grade }}">{{ r.grade }}</span>
+        <a href="{% url 'test_result_detail' r.id %}" class="abtn">Открыть</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="dim-text mb-5">Ещё нет результатов.</p>
+  {% endif %}
 
-          // === TESTS CHART ===
-          if (testsData.length > 0) {
-              new Chart(document.getElementById("testsChart"), {
-                  type: "line",
-                  data: {
-                      labels: testsData.map((_, i) => i + 1),
-                      datasets: [{
-                          data: testsData,
-                          borderColor: "#4da3ff",
-                          backgroundColor: "rgba(77,163,255,0.2)",
-                          fill: true
-                      }]
-                  },
-                  options: chartOptions
-              });
-          }
+  <!-- ВЫПОЛНЕННЫЕ ДЗ -->
+  <h3 class="sec-h mb-3">Выполненные домашние задания</h3>
+  {% if homework_done %}
+  <div class="row g-3 mb-5">
+    {% for item in homework_done %}
+    <div class="col-md-6">
+      <div class="hwcard">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="font-weight:700; font-size:.95rem;">{{ item.hw.lesson.title }}</div>
+          <a href="{% url 'homework_detail' item.hw.id %}" class="abtn ms-3">Открыть</a>
+        </div>
+        <div class="mbar mb-2">
+          <div class="mbar-fill {% if item.percent >= 70 %}mbar-green{% elif item.percent >= 40 %}mbar-yellow{% else %}mbar-red{% endif %}" style="width:{{ item.percent }}%;"></div>
+        </div>
+        <div class="d-flex justify-content-between" style="font-size:.8rem; opacity:.45;">
+          <span>{{ item.solved }} / {{ item.total }} верно</span>
+          <b>{{ item.percent }}%</b>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="dim-text mb-5">Пока нет выполненных ДЗ.</p>
+  {% endif %}
 
-          // === HOMEWORK CHART ===
-          if (hwData.length > 0) {
-              new Chart(document.getElementById("hwChart"), {
-                  type: "line",
-                  data: {
-                      labels: hwData.map((_, i) => i + 1),
-                      datasets: [{
-                          data: hwData,
-                          borderColor: "#4da3ff",
-                          backgroundColor: "rgba(77,163,255,0.2)",
-                          fill: true
-                      }]
-                  },
-                  options: chartOptions
-              });
-          }
+</div>
 
-      });
-  </script>
+<style>
+.eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.35}
+.hero-name{font-size:2rem;font-weight:800;margin-bottom:0}
 
+/* KPI */
+.kpi-row{display:flex;gap:10px;flex-wrap:wrap}
+.kpi-pill{display:flex;flex-direction:column;align-items:center;padding:14px 26px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);min-width:110px;gap:5px}
+[data-bs-theme="light"] .kpi-pill{border-color:rgba(0,0,0,.1);background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+.kpi-num{font-size:1.8rem;font-weight:900;line-height:1}
+.kpi-lbl{font-size:.82rem;font-weight:600;opacity:.5;white-space:nowrap}
+
+/* Per-subject row */
+.subj-row{display:flex;gap:12px;flex-wrap:wrap}
+.subj-chip{border-radius:14px;border:1px solid rgba(255,255,255,.08);padding:18px 20px;flex:1;min-width:240px}
+[data-bs-theme="light"] .subj-chip{border-color:rgba(0,0,0,.09);background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.subj-name{font-weight:800;font-size:1.05rem;margin-bottom:14px}
+.subj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.subj-cell{display:flex;flex-direction:column;gap:4px}
+.subj-lbl{font-size:.72rem;opacity:.45;font-weight:600;line-height:1.2}
+.subj-val{font-weight:900;font-size:1.25rem;line-height:1}
+.g5{color:#2ecc71}.g4{color:#4a8df0}.g3{color:#c9a800}.g2{color:#e74c3c}
+
+/* Section header */
+.sec-h{font-size:1.2rem;font-weight:800;margin-bottom:0}
+.sec-cnt{display:inline-flex;align-items:center;justify-content:center;background:#4a8df0;color:#fff;font-size:.7rem;font-weight:900;border-radius:20px;padding:2px 9px;vertical-align:middle;margin-left:8px}
+.sh-link{font-size:.85rem;opacity:.4;text-decoration:none;color:inherit;transition:opacity .15s}
+.sh-link:hover{opacity:.8;color:inherit}
+
+/* List block */
+.lblock{border-radius:12px;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+[data-bs-theme="light"] .lblock{border-color:rgba(0,0,0,.09);background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.05)}
+.lrow{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05);transition:background .12s}
+[data-bs-theme="light"] .lrow{border-color:rgba(0,0,0,.05)}
+.lrow:last-child{border-bottom:none}
+.lrow:hover{background:rgba(255,255,255,.03)}
+[data-bs-theme="light"] .lrow:hover{background:#f7f8fa}
+.lrow-body{flex:1;min-width:0}
+.lrow-title{font-weight:700;font-size:.92rem;margin-bottom:2px}
+.lrow-sub{font-size:.78rem;opacity:.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.deadline{color:#e74c3c;font-weight:700;opacity:1}
+
+/* Buttons */
+.abtn{flex-shrink:0;border-radius:8px;padding:6px 14px;font-size:.82rem;font-weight:700;text-decoration:none;transition:.12s;white-space:nowrap;cursor:pointer;display:inline-block;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:inherit}
+[data-bs-theme="light"] .abtn{background:#f0f0f0;border-color:rgba(0,0,0,.1);color:#333}
+.abtn:hover{background:rgba(255,255,255,.13);color:inherit}
+[data-bs-theme="light"] .abtn:hover{background:#e4e4e4;color:#333}
+.abtn-primary{background:#4a8df0;border-color:#4a8df0;color:#fff}
+.abtn-primary:hover{background:#3a7de0;border-color:#3a7de0;color:#fff}
+.abtn-dim{opacity:.35;cursor:default}
+.tag{font-size:.62rem;font-weight:700;border-radius:5px;padding:2px 6px;text-transform:uppercase;letter-spacing:.04em;vertical-align:middle}
+.tag-yellow{background:rgba(241,196,15,.2);color:#d4ac0d}
+
+/* Stat cards */
+.scard{border-radius:12px;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+[data-bs-theme="light"] .scard{border-color:rgba(0,0,0,.09);background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.05)}
+.scard-hd{padding:13px 16px;font-weight:800;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.06)}
+[data-bs-theme="light"] .scard-hd{border-color:rgba(0,0,0,.06);color:#555}
+.scard-body{padding:16px}
+.srow{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:.87rem}
+.srow span:first-child{opacity:.5}
+.sparkwrap{height:46px}
+.sparkwrap canvas{width:100% !important;height:100% !important}
+
+/* Grade badges */
+.gbadge{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 7px;border-radius:7px;font-weight:900;font-size:.88rem}
+.gbadge-5{background:rgba(46,204,113,.2);color:#2ecc71}
+.gbadge-4{background:rgba(74,141,240,.2);color:#4a8df0}
+.gbadge-3{background:rgba(241,196,15,.2);color:#c9a800}
+.gbadge-2{background:rgba(231,76,60,.2);color:#e74c3c}
+
+/* Progress bars */
+.mbar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+[data-bs-theme="light"] .mbar{background:rgba(0,0,0,.08)}
+.mbar-fill{height:100%;border-radius:3px;transition:width .5s}
+.mbar-green{background:#2ecc71}
+.mbar-blue{background:#4a8df0}
+.mbar-yellow{background:#f1c40f}
+.mbar-red{background:#e74c3c}
+
+/* HW card */
+.hwcard{border-radius:12px;border:1px solid rgba(255,255,255,.08);padding:16px 18px}
+[data-bs-theme="light"] .hwcard{border-color:rgba(0,0,0,.09);background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+
+/* Empty */
+.empty-box{text-align:center;padding:40px;border-radius:12px;border:1px dashed rgba(255,255,255,.1)}
+[data-bs-theme="light"] .empty-box{border-color:rgba(0,0,0,.1);background:#fafafa}
+.empty-title{font-weight:800;font-size:1.05rem;margin-bottom:4px}
+.empty-sub{font-size:.85rem;opacity:.4}
+.dim-text{opacity:.4;font-size:.9rem}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const testsData = {{ tests_history|safe }};
+    const hwData = {{ hw_history|safe }};
+    const opts = {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{display:false},y:{display:false}},
+      elements:{line:{tension:.4,borderWidth:2},point:{radius:0}}
+    };
+    if (testsData.length > 1)
+      new Chart(document.getElementById("testsChart"), {type:"line",data:{labels:testsData.map((_,i)=>i+1),datasets:[{data:testsData,borderColor:"#4a8df0",backgroundColor:"rgba(74,141,240,.1)",fill:true}]},options:opts});
+    if (hwData.length > 1)
+      new Chart(document.getElementById("hwChart"), {type:"line",data:{labels:hwData.map((_,i)=>i+1),datasets:[{data:hwData,borderColor:"#2ecc71",backgroundColor:"rgba(46,204,113,.1)",fill:true}]},options:opts});
+  });
+</script>
 {% endblock %}
