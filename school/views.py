@@ -1284,6 +1284,21 @@ def resolve_appeal(request, appeal_id):
     })
 
 
+# ── Static pages ────────────────────────────────────────────
+
+def page_about(request):
+    return render(request, "pages/about.html")
+
+def page_faq(request):
+    return render(request, "pages/faq.html")
+
+def page_privacy(request):
+    return render(request, "pages/privacy.html")
+
+def page_terms(request):
+    return render(request, "pages/terms.html")
+
+
 # ── Error handlers ──────────────────────────────────────────
 
 def error_400(request, exception=None):

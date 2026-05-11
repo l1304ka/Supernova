@@ -1,100 +1,150 @@
-﻿{% extends "base.html" %}
-
+{% extends "base.html" %}
 {% block title %}Результат теста{% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
+<div class="res-wrap">
 
-    <!-- Заголовок -->
-    <div class="card shadow-sm mb-4">
-      <div class="card-body">
-        <h3 class="card-title mb-1">{{ result.test.title }}</h3>
-        <p class="text-muted mb-0">{{ result.completed_at|date:"d.m.Y H:i" }}</p>
+  <!-- Шапка с итогом -->
+  <div class="res-hero">
+    <div class="res-hero-top">
+      <div class="res-grade grade-{{ result.grade }}">{{ result.grade }}</div>
+      <div class="res-hero-info">
+        <div class="res-test-title">{{ result.test.title }}</div>
+        <div class="res-test-date">{{ result.completed_at|date:"d.m.Y, H:i" }}</div>
       </div>
     </div>
 
-    <!-- Основные показатели -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-4">
-        <div class="card shadow-sm text-center p-3">
-          <h5>Оценка</h5>
-          <span class="badge
-          {% if result.grade == 5 %}bg-success
-          {% elif result.grade == 4 %}bg-primary
-          {% elif result.grade == 3 %}bg-warning
-          {% else %}bg-danger{% endif %}
-        " style="font-size:1.3rem">{{ result.grade }}</span>
-        </div>
+    <div class="res-kpis">
+      <div class="res-kpi">
+        <div class="res-kpi-val">{{ result.score }}%</div>
+        <div class="res-kpi-lbl">Результат</div>
       </div>
-
-      <div class="col-md-4">
-        <div class="card shadow-sm text-center p-3">
-          <h5>Балл</h5>
-          <span class="fw-bold">{{ result.score }}%</span>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card shadow-sm text-center p-3">
-          <h5>Верных ответов</h5>
-          <span class="fw-bold">{{ correct }}/{{ total }}</span>
-        </div>
+      <div class="res-kpi-sep"></div>
+      <div class="res-kpi">
+        <div class="res-kpi-val">{{ correct }}<span>/{{ total }}</span></div>
+        <div class="res-kpi-lbl">Верных ответов</div>
       </div>
     </div>
 
-    <hr class="mb-4">
-
-    <!-- Разбор -->
-    <h4 class="mb-3">Разбор вопросов</h4>
-
-    <div class="question-cards-wrapper">
-
-      {% for a in answers %}
-        <div class="question-card {% if a.is_correct %}qc-correct{% else %}qc-wrong{% endif %} shadow-sm">
-
-          <div class="qc-header">
-            <h5 class="qc-number">Вопрос {{ forloop.counter }}</h5>
-
-            <span class="qc-status {% if a.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">
-              {% if a.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
-            </span>
-          </div>
-
-          <div class="qc-body">
-            <p class="qc-question">{{ a.question.text }}</p>
-
-            <p class="qc-field"><span>Ваш ответ:</span> {{ a.get_given_text }}</p>
-
-            <p class="qc-field"><span>Правильный ответ:</span> {{ a.question.get_correct_text }}</p>
-          </div>
-
-        </div>
-      {% endfor %}
-
+    <!-- Прогресс-бар -->
+    <div class="res-bar-wrap">
+      <div class="res-bar">
+        <div class="res-bar-fill grade-fill-{{ result.grade }}" style="width:{{ result.score }}%"></div>
+      </div>
     </div>
-
-    <hr class="mb-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h4 class="mb-0">Домашнее задание</h4>
-
-      {% if result.homework %}
-        <a href="{% url 'homework_detail' result.homework.id %}"
-           class="btn btn-primary">
-          Открыть домашнее задание
-        </a>
-      {% else %}
-        <form method="post" action="{% url 'generate_homework' result.id %}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-outline-primary hw-generate-btn">
-            Сгенерировать ДЗ по этой теме
-          </button>
-        </form>
-      {% endif %}
-    </div>
-
-
-    <a href="/" class="btn btn-outline-secondary mt-3">← На главную</a>
-
   </div>
+
+  <!-- Домашнее задание -->
+  <div class="res-hw-block">
+    <div class="res-hw-left">
+      <div class="res-hw-title">Домашнее задание</div>
+      <div class="res-hw-sub">
+        {% if result.homework %}Задание уже сформировано по слабым темам{% else %}Получите персональное задание по ошибкам{% endif %}
+      </div>
+    </div>
+    {% if result.homework %}
+      <a href="{% url 'homework_detail' result.homework.id %}" class="res-hw-btn">Открыть ДЗ →</a>
+    {% else %}
+      <form method="post" action="{% url 'generate_homework' result.id %}">
+        {% csrf_token %}
+        <button type="submit" class="res-hw-btn res-hw-btn-gen">Сгенерировать ДЗ</button>
+      </form>
+    {% endif %}
+  </div>
+
+  <!-- Разбор вопросов -->
+  <div class="res-section-title">Разбор вопросов</div>
+
+  <div class="res-questions">
+    {% for a in answers %}
+      <div class="res-qcard {% if a.is_correct %}rq-correct{% else %}rq-wrong{% endif %}">
+        <div class="rq-head">
+          <span class="rq-num">{{ forloop.counter }}</span>
+          <span class="rq-status {% if a.is_correct %}rqs-ok{% else %}rqs-fail{% endif %}">
+            {% if a.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
+          </span>
+        </div>
+        <div class="rq-text">{{ a.question.text }}</div>
+        <div class="rq-answers">
+          <div class="rq-ans {% if a.is_correct %}rqa-ok{% else %}rqa-fail{% endif %}">
+            <span class="rqa-lbl">Ваш ответ</span>
+            <span class="rqa-val">{{ a.get_given_text }}</span>
+          </div>
+          {% if not a.is_correct %}
+            <div class="rq-ans rqa-ok">
+              <span class="rqa-lbl">Правильный ответ</span>
+              <span class="rqa-val">{{ a.question.get_correct_text }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <a href="/" class="res-back-btn">← На главную</a>
+
+</div>
+
+<style>
+.res-wrap{max-width:720px;margin:0 auto;padding:40px 20px 80px}
+
+/* Hero */
+.res-hero{background:var(--bs-body-bg);border:1px solid var(--bs-border-color);border-radius:18px;padding:28px 28px 24px;margin-bottom:16px}
+.res-hero-top{display:flex;align-items:center;gap:18px;margin-bottom:24px}
+.res-grade{font-size:2.8rem;font-weight:900;width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.res-grade.grade-5{background:#16a34a;color:#fff}
+.res-grade.grade-4{background:#2563eb;color:#fff}
+.res-grade.grade-3{background:#d97706;color:#fff}
+.res-grade.grade-2{background:#dc2626;color:#fff}
+.res-test-title{font-size:1.15rem;font-weight:800;margin-bottom:4px}
+.res-test-date{font-size:.85rem;opacity:.45}
+.res-kpis{display:flex;align-items:center;gap:0;margin-bottom:20px}
+.res-kpi{flex:1;text-align:center}
+.res-kpi-val{font-size:1.6rem;font-weight:900;line-height:1}
+.res-kpi-val span{font-size:1rem;opacity:.45;font-weight:500}
+.res-kpi-val.grade-5{color:#16a34a}
+.res-kpi-val.grade-4{color:#2563eb}
+.res-kpi-val.grade-3{color:#d97706}
+.res-kpi-val.grade-2{color:#dc2626}
+.res-kpi-lbl{font-size:.78rem;font-weight:600;opacity:.45;margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
+.res-kpi-sep{width:1px;height:36px;background:var(--bs-border-color)}
+.res-bar-wrap{}
+.res-bar{height:8px;background:var(--bs-border-color);border-radius:99px;overflow:hidden}
+.res-bar-fill{height:100%;border-radius:99px;transition:width .5s}
+.res-bar-fill.grade-fill-5{background:#16a34a}
+.res-bar-fill.grade-fill-4{background:#2563eb}
+.res-bar-fill.grade-fill-3{background:#d97706}
+.res-bar-fill.grade-fill-2{background:#dc2626}
+
+/* ДЗ блок */
+.res-hw-block{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--bs-body-bg);border:1px solid var(--bs-border-color);border-radius:14px;padding:18px 22px;margin-bottom:28px}
+.res-hw-title{font-size:1rem;font-weight:700;margin-bottom:3px}
+.res-hw-sub{font-size:.84rem;opacity:.5}
+.res-hw-btn{flex-shrink:0;background:#4a8df0;color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:.9rem;font-weight:700;text-decoration:none;cursor:pointer;transition:background .15s;white-space:nowrap}
+.res-hw-btn:hover{background:#3a7de0;color:#fff}
+.res-hw-btn-gen{background:rgba(74,141,240,.15);color:#4a8df0}
+.res-hw-btn-gen:hover{background:rgba(74,141,240,.25);color:#4a8df0}
+
+/* Разбор */
+.res-section-title{font-size:1.1rem;font-weight:800;margin-bottom:14px;opacity:.7;text-transform:uppercase;letter-spacing:.04em;font-size:.8rem}
+.res-questions{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.res-qcard{border-radius:14px;padding:18px 20px;border:1px solid transparent}
+.rq-correct{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2)}
+.rq-wrong{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.2)}
+.rq-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.rq-num{width:24px;height:24px;border-radius:6px;background:var(--bs-tertiary-bg);font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rq-status{font-size:.8rem;font-weight:700;margin-left:auto}
+.rqs-ok{color:#16a34a}
+.rqs-fail{color:#dc2626}
+.rq-text{font-size:.97rem;font-weight:600;margin-bottom:12px;line-height:1.5}
+.rq-answers{display:flex;flex-direction:column;gap:6px}
+.rq-ans{display:flex;gap:8px;align-items:baseline;font-size:.88rem}
+.rqa-lbl{opacity:.5;flex-shrink:0;min-width:110px}
+.rqa-val{font-weight:600}
+.rqa-ok .rqa-val{color:#16a34a}
+.rqa-fail .rqa-val{color:#dc2626}
+
+.res-back-btn{display:inline-block;font-size:.9rem;font-weight:600;opacity:.5;text-decoration:none;color:inherit;transition:opacity .15s}
+.res-back-btn:hover{opacity:1;color:inherit}
+</style>
 {% endblock %}

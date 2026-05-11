@@ -1,382 +1,325 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% block title %}Домашнее задание{% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
+<div class="hw-wrap">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="mb-0">{{ homework.topic.topic.name }}</h2>
-
-      {% if homework.is_checked %}
-        <a href="{% url 'test_result_detail' homework.test_result.id %}"
-           class="btn btn-outline-secondary btn-sm">
-          ← К результату теста
-        </a>
-      {% endif %}
+  <!-- Шапка -->
+  <div class="hw-hero">
+    <div class="hw-hero-left">
+      <div class="hw-label">Домашнее задание</div>
+      <div class="hw-title">{{ homework.topic.topic.name }}</div>
     </div>
-
-    <!-- ПРОГРЕСС -->
     {% if homework.is_checked %}
-      <div class="hw-progress mb-3">
-        <div class="hw-progress-fill" style="width: {{ percent }}%;"></div>
+      <a href="{% url 'test_result_detail' homework.test_result.id %}" class="hw-back-link">← К результату теста</a>
+    {% endif %}
+  </div>
+
+  <!-- Статус / прогресс -->
+  {% if homework.is_checked %}
+    <div class="hw-result-bar">
+      <div class="hw-result-stats">
+        <span class="hw-result-num">{{ solved }}<span>/{{ total }}</span></span>
+        <span class="hw-result-lbl">верных ответов — {{ percent }}%</span>
       </div>
-    {% endif %}
+      <div class="hw-pbar">
+        <div class="hw-pbar-fill" style="width:{{ percent }}%"></div>
+      </div>
+    </div>
+  {% else %}
+    <div class="hw-pending-note">{{ total }} {{ total|pluralize:"задание,задания,заданий" }} — заполните ответы и нажмите «Проверить»</div>
+  {% endif %}
 
-    {% if not homework.is_checked %}
-      <p class="text-muted">Заданий: {{ total }}. Заполните поля и нажмите "Проверить".</p>
-    {% else %}
-      <p class="text-muted">Верно: {{ solved }} / {{ total }} ({{ percent }}%)</p>
-    {% endif %}
+  <!-- Задачи -->
+  <form method="post" id="hwForm">
+    {% csrf_token %}
 
-    <form method="post">
-      {% csrf_token %}
+    {% for t in tasks %}
+      <div class="hw-task
+        {% if not homework.is_checked %}hwtask-neutral
+        {% elif t.is_correct %}hwtask-correct
+        {% else %}hwtask-wrong{% endif %}">
 
-      {% for t in tasks %}
+        <div class="hwtask-head">
+          <span class="hwtask-num">{{ forloop.counter }}</span>
+          {% if homework.is_checked %}
+            <span class="hwtask-verdict {% if t.is_correct %}htv-ok{% else %}htv-fail{% endif %}">
+              {% if t.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
+            </span>
 
-        <div class="task-card mb-4
-        {% if not homework.is_checked %}task-neutral
-        {% elif t.is_correct %}task-correct
-        {% else %}task-wrong{% endif %}
-        shadow-sm">
-
-          <div class="qc-header">
-            <h5 class="qc-number">Задача {{ forloop.counter }}</h5>
-
-            {% if homework.is_checked %}
-              <div class="d-flex align-items-center gap-2">
-                <span class="qc-status {% if t.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">
-                  {% if t.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
-                </span>
-                {% if not appeal and not t.is_correct %}
-                  <button type="button"
-                          class="btn btn-sm btn-outline-warning appeal-btn"
-                          data-task-id="{{ t.id }}"
-                          data-task-num="{{ forloop.counter }}">
-                    Оспорить
-                  </button>
-                {% endif %}
-                {% if appeal %}
-                  {% for at in appeal.appeal_tasks.all %}
-                    {% if at.task_id == t.id %}
-                      {% if appeal.status == 'pending' %}
-                        <span class="badge bg-warning text-dark">⏳ На рассмотрении</span>
-                      {% elif at.teacher_verdict %}
-                        <span class="badge bg-success">✔ Засчитано учителем</span>
-                      {% else %}
-                        <span class="badge bg-danger">✘ Не засчитано</span>
-                      {% endif %}
-                    {% endif %}
-                  {% endfor %}
-                {% endif %}
-              </div>
+            {% if not appeal and not t.is_correct %}
+              <button type="button" class="appeal-btn" data-task-id="{{ t.id }}" data-task-num="{{ forloop.counter }}">
+                Оспорить
+              </button>
             {% endif %}
-          </div>
 
-          <div class="qc-body">
-            <p class="qc-question">{{ t.text }}</p>
+            {% if appeal %}
+              {% for at in appeal.appeal_tasks.all %}
+                {% if at.task_id == t.id %}
+                  {% if appeal.status == 'pending' %}
+                    <span class="hwtask-badge badge-warn">⏳ На рассмотрении</span>
+                  {% elif at.teacher_verdict %}
+                    <span class="hwtask-badge badge-ok">✔ Засчитано</span>
+                  {% else %}
+                    <span class="hwtask-badge badge-fail">✘ Не засчитано</span>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endif %}
+        </div>
 
-            {% if not homework.is_checked %}
-              <!-- ПОЛЕ ВВОДА -->
-              <input type="text"
-                     class="form-control"
-                     name="task_{{ t.id }}"
-                     placeholder="Введите число"
-                     required>
-            {% else %}
-              <!-- РЕЗУЛЬТАТЫ -->
-              <p class="qc-field"><span>Ваш ответ:</span> {{ t.student_answer }}</p>
-              <p class="qc-field"><span>Правильный ответ:</span> {{ t.correct_answer }}</p>
+        <div class="hwtask-body">
+          <p class="hwtask-text">{{ t.text }}</p>
 
-              <details class="mt-3">
-                <summary class="mb-2"><b>Показать решение</b></summary>
-                <div class="mt-2 solution-html ps-3">{{ t.solution|safe }}</div>
+          {% if not homework.is_checked %}
+            <input type="text" class="hwtask-input" name="task_{{ t.id }}" placeholder="Введите ответ" required>
+          {% else %}
+            <div class="hwtask-answers">
+              <div class="htans {% if t.is_correct %}htans-ok{% else %}htans-fail{% endif %}">
+                <span class="htans-lbl">Ваш ответ</span>
+                <span class="htans-val">{{ t.student_answer }}</span>
+              </div>
+              {% if not t.is_correct %}
+                <div class="htans htans-ok">
+                  <span class="htans-lbl">Правильный ответ</span>
+                  <span class="htans-val">{{ t.correct_answer }}</span>
+                </div>
+              {% endif %}
+            </div>
+
+            {% if t.solution %}
+              <details class="hwtask-solution">
+                <summary>Показать решение</summary>
+                <div class="solution-html">{{ t.solution|safe }}</div>
               </details>
             {% endif %}
-          </div>
-
-        </div>
-
-      {% endfor %}
-
-      {% if not homework.is_checked %}
-        <button class="btn btn-primary">Проверить ответы</button>
-      {% else %}
-        <a href="/" class="btn btn-outline-secondary">На главную</a>
-      {% endif %}
-    </form>
-
-    {% if homework.is_checked and not appeal %}
-      <form method="post" action="{% url 'submit_appeal' homework.id %}" id="appeal-form" class="mt-2">
-        {% csrf_token %}
-        <div id="appeal-submit-block" style="display:none;" class="mt-3">
-          <button type="submit" class="btn btn-warning">Отправить апелляцию учителю</button>
-          <span id="appeal-count-label" class="text-muted ms-2 small"></span>
-        </div>
-      </form>
-    {% endif %}
-
-  </div>
-
-  {% if homework.is_checked and not appeal %}
-  <!-- Модальное окно апелляции -->
-  <div class="modal fade" id="appealModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content appeal-modal-content">
-
-        <div class="appeal-modal-header">
-          <div>
-            <div class="appeal-modal-label">Апелляция</div>
-            <div class="appeal-modal-title">Задача <span id="modal-task-num"></span></div>
-          </div>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="appeal-modal-body">
-
-          <p class="appeal-modal-hint">Укажите причину — можно выбрать обе</p>
-
-          <div class="appeal-reasons">
-            <label class="appeal-reason-card" id="card-answer">
-              <input type="checkbox" id="reason-answer" value="answer" class="appeal-reason-cb">
-              <div class="appeal-reason-icon">✏️</div>
-              <div class="appeal-reason-text">Не согласен<br>с <b>ответом</b></div>
-            </label>
-            <label class="appeal-reason-card" id="card-solution">
-              <input type="checkbox" id="reason-solution" value="solution" class="appeal-reason-cb">
-              <div class="appeal-reason-icon">📐</div>
-              <div class="appeal-reason-text">Не согласен<br>с <b>решением</b></div>
-            </label>
-          </div>
-
-          <div class="appeal-note-wrap">
-            <textarea id="modal-note" class="appeal-note" rows="3"
-                      placeholder="Напишите, что именно не так..."></textarea>
-          </div>
-
-        </div>
-
-        <div class="appeal-modal-footer">
-          <button type="button" class="btn-appeal-cancel" data-bs-dismiss="modal">Отмена</button>
-          <button type="button" class="btn-appeal-confirm" id="modal-confirm">Добавить к апелляции →</button>
+          {% endif %}
         </div>
 
       </div>
+    {% endfor %}
+
+    {% if not homework.is_checked %}
+      <button type="submit" class="hw-submit-btn">Проверить ответы</button>
+    {% else %}
+      <a href="/" class="hw-back-btn">← На главную</a>
+    {% endif %}
+  </form>
+
+  {% if homework.is_checked and not appeal %}
+    <form method="post" action="{% url 'submit_appeal' homework.id %}" id="appeal-form" class="mt-2">
+      {% csrf_token %}
+      <div id="appeal-submit-block" style="display:none;" class="appeal-submit-wrap">
+        <div class="appeal-submit-info">
+          <span id="appeal-count-label" class="appeal-count"></span>
+          <span class="appeal-submit-hint">задач добавлено в апелляцию</span>
+        </div>
+        <button type="submit" class="appeal-send-btn">Отправить апелляцию учителю</button>
+      </div>
+    </form>
+  {% endif %}
+
+</div>
+
+{% if homework.is_checked and not appeal %}
+<div class="modal fade" id="appealModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content appeal-modal-content">
+      <div class="appeal-modal-header">
+        <div>
+          <div class="appeal-modal-label">Апелляция</div>
+          <div class="appeal-modal-title">Задача <span id="modal-task-num"></span></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="appeal-modal-body">
+        <p class="appeal-modal-hint">Укажите причину — можно выбрать обе</p>
+        <div class="appeal-reasons">
+          <label class="appeal-reason-card" id="card-answer">
+            <input type="checkbox" id="reason-answer" value="answer" class="appeal-reason-cb">
+            <div class="appeal-reason-icon">✏️</div>
+            <div class="appeal-reason-text">Не согласен<br>с <b>ответом</b></div>
+          </label>
+          <label class="appeal-reason-card" id="card-solution">
+            <input type="checkbox" id="reason-solution" value="solution" class="appeal-reason-cb">
+            <div class="appeal-reason-icon">📐</div>
+            <div class="appeal-reason-text">Не согласен<br>с <b>решением</b></div>
+          </label>
+        </div>
+        <textarea id="modal-note" class="appeal-note" rows="3" placeholder="Напишите, что именно не так..."></textarea>
+      </div>
+      <div class="appeal-modal-footer">
+        <button type="button" class="btn-appeal-cancel" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn-appeal-confirm" id="modal-confirm">Добавить к апелляции →</button>
+      </div>
     </div>
   </div>
+</div>
+{% endif %}
 
-  <style>
-    .appeal-modal-content {
-      border: none;
-      border-radius: 16px;
-      overflow: hidden;
-      background: var(--bs-body-bg);
-    }
-    .appeal-modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-    }
-    .appeal-modal-label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      opacity: .5;
-      margin-bottom: 2px;
-    }
-    .appeal-modal-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-    .appeal-modal-body {
-      padding: 20px 24px;
-    }
-    .appeal-modal-hint {
-      font-size: 0.85rem;
-      opacity: .55;
-      margin-bottom: 14px;
-    }
-    .appeal-reasons {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    .appeal-reason-card {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      padding: 14px 10px;
-      border-radius: 12px;
-      border: 2px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-      transition: .18s;
-      text-align: center;
-      user-select: none;
-    }
-    [data-bs-theme="light"] .appeal-reason-card {
-      border-color: rgba(0,0,0,0.1);
-    }
-    .appeal-reason-card:hover {
-      border-color: rgba(255, 193, 7, 0.5);
-    }
-    .appeal-reason-card.selected {
-      border-color: #ffc107;
-      background: rgba(255,193,7,0.1);
-    }
-    .appeal-reason-cb { display: none; }
-    .appeal-reason-icon { font-size: 1.6rem; line-height: 1; }
-    .appeal-reason-text { font-size: 0.82rem; line-height: 1.4; }
-    .appeal-note-wrap { }
-    .appeal-note {
-      width: 100%;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 0.9rem;
-      resize: none;
-      border: 1.5px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
-      color: inherit;
-      transition: border-color .2s;
-    }
-    [data-bs-theme="light"] .appeal-note {
-      border-color: rgba(0,0,0,0.15);
-      background: #f8f9fa;
-      color: #212529;
-    }
-    .appeal-note:focus {
-      outline: none;
-      border-color: #ffc107;
-    }
-    .appeal-modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      padding: 14px 24px 20px;
-      border-top: 1px solid rgba(255,255,255,0.07);
-    }
-    .btn-appeal-cancel {
-      background: none;
-      border: 1.5px solid rgba(255,255,255,0.15);
-      color: inherit;
-      border-radius: 8px;
-      padding: 7px 16px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: .15s;
-    }
-    [data-bs-theme="light"] .btn-appeal-cancel {
-      border-color: rgba(0,0,0,0.2);
-    }
-    .btn-appeal-cancel:hover { opacity: .7; }
-    .btn-appeal-confirm {
-      background: #ffc107;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 7px 18px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: .15s;
-    }
-    .btn-appeal-confirm:hover { background: #e0a800; }
-    .btn-appeal-confirm:disabled { opacity: .4; cursor: default; }
-  </style>
+<style>
+.hw-wrap{max-width:720px;margin:0 auto;padding:40px 20px 80px}
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-    const appealForm = document.getElementById('appeal-form');
-    const submitBlock = document.getElementById('appeal-submit-block');
-    const countLabel = document.getElementById('appeal-count-label');
-    const modal = new bootstrap.Modal(document.getElementById('appealModal'));
-    let currentTaskId = null;
-    const disputed = {};  // taskId -> {reason, note}
+/* Шапка */
+.hw-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.hw-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.4;margin-bottom:4px}
+.hw-title{font-size:1.5rem;font-weight:900}
+.hw-back-link{flex-shrink:0;font-size:.85rem;font-weight:600;opacity:.45;text-decoration:none;color:inherit;padding-top:4px;transition:opacity .15s}
+.hw-back-link:hover{opacity:1;color:inherit}
 
-    // карточки-чекбоксы: клик переключает выделение
-    document.querySelectorAll('.appeal-reason-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const cb = card.querySelector('.appeal-reason-cb');
-        cb.checked = !cb.checked;
-        card.classList.toggle('selected', cb.checked);
-      });
+/* Статус */
+.hw-result-bar{background:var(--bs-body-bg);border:1px solid var(--bs-border-color);border-radius:14px;padding:16px 20px;margin-bottom:24px}
+.hw-result-stats{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.hw-result-num{font-size:1.5rem;font-weight:900}
+.hw-result-num span{font-size:.95rem;opacity:.4;font-weight:500}
+.hw-result-lbl{font-size:.88rem;opacity:.5}
+.hw-pbar{height:8px;background:var(--bs-border-color);border-radius:99px;overflow:hidden}
+.hw-pbar-fill{height:100%;background:#4a8df0;border-radius:99px;transition:width .4s}
+.hw-pending-note{font-size:.9rem;opacity:.5;margin-bottom:20px}
+
+/* Задачи */
+.hw-task{border-radius:14px;padding:20px;margin-bottom:12px;border:1px solid transparent}
+.hwtask-neutral{background:var(--bs-body-bg);border-color:var(--bs-border-color)}
+.hwtask-correct{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.25)}
+.hwtask-wrong{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.2)}
+
+.hwtask-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.hwtask-num{width:26px;height:26px;border-radius:7px;background:var(--bs-tertiary-bg);font-size:.8rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hwtask-verdict{font-size:.82rem;font-weight:700}
+.htv-ok{color:#16a34a}
+.htv-fail{color:#dc2626}
+.appeal-btn{margin-left:auto;background:rgba(245,158,11,.12);color:#d97706;border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:4px 12px;font-size:.8rem;font-weight:700;cursor:pointer;transition:.15s}
+.appeal-btn:hover{background:rgba(245,158,11,.22)}
+.appeal-btn.added{background:rgba(245,158,11,.2);color:#d97706}
+.hwtask-badge{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px}
+.badge-warn{background:rgba(245,158,11,.15);color:#d97706}
+.badge-ok{background:rgba(34,197,94,.15);color:#16a34a}
+.badge-fail{background:rgba(239,68,68,.15);color:#dc2626}
+
+.hwtask-text{font-size:.97rem;font-weight:600;line-height:1.6;margin:0 0 14px}
+.hwtask-input{width:100%;background:var(--bs-tertiary-bg);border:1.5px solid var(--bs-border-color);border-radius:10px;padding:11px 14px;font-size:.97rem;color:var(--bs-body-color);outline:none;transition:border-color .15s;box-sizing:border-box}
+.hwtask-input:focus{border-color:#4a8df0;box-shadow:0 0 0 3px rgba(74,141,240,.15)}
+.hwtask-answers{display:flex;flex-direction:column;gap:6px}
+.htans{display:flex;gap:8px;align-items:baseline;font-size:.9rem}
+.htans-lbl{opacity:.45;min-width:120px;flex-shrink:0}
+.htans-val{font-weight:700}
+.htans-ok .htans-val{color:#16a34a}
+.htans-fail .htans-val{color:#dc2626}
+.hwtask-solution{margin-top:14px;font-size:.88rem}
+.hwtask-solution summary{cursor:pointer;font-weight:600;opacity:.6;transition:opacity .15s}
+.hwtask-solution summary:hover{opacity:1}
+.hwtask-solution .solution-html{margin-top:10px;opacity:.75;line-height:1.7;padding-left:12px;border-left:3px solid var(--bs-border-color)}
+
+.hw-submit-btn{background:#4a8df0;color:#fff;border:none;border-radius:12px;padding:14px 32px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:8px;transition:background .15s,transform .1s}
+.hw-submit-btn:hover{background:#3a7de0}
+.hw-submit-btn:active{transform:scale(.98)}
+.hw-back-btn{display:inline-block;font-size:.9rem;font-weight:600;opacity:.45;text-decoration:none;color:inherit;margin-top:8px;transition:opacity .15s}
+.hw-back-btn:hover{opacity:1;color:inherit}
+
+/* Апелляция — submit */
+.appeal-submit-wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:14px;padding:16px 20px;margin-top:16px}
+.appeal-submit-info{display:flex;align-items:baseline;gap:6px}
+.appeal-count{font-size:1.2rem;font-weight:900;color:#d97706}
+.appeal-submit-hint{font-size:.88rem;opacity:.6}
+.appeal-send-btn{background:#f59e0b;color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:.9rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s}
+.appeal-send-btn:hover{background:#d97706}
+
+/* Модал апелляции */
+.appeal-modal-content{border:none;border-radius:16px;overflow:hidden;background:var(--bs-body-bg)}
+.appeal-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px 16px;border-bottom:1px solid var(--bs-border-color)}
+.appeal-modal-label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.5;margin-bottom:2px}
+.appeal-modal-title{font-size:1.25rem;font-weight:700}
+.appeal-modal-body{padding:20px 24px}
+.appeal-modal-hint{font-size:.85rem;opacity:.55;margin-bottom:14px}
+.appeal-reasons{display:flex;gap:12px;margin-bottom:18px}
+.appeal-reason-card{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px;border-radius:12px;border:2px solid var(--bs-border-color);cursor:pointer;transition:.18s;text-align:center;user-select:none}
+.appeal-reason-card:hover{border-color:rgba(245,158,11,.5)}
+.appeal-reason-card.selected{border-color:#f59e0b;background:rgba(245,158,11,.08)}
+.appeal-reason-cb{display:none}
+.appeal-reason-icon{font-size:1.6rem;line-height:1}
+.appeal-reason-text{font-size:.82rem;line-height:1.4}
+.appeal-note{width:100%;border-radius:10px;padding:10px 14px;font-size:.9rem;resize:none;border:1.5px solid var(--bs-border-color);background:var(--bs-tertiary-bg);color:var(--bs-body-color);transition:border-color .2s;outline:none;box-sizing:border-box}
+.appeal-note:focus{border-color:#f59e0b}
+.appeal-modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 24px 20px;border-top:1px solid var(--bs-border-color)}
+.btn-appeal-cancel{background:none;border:1.5px solid var(--bs-border-color);color:inherit;border-radius:8px;padding:7px 16px;font-size:.9rem;cursor:pointer;transition:.15s}
+.btn-appeal-cancel:hover{opacity:.7}
+.btn-appeal-confirm{background:#f59e0b;color:#000;border:none;border-radius:8px;padding:7px 18px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.15s}
+.btn-appeal-confirm:hover{background:#d97706}
+.btn-appeal-confirm:disabled{opacity:.4;cursor:default}
+</style>
+
+{% if homework.is_checked and not appeal %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const appealForm = document.getElementById('appeal-form');
+  const submitBlock = document.getElementById('appeal-submit-block');
+  const countLabel = document.getElementById('appeal-count-label');
+  const modal = new bootstrap.Modal(document.getElementById('appealModal'));
+  let currentTaskId = null;
+  const disputed = {};
+
+  document.querySelectorAll('.appeal-reason-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const cb = card.querySelector('.appeal-reason-cb');
+      cb.checked = !cb.checked;
+      card.classList.toggle('selected', cb.checked);
     });
+  });
 
-    document.querySelectorAll('.appeal-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        currentTaskId = btn.dataset.taskId;
-        document.getElementById('modal-task-num').textContent = btn.dataset.taskNum;
-
-        // восстановить прошлые значения
-        if (disputed[currentTaskId]) {
-          const saved = disputed[currentTaskId];
-          ['answer','solution'].forEach(v => {
-            const cb = document.getElementById(`reason-${v}`);
-            cb.checked = saved.reasons.includes(v);
-            cb.closest('.appeal-reason-card').classList.toggle('selected', cb.checked);
-          });
-          document.getElementById('modal-note').value = saved.note;
-        } else {
-          document.querySelectorAll('.appeal-reason-cb').forEach(cb => {
-            cb.checked = false;
-            cb.closest('.appeal-reason-card').classList.remove('selected');
-          });
-          document.getElementById('modal-note').value = '';
-        }
-
-        modal.show();
-      });
-    });
-
-    document.getElementById('modal-confirm').addEventListener('click', () => {
-      const reasons = [...document.querySelectorAll('.appeal-reason-cb:checked')].map(cb => cb.value);
-      const note = document.getElementById('modal-note').value.trim();
-
-      if (reasons.length === 0 && !note) return;
-
-      disputed[currentTaskId] = { reasons, note };
-      syncForm();
-      modal.hide();
-
-      const btn = document.querySelector(`.appeal-btn[data-task-id="${currentTaskId}"]`);
-      btn.classList.remove('btn-outline-warning');
-      btn.classList.add('btn-warning');
-      btn.textContent = '✓ В апелляции';
-    });
-
-    function syncForm() {
-      appealForm.querySelectorAll('.dynamic-input').forEach(el => el.remove());
-
-      const addHidden = (name, value) => {
-        const inp = document.createElement('input');
-        inp.type = 'hidden';
-        inp.name = name;
-        inp.value = value;
-        inp.className = 'dynamic-input';
-        appealForm.appendChild(inp);
-      };
-
-      Object.entries(disputed).forEach(([tid, data]) => {
-        addHidden('task_ids', tid);
-        addHidden(`reason_${tid}`, data.reasons.join(','));
-        addHidden(`note_${tid}`, data.note);
-      });
-
-      const count = Object.keys(disputed).length;
-      submitBlock.style.display = count > 0 ? 'block' : 'none';
-      function taskWord(n) {
-        const mod10 = n % 10, mod100 = n % 100;
-        if (mod10 === 1 && mod100 !== 11) return 'задача';
-        if ([2,3,4].includes(mod10) && ![12,13,14].includes(mod100)) return 'задачи';
-        return 'задач';
+  document.querySelectorAll('.appeal-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentTaskId = btn.dataset.taskId;
+      document.getElementById('modal-task-num').textContent = btn.dataset.taskNum;
+      if (disputed[currentTaskId]) {
+        const saved = disputed[currentTaskId];
+        ['answer','solution'].forEach(v => {
+          const cb = document.getElementById(`reason-${v}`);
+          cb.checked = saved.reasons.includes(v);
+          cb.closest('.appeal-reason-card').classList.toggle('selected', cb.checked);
+        });
+        document.getElementById('modal-note').value = saved.note;
+      } else {
+        document.querySelectorAll('.appeal-reason-cb').forEach(cb => {
+          cb.checked = false;
+          cb.closest('.appeal-reason-card').classList.remove('selected');
+        });
+        document.getElementById('modal-note').value = '';
       }
-      countLabel.textContent = count > 0 ? `${count} ${taskWord(count)}` : '';
-    }
-    }); // DOMContentLoaded
-  </script>
-  {% endif %}
+      modal.show();
+    });
+  });
+
+  document.getElementById('modal-confirm').addEventListener('click', () => {
+    const reasons = [...document.querySelectorAll('.appeal-reason-cb:checked')].map(cb => cb.value);
+    const note = document.getElementById('modal-note').value.trim();
+    if (reasons.length === 0 && !note) return;
+    disputed[currentTaskId] = { reasons, note };
+    syncForm();
+    modal.hide();
+    const btn = document.querySelector(`.appeal-btn[data-task-id="${currentTaskId}"]`);
+    btn.classList.add('added');
+    btn.textContent = '✓ В апелляции';
+  });
+
+  function syncForm() {
+    appealForm.querySelectorAll('.dynamic-input').forEach(el => el.remove());
+    const addHidden = (name, value) => {
+      const inp = document.createElement('input');
+      inp.type = 'hidden'; inp.name = name; inp.value = value; inp.className = 'dynamic-input';
+      appealForm.appendChild(inp);
+    };
+    Object.entries(disputed).forEach(([tid, data]) => {
+      addHidden('task_ids', tid);
+      addHidden(`reason_${tid}`, data.reasons.join(','));
+      addHidden(`note_${tid}`, data.note);
+    });
+    const count = Object.keys(disputed).length;
+    submitBlock.style.display = count > 0 ? 'flex' : 'none';
+    countLabel.textContent = count;
+  }
+});
+</script>
+{% endif %}
 
 {% endblock %}

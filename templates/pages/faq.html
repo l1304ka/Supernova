@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}FAQ — Частые вопросы{% endblock %}
+{% block content %}
+<div class="page-wrap">
+
+  <section class="page-hero">
+    <h1 class="page-hero-title">Частые вопросы</h1>
+    <p class="page-hero-sub">Ответы на самые распространённые вопросы о платформе</p>
+  </section>
+
+  <section class="faq-section">
+    <h2 class="faq-group-title">Для учеников</h2>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Как пройти тест?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Перейдите на главную страницу, найдите нужный тест в разделе «Доступные тесты» и нажмите «Пройти тест».
+        Отвечайте на вопросы и нажмите «Отправить» в конце. Результат будет сохранён автоматически.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Как выполнить домашнее задание?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Домашние задания отображаются на главной странице в разделе «Домашние задания».
+        Нажмите на задание, ответьте на вопросы и отправьте ответы. Учитель проверит их и выставит оценку.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Что такое адаптивное домашнее задание?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        После прохождения теста система анализирует ваши ответы и автоматически создаёт домашнее задание
+        по темам, в которых вы допустили ошибки. Это помогает целенаправленно работать над пробелами в знаниях.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Как оспорить оценку за домашнее задание?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Откройте выполненное домашнее задание и нажмите кнопку «Подать апелляцию». Опишите причину несогласия
+        с оценкой. Учитель рассмотрит апелляцию и примет решение.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Где посмотреть свою статистику?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        На главной странице отображается ваша общая статистика: средняя оценка и успеваемость по домашним заданиям.
+        Ниже — детальная статистика по каждому предмету отдельно.
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2 class="faq-group-title">Для учителей</h2>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Как создать урок?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Перейдите в раздел «Создать урок» через панель учителя. Заполните название, выберите предмет и тему,
+        добавьте вопросы для теста. Сохранённый урок станет доступен для назначения классу.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Как назначить домашнее задание классу?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Откройте нужный класс, перейдите в раздел «Назначить задание». Выберите урок и нажмите «Назначить».
+        Задание появится у всех учеников класса.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Как посмотреть успеваемость ученика?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        В журнале класса кликните на имя ученика. Откроется детальная страница с его результатами по всем тестам
+        и домашним заданиям, а также общей статистикой по предметам.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Как рассмотреть апелляцию?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Апелляции отображаются в разделе домашних заданий ученика. Нажмите «Рассмотреть апелляцию»,
+        просмотрите ответы ученика и его аргументацию, затем примите или отклоните апелляцию.
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2 class="faq-group-title">Технические вопросы</h2>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Что делать, если забыл пароль?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Обратитесь к администратору школы — он сможет сбросить пароль через административную панель.
+        Самостоятельный сброс пароля через email планируется в следующих версиях платформы.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Поддерживаются ли мобильные устройства?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Да, платформа адаптирована для работы на смартфонах и планшетах. Рекомендуем использовать современные
+        браузеры: Chrome, Firefox, Safari или Edge последних версий.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Как переключить тёмную тему?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Нажмите на иконку луны/солнца в правом углу шапки сайта. Выбранная тема сохраняется в браузере.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Куда обращаться при проблемах?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        Напишите нам на <strong>support@adaptive-school.ru</strong> с описанием проблемы.
+        Мы постараемся ответить в течение одного рабочего дня.
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+
+<style>
+.page-wrap{max-width:800px;margin:0 auto;padding:48px 24px 80px}
+.page-hero{text-align:center;padding:40px 0 36px}
+.page-hero-title{font-size:2.2rem;font-weight:900;margin:0 0 10px}
+.page-hero-sub{font-size:1rem;opacity:.55;margin:0}
+.faq-section{margin-bottom:40px}
+.faq-group-title{font-size:1.15rem;font-weight:800;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--bs-border-color);color:#4a8df0}
+.faq-item{border:1px solid var(--bs-border-color);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.faq-q{width:100%;background:var(--bs-body-bg);border:none;text-align:left;padding:15px 18px;font-size:.97rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--bs-body-color);transition:background .15s}
+.faq-q:hover{background:var(--bs-tertiary-bg)}
+.faq-arrow{font-size:.7rem;opacity:.5;flex-shrink:0;transition:transform .2s}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 18px 16px;font-size:.92rem;line-height:1.7;opacity:.7;background:var(--bs-body-bg);color:var(--bs-body-color)}
+.faq-item.open .faq-a{display:block}
+</style>
+{% endblock %}

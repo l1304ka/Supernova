@@ -30,4 +30,12 @@ urlpatterns = [
     path("homework/<int:homework_id>/appeal/", views.submit_appeal, name="submit_appeal"),
     path("homework/appeal/<int:appeal_id>/resolve/", views.resolve_appeal, name="resolve_appeal"),
     path("lesson/create/", views.create_lesson, name="create_lesson"),
+    path("about/", views.page_about, name="page_about"),
+    path("faq/", views.page_faq, name="page_faq"),
+    path("privacy/", views.page_privacy, name="page_privacy"),
+    path("terms/", views.page_terms, name="page_terms"),
+    path("error/400/", views.error_400),
+    path("error/403/", views.error_403),
+    path("error/404/", views.error_404),
+    path("error/500/", views.error_500),
 ]

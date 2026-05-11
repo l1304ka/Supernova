@@ -513,38 +513,107 @@
 <body class="d-flex flex-column min-vh-100">
 
 <!-- HEADER -->
-<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
+<header class="site-header sticky-top">
+  <div class="container-fluid px-4">
+    <div class="header-inner">
 
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/"><b>🎓 Adaptive School</b></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <!-- Лого -->
+      <a class="header-logo" href="/">
+        <span class="header-logo-icon">🎓</span>
+        <span class="header-logo-text">Adaptive School</span>
+      </a>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+      <!-- Центр: навигация -->
+      <nav class="header-nav" id="headerNav">
+        {% if not request.user.is_authenticated %}
+          <a href="{% url 'page_about' %}" class="hnav-link">О платформе</a>
+          <a href="{% url 'page_faq' %}" class="hnav-link">FAQ</a>
+        {% endif %}
+      </nav>
+
+      <!-- Правая часть -->
+      <div class="header-right">
         {% if request.user.is_authenticated %}
-
           {% if request.user.is_superuser %}
-            <li class="nav-item"><a class="nav-link text-danger" href="/admin/"><b>Админка Django</b></a></li>
-            <li class="nav-item"><a class="nav-link text-danger" href="/admin-panel/">Админ-панель</a></li>
+            <a href="/admin/" class="hnav-link" style="color:#e74c3c;">Django admin</a>
+            <a href="/admin-panel/" class="hnav-link" style="color:#e74c3c;">Админ-панель</a>
           {% endif %}
-
-          <li class="nav-item"><a class="nav-link text-warning" href="{% url 'logout' %}">Выйти</a></li>
-
+          <a href="/" class="header-user">
+            <span class="header-avatar">
+              {% if request.user.student %}{{ request.user.student.name|first }}{% elif request.user.teacher %}{{ request.user.teacher.name|first }}{% else %}?{% endif %}
+            </span>
+            <span class="header-username">
+              {% if request.user.student %}{{ request.user.student.name }}{% elif request.user.teacher %}{{ request.user.teacher.name }}{% else %}{{ request.user.username }}{% endif %}
+            </span>
+          </a>
+          <a href="{% url 'logout' %}" class="hnav-link hnav-logout">Выйти</a>
         {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Войти</a></li>
+          <a href="{% url 'login' %}" class="header-btn-login">Войти</a>
         {% endif %}
 
-        <li class="nav-item align-content-center justify-content-center">
-          <button id="themeToggle" class="btn btn-outline-secondary btn-sm ms-3" aria-label="Переключить тему"><span
-              id="themeIcon"></span></button>
-        </li>
-      </ul>
+        <button id="themeToggle" class="theme-btn" aria-label="Переключить тему">
+          <span id="themeIcon"></span>
+        </button>
+
+        <!-- Бургер для мобильных -->
+        <button class="burger-btn" id="burgerBtn" aria-label="Меню">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
 
     </div>
   </div>
-</nav>
+</header>
+
+<style>
+.site-header{background:var(--bs-body-bg);border-bottom:1px solid rgba(255,255,255,.08);z-index:1030}
+[data-bs-theme="light"] .site-header{border-color:rgba(0,0,0,.09);box-shadow:0 1px 12px rgba(0,0,0,.06)}
+.header-inner{display:flex;align-items:center;gap:20px;height:56px}
+
+.header-logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex-shrink:0}
+.header-logo-icon{font-size:1.2rem}
+.header-logo-text{font-size:1rem;font-weight:800;letter-spacing:-.01em}
+
+.header-nav{display:flex;align-items:center;gap:4px;flex:1}
+.hnav-link{font-size:.85rem;font-weight:600;opacity:.5;text-decoration:none;color:inherit;padding:5px 10px;border-radius:8px;transition:.15s;white-space:nowrap}
+.hnav-link:hover{opacity:1;background:rgba(255,255,255,.07);color:inherit}
+[data-bs-theme="light"] .hnav-link:hover{background:rgba(0,0,0,.06)}
+.hnav-logout{color:#e74c3c !important;opacity:.65}
+.hnav-logout:hover{opacity:1;background:rgba(231,76,60,.1) !important}
+
+.header-right{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+
+.header-user{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;padding:4px 10px;border-radius:10px;transition:.15s}
+.header-user:hover{background:rgba(255,255,255,.07);color:inherit}
+[data-bs-theme="light"] .header-user:hover{background:rgba(0,0,0,.05)}
+.header-avatar{width:28px;height:28px;border-radius:50%;background:#4a8df0;color:#fff;font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.header-username{font-size:.85rem;font-weight:600}
+
+.header-btn-login{background:#4a8df0;color:#fff;border:none;border-radius:8px;padding:6px 16px;font-size:.85rem;font-weight:700;text-decoration:none;transition:.15s}
+.header-btn-login:hover{background:#3a7de0;color:#fff}
+
+.theme-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:5px 10px;font-size:.85rem;cursor:pointer;color:inherit;transition:.15s;flex-shrink:0}
+[data-bs-theme="light"] .theme-btn{background:#f0f0f0;border-color:rgba(0,0,0,.1)}
+.theme-btn:hover{background:rgba(255,255,255,.14)}
+[data-bs-theme="light"] .theme-btn:hover{background:#e4e4e4}
+
+.burger-btn{display:none;background:none;border:none;padding:6px;cursor:pointer;flex-direction:column;gap:4px}
+.burger-btn span{display:block;width:20px;height:2px;background:currentColor;border-radius:2px;transition:.2s}
+
+@media(max-width:768px){
+  .header-nav{display:none;position:absolute;top:56px;left:0;right:0;background:var(--bs-body-bg);border-bottom:1px solid rgba(255,255,255,.08);padding:12px 16px;flex-direction:column;align-items:flex-start;gap:4px;z-index:1029}
+  [data-bs-theme="light"] .header-nav{border-color:rgba(0,0,0,.09);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+  .header-nav.open{display:flex}
+  .header-username{display:none}
+  .burger-btn{display:flex}
+}
+</style>
+
+<script>
+document.getElementById("burgerBtn")?.addEventListener("click", function() {
+  document.getElementById("headerNav").classList.toggle("open");
+});
+</script>
 
 <!-- MAIN -->
 <main class="container my-4 flex-grow-1">
@@ -553,11 +622,129 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="bg-body-tertiary text-center py-3 mt-auto border-top">
-  <p class="mb-0 text-muted">
-    © 2025 Adaptive Learning Service | Разработано с ❤️ для эффективного обучения
-  </p>
+<footer class="site-footer mt-auto">
+  <div class="container">
+    <div class="footer-grid">
+
+      <!-- Бренд -->
+      <div class="footer-col footer-brand-col">
+        <div class="footer-logo">🎓 Adaptive School</div>
+        <div class="footer-desc">Платформа адаптивного обучения для школ. ИИ-генерация заданий, тесты и аналитика успеваемости.</div>
+      </div>
+
+      <!-- Навигация -->
+      <div class="footer-col">
+        <div class="footer-col-title">Навигация</div>
+        <ul class="footer-links">
+          <li><a href="/">Главная</a></li>
+          {% if request.user.is_authenticated %}
+          <li><a href="/">Личный кабинет</a></li>
+          {% else %}
+          <li><a href="{% url 'login' %}">Войти</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Информация -->
+      <div class="footer-col">
+        <div class="footer-col-title">Информация</div>
+        <ul class="footer-links">
+          <li><a href="/faq/">FAQ</a></li>
+          <li><a href="/privacy/">Политика конфиденциальности</a></li>
+          <li><a href="/terms/">Пользовательское соглашение</a></li>
+        </ul>
+      </div>
+
+      <!-- Поддержка -->
+      <div class="footer-col">
+        <div class="footer-col-title">Поддержка</div>
+        <ul class="footer-links">
+          <li><a href="mailto:support@adaptive.school">support@adaptive.school</a></li>
+          <li class="footer-note">Пн–Пт, 9:00–18:00 МСК</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 Adaptive School. Все права защищены.</span>
+    </div>
+  </div>
 </footer>
+
+<style>
+.site-footer {
+  border-top: 1px solid rgba(255,255,255,.07);
+  padding: 48px 0 24px;
+  margin-top: 60px;
+}
+[data-bs-theme="light"] .site-footer {
+  border-color: rgba(0,0,0,.08);
+  background: #f8f9fa;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+@media (max-width: 768px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .footer-brand-col { grid-column: 1 / -1; }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+.footer-logo {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.footer-desc {
+  font-size: .82rem;
+  opacity: .4;
+  line-height: 1.6;
+  max-width: 280px;
+}
+.footer-col-title {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  opacity: .35;
+  margin-bottom: 14px;
+}
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer-links a {
+  font-size: .86rem;
+  opacity: .55;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity .15s;
+}
+.footer-links a:hover { opacity: 1; }
+.footer-note {
+  font-size: .82rem;
+  opacity: .3;
+}
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding-top: 20px;
+  font-size: .8rem;
+  opacity: .3;
+  text-align: center;
+}
+[data-bs-theme="light"] .footer-bottom { border-color: rgba(0,0,0,.07); }
+</style>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

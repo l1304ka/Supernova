@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}О платформе — Adaptive School{% endblock %}
+{% block content %}
+<div class="page-wrap">
+
+  <section class="page-hero">
+    <div class="page-hero-icon">🎓</div>
+    <h1 class="page-hero-title">Adaptive School</h1>
+    <p class="page-hero-sub">Умная платформа адаптивного обучения для школ</p>
+  </section>
+
+  <section class="page-section">
+    <h2 class="page-section-title">Что такое Adaptive School?</h2>
+    <p class="page-text">
+      Adaptive School — это образовательная платформа, которая помогает учителям эффективно управлять учебным процессом,
+      а ученикам — учиться в комфортном темпе с персонализированными заданиями.
+    </p>
+    <p class="page-text">
+      Система автоматически анализирует результаты тестов и домашних заданий, выявляет пробелы в знаниях
+      и предлагает дополнительные задания именно по тем темам, которые требуют проработки.
+    </p>
+  </section>
+
+  <section class="page-section">
+    <h2 class="page-section-title">Возможности платформы</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <div class="feature-title">Тесты и задания</div>
+        <div class="feature-desc">Учитель создаёт тесты по темам, ученики проходят их онлайн. Результаты сохраняются автоматически.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏠</div>
+        <div class="feature-title">Домашние задания</div>
+        <div class="feature-desc">Домашние задания формируются на основе слабых мест ученика или назначаются вручную по классу.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Статистика и аналитика</div>
+        <div class="feature-desc">Детальная статистика по каждому ученику, предмету и классу. Динамика успеваемости во времени.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">Адаптивное обучение</div>
+        <div class="feature-desc">Система подбирает сложность заданий индивидуально под каждого ученика на основе его результатов.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👩‍🏫</div>
+        <div class="feature-title">Управление классами</div>
+        <div class="feature-desc">Учитель видит журнал класса, успеваемость каждого ученика и может назначать задания всему классу.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✉️</div>
+        <div class="feature-title">Апелляции</div>
+        <div class="feature-desc">Ученик может оспорить оценку за домашнее задание, учитель рассматривает и принимает решение.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <h2 class="page-section-title">Как это работает</h2>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Регистрация и классы</div>
+          <div class="step-desc">Администратор создаёт классы, добавляет учителей и учеников, назначает предметы.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Уроки и тесты</div>
+          <div class="step-desc">Учитель создаёт уроки по темам и прикрепляет к ним тесты с вопросами.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Прохождение тестов</div>
+          <div class="step-desc">Ученики проходят тесты онлайн. Система автоматически проверяет ответы и выставляет оценки.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Домашние задания</div>
+          <div class="step-desc">На основе результатов система генерирует персонализированные домашние задания по слабым темам.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Аналитика и рост</div>
+          <div class="step-desc">Учитель отслеживает прогресс каждого ученика. Ученик видит свою статистику и зоны роста.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <h2 class="page-section-title">Контакты</h2>
+    <p class="page-text">По вопросам внедрения платформы в вашу школу или техническим вопросам обращайтесь:</p>
+    <p class="page-text"><strong>Email:</strong> support@adaptive-school.ru</p>
+  </section>
+
+</div>
+
+<style>
+.page-wrap{max-width:860px;margin:0 auto;padding:48px 24px 80px}
+.page-hero{text-align:center;padding:48px 0 40px}
+.page-hero-icon{font-size:3.5rem;margin-bottom:16px}
+.page-hero-title{font-size:2.4rem;font-weight:900;margin:0 0 10px}
+.page-hero-sub{font-size:1.1rem;opacity:.55;margin:0}
+.page-section{margin-bottom:48px}
+.page-section-title{font-size:1.4rem;font-weight:800;margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid var(--border,#e5e7eb)}
+.page-text{font-size:1rem;line-height:1.75;opacity:.8;margin:0 0 14px}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.feature-card{background:var(--card-bg,#fff);border:1px solid var(--border,#e5e7eb);border-radius:12px;padding:20px}
+.feature-icon{font-size:1.8rem;margin-bottom:10px}
+.feature-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+.feature-desc{font-size:.88rem;line-height:1.6;opacity:.6}
+.steps-list{display:flex;flex-direction:column;gap:16px}
+.step-item{display:flex;gap:16px;align-items:flex-start}
+.step-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:#4a8df0;color:#fff;font-weight:800;font-size:.95rem;display:flex;align-items:center;justify-content:center}
+.step-body{}
+.step-title{font-size:1rem;font-weight:700;margin-bottom:4px}
+.step-desc{font-size:.9rem;line-height:1.6;opacity:.65}
+@media(max-width:600px){.feature-grid{grid-template-columns:1fr}}
+</style>
+{% endblock %}
