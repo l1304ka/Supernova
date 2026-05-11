@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-(&%go_2*_h=kov36a4rogc21^5v3p@_1-pi)6_@2&be3(5%h^^
 
 env_path = os.path.join(BASE_DIR, ".env")
 load_dotenv(env_path)
-GENAI_API_KEY = "AIzaSyA2jTHtJyGb4Et60bjuxOhL_x3MaD_7Ixk"
+GENAI_API_KEY = os.environ.get("GENAI_API_KEY", "")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

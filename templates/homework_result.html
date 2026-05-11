@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% block title %}Результаты ДЗ{% endblock %}
 
 {% block content %}
@@ -6,34 +6,94 @@
 
   <h2>Результаты ДЗ: {{ correct }} из {{ total }}</h2>
 
-  <div class="question-cards-wrapper mt-3">
-
-    {% for t in tasks %}
-      <div class="question-card {% if t.is_correct %}qc-correct{% else %}qc-wrong{% endif %}">
-        <div class="qc-header">
-          <h5 class="qc-number">Задача {{ forloop.counter }}</h5>
-          <span class="qc-status {% if t.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">
-            {% if t.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
-          </span>
-        </div>
-
-        <div class="qc-body">
-          <p class="qc-question">{{ t.text }}</p>
-
-          <p class="qc-field"><span>Ваш ответ:</span> {{ t.student_answer }}</p>
-          <p class="qc-field"><span>Правильный ответ:</span> {{ t.correct_answer }}</p>
-
-          <details class="mt-2">
-            <summary>Показать решение</summary>
-            <div class="mt-2 solution-html ps-3">{{ t.solution|safe }}</div>
-          </details>
-        </div>
+  {% if appeal %}
+    {% if appeal.status == 'pending' %}
+      <div class="alert alert-info mt-3">
+        ⏳ Апелляция отправлена учителю на рассмотрение.
       </div>
-    {% endfor %}
+    {% else %}
+      <div class="alert alert-success mt-3">
+        ✅ Учитель рассмотрел вашу апелляцию. Результат обновлён.
+      </div>
+    {% endif %}
+  {% endif %}
 
-  </div>
+  <form method="post" action="{% url 'submit_appeal' homework.id %}" id="appeal-form">
+    {% csrf_token %}
+
+    <div class="question-cards-wrapper mt-3">
+
+      {% for t in tasks %}
+        <div class="question-card {% if t.is_correct %}qc-correct{% else %}qc-wrong{% endif %}">
+          <div class="qc-header">
+            <h5 class="qc-number">Задача {{ forloop.counter }}</h5>
+            <div class="d-flex align-items-center gap-3">
+              <span class="qc-status {% if t.is_correct %}qc-status-true{% else %}qc-status-false{% endif %}">
+                {% if t.is_correct %}✔ Верно{% else %}✘ Неверно{% endif %}
+              </span>
+              {% if not appeal and not t.is_correct %}
+                <label class="d-flex align-items-center gap-1 mb-0" style="cursor:pointer; font-size:0.9rem;">
+                  <input type="checkbox" name="task_ids" value="{{ t.id }}" class="appeal-checkbox">
+                  Оспорить
+                </label>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="qc-body">
+            <p class="qc-question">{{ t.text }}</p>
+
+            <p class="qc-field"><span>Ваш ответ:</span> {{ t.student_answer }}</p>
+            <p class="qc-field"><span>Правильный ответ:</span> {{ t.correct_answer }}</p>
+
+            {% if appeal and appeal.status == 'resolved' %}
+              {% for at in appeal.appeal_tasks.all %}
+                {% if at.task_id == t.id %}
+                  <div class="alert alert-secondary mt-2 py-2">
+                    <b>Решение учителя:</b>
+                    {% if at.teacher_verdict %}✔ Засчитано{% else %}✘ Не засчитано{% endif %}
+                    {% if at.teacher_comment %}
+                      <br><small>{{ at.teacher_comment }}</small>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            <details class="mt-2">
+              <summary>Показать решение</summary>
+              <div class="mt-2 solution-html ps-3">{{ t.solution|safe }}</div>
+            </details>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+    {% if not appeal %}
+      <div id="appeal-section" class="mt-4" style="display:none;">
+        <h5>Комментарий к апелляции</h5>
+        <textarea name="comment" class="form-control mb-3" rows="3"
+                  placeholder="Объясните, почему вы не согласны с оценкой..."></textarea>
+        <button type="submit" class="btn btn-warning">Отправить апелляцию учителю</button>
+      </div>
+    {% endif %}
+
+  </form>
 
   <a href="/" class="btn btn-outline-secondary mt-3">На главную</a>
 
 </div>
+
+{% if not appeal %}
+<script>
+  document.querySelectorAll('.appeal-checkbox').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const anyChecked = document.querySelectorAll('.appeal-checkbox:checked').length > 0;
+      document.getElementById('appeal-section').style.display = anyChecked ? 'block' : 'none';
+    });
+  });
+</script>
+{% endif %}
+
 {% endblock %}

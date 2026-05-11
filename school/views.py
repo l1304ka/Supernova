@@ -13,7 +13,7 @@ from django.utils.timezone import now
 from administrator.views import superuser_required
 from .ai_utils import generate_homework_tasks_gemini
 from .models import Test, TestResult, Student, Lesson, Subject, AssignedTopic, Question, StudentAnswer, Teacher, \
-    SchoolClass, Homework, HomeworkTask
+    SchoolClass, Homework, HomeworkTask, HomeworkAppeal, HomeworkAppealTask
 
 
 @login_required
@@ -165,6 +165,13 @@ def index(request):
         else:
             avg_test_score = 0
 
+        pending_appeals = HomeworkAppeal.objects.filter(
+            homework__student__in=students,
+            status=HomeworkAppeal.STATUS_PENDING,
+        ).select_related(
+            "homework__student", "homework__lesson"
+        ).prefetch_related("appeal_tasks").order_by("created_at")
+
         return render(request, "teacher_dashboard.html", {
             "teacher": teacher,
             "classes": classes,
@@ -181,6 +188,7 @@ def index(request):
             "avg_test_score": avg_test_score,
 
             "recent_events_json": recent_events_json,
+            "pending_appeals": pending_appeals,
         })
 
     # ─────────────────────────────────────────────
@@ -1119,6 +1127,8 @@ def homework_detail(request, homework_id):
     solved = len([t for t in tasks if t.is_correct is not False])
     percent = int((solved / total) * 100) if total else 0
 
+    appeal = getattr(hw, "appeal", None)
+
     return render(request, "homework_detail.html", {
         "homework": hw,
         "tasks": tasks,
@@ -1126,23 +1136,13 @@ def homework_detail(request, homework_id):
         "correct": correct,
         "solved": solved,
         "percent": percent,
+        "appeal": appeal,
     })
 
 
 @login_required
 def homework_result(request, homework_id):
-    hw = get_object_or_404(Homework, id=homework_id, student__user=request.user)
-    tasks = list(hw.tasks.order_by("order"))
-
-    total = len(tasks)
-    correct = len([t for t in tasks if t.is_correct])
-
-    return render(request, "homework_result.html", {
-        "homework": hw,
-        "tasks": tasks,
-        "total": total,
-        "correct": correct,
-    })
+    return redirect("homework_detail", homework_id=homework_id)
 
 
 @login_required
@@ -1177,4 +1177,95 @@ def create_lesson(request):
 
     return render(request, "create_lesson.html", {
         "subjects": subjects,
+    })
+
+
+@login_required
+def submit_appeal(request, homework_id):
+    hw = get_object_or_404(Homework, id=homework_id, student__user=request.user)
+
+    if not hw.is_checked:
+        return redirect("homework_detail", homework_id=hw.id)
+
+    if hasattr(hw, "appeal"):
+        return redirect("homework_result", homework_id=hw.id)
+
+    if request.method == "POST":
+        task_ids = request.POST.getlist("task_ids")
+        comment = request.POST.get("comment", "").strip()
+
+        if not task_ids:
+            return redirect("homework_result", homework_id=hw.id)
+
+        appeal = HomeworkAppeal.objects.create(
+            homework=hw,
+            student_comment=comment,
+        )
+
+        valid_task_ids = set(hw.tasks.values_list("id", flat=True))
+        for tid in task_ids:
+            try:
+                tid = int(tid)
+            except (ValueError, TypeError):
+                continue
+            if tid in valid_task_ids:
+                task = HomeworkTask.objects.get(id=tid)
+                raw_reason = request.POST.get(f"reason_{tid}", HomeworkAppealTask.REASON_ANSWER)
+                # обрезаем до допустимых значений из comma-separated строки
+                valid = {HomeworkAppealTask.REASON_ANSWER, HomeworkAppealTask.REASON_SOLUTION}
+                parts = [r for r in raw_reason.split(",") if r in valid]
+                reason = ",".join(parts) if parts else HomeworkAppealTask.REASON_ANSWER
+                HomeworkAppealTask.objects.create(
+                    appeal=appeal,
+                    task=task,
+                    reason=reason,
+                    student_note=request.POST.get(f"note_{tid}", "").strip(),
+                )
+
+    return redirect("homework_result", homework_id=hw.id)
+
+
+@login_required
+def resolve_appeal(request, appeal_id):
+    if not hasattr(request.user, "teacher"):
+        return redirect("index")
+
+    teacher = request.user.teacher
+    teacher_classes = teacher.classes.all()
+    students = Student.objects.filter(classes__in=teacher_classes).distinct()
+
+    appeal = get_object_or_404(
+        HomeworkAppeal,
+        id=appeal_id,
+        homework__student__in=students,
+    )
+
+    if request.method == "POST":
+        from django.utils.timezone import now as tz_now
+
+        for at in appeal.appeal_tasks.select_related("task"):
+            verdict_raw = request.POST.get(f"verdict_{at.id}")
+            teacher_comment = request.POST.get(f"comment_{at.id}", "").strip()
+
+            if verdict_raw is None:
+                continue
+
+            is_correct = verdict_raw == "correct"
+            at.teacher_verdict = is_correct
+            at.teacher_comment = teacher_comment
+            at.save()
+
+            at.task.is_correct = is_correct
+            at.task.save()
+
+        appeal.status = HomeworkAppeal.STATUS_RESOLVED
+        appeal.resolved_at = tz_now()
+        appeal.save()
+
+        return redirect("index")
+
+    appeal_tasks = appeal.appeal_tasks.select_related("task").order_by("task__order")
+    return render(request, "appeal_resolve.html", {
+        "appeal": appeal,
+        "appeal_tasks": appeal_tasks,
     })

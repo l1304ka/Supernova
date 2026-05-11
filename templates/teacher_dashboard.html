@@ -13,6 +13,126 @@
       </a>
     </div>
   </div>
+    <!-- === БЛОК АПЕЛЛЯЦИЙ === -->
+    {% if pending_appeals %}
+      <div class="appeals-block mb-4">
+        <div class="appeals-block-header">
+          <span class="appeals-block-icon">⚡</span>
+          <span class="appeals-block-title">Апелляции</span>
+          <span class="appeals-block-count">{{ pending_appeals|length }}</span>
+        </div>
+        <div class="appeals-list">
+          {% for appeal in pending_appeals %}
+            <div class="appeal-row">
+              <div class="appeal-row-avatar">
+                {{ appeal.homework.student.name|first }}{{ appeal.homework.student.surname|first }}
+              </div>
+              <div class="appeal-row-info">
+                <div class="appeal-row-name">{{ appeal.homework.student.surname }} {{ appeal.homework.student.name }}</div>
+                <div class="appeal-row-meta">
+                  {{ appeal.homework.lesson.title }}
+                  <span class="appeal-row-dot">·</span>
+                  {{ appeal.appeal_tasks.count }} задач
+                  <span class="appeal-row-dot">·</span>
+                  {{ appeal.created_at|date:"d.m.Y H:i" }}
+                </div>
+              </div>
+              <a href="{% url 'resolve_appeal' appeal.id %}" class="appeal-row-btn">Рассмотреть →</a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <style>
+        .appeals-block {
+          border-radius: 14px;
+          border: 1px solid rgba(255,193,7,0.25);
+          background: rgba(255,193,7,0.05);
+          overflow: hidden;
+        }
+        [data-bs-theme="light"] .appeals-block {
+          background: #fffbf0;
+          border-color: rgba(255,193,7,0.35);
+        }
+        .appeals-block-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 14px 20px;
+          border-bottom: 1px solid rgba(255,193,7,0.15);
+        }
+        .appeals-block-icon { font-size: 1rem; }
+        .appeals-block-title {
+          font-weight: 700;
+          font-size: 0.95rem;
+          flex: 1;
+        }
+        .appeals-block-count {
+          background: #ffc107;
+          color: #000;
+          font-size: 0.75rem;
+          font-weight: 800;
+          border-radius: 20px;
+          padding: 1px 8px;
+          min-width: 22px;
+          text-align: center;
+        }
+        .appeals-list { }
+        .appeal-row {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 14px 20px;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+          transition: background .15s;
+        }
+        [data-bs-theme="light"] .appeal-row {
+          border-color: rgba(0,0,0,0.05);
+        }
+        .appeal-row:last-child { border-bottom: none; }
+        .appeal-row:hover { background: rgba(255,193,7,0.06); }
+        .appeal-row-avatar {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: rgba(255,193,7,0.2);
+          color: #ffc107;
+          font-weight: 800;
+          font-size: 0.85rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          letter-spacing: .02em;
+        }
+        .appeal-row-info { flex: 1; min-width: 0; }
+        .appeal-row-name {
+          font-weight: 600;
+          font-size: 0.92rem;
+          margin-bottom: 2px;
+        }
+        .appeal-row-meta {
+          font-size: 0.78rem;
+          opacity: .55;
+        }
+        .appeal-row-dot { margin: 0 4px; }
+        .appeal-row-btn {
+          flex-shrink: 0;
+          background: #ffc107;
+          color: #000;
+          border: none;
+          border-radius: 8px;
+          padding: 6px 14px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: background .15s;
+          white-space: nowrap;
+        }
+        .appeal-row-btn:hover { background: #e0a800; color: #000; }
+      </style>
+    {% endif %}
+
     <!-- === БЛОК КЛАССОВ === -->
     <h3 class="mt-4">Ваши классы</h3>
     <div class="row">

@@ -27,5 +27,7 @@ urlpatterns = [
     path("homework/generate/<int:result_id>/", views.generate_homework, name="generate_homework"),
     path("homework/<int:homework_id>/", views.homework_detail, name="homework_detail"),
     path("homework/<int:homework_id>/result/", views.homework_result, name="homework_result"),
+    path("homework/<int:homework_id>/appeal/", views.submit_appeal, name="submit_appeal"),
+    path("homework/appeal/<int:appeal_id>/resolve/", views.resolve_appeal, name="resolve_appeal"),
     path("lesson/create/", views.create_lesson, name="create_lesson"),
 ]

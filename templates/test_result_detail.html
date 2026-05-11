@@ -86,7 +86,7 @@
       {% else %}
         <form method="post" action="{% url 'generate_homework' result.id %}">
           {% csrf_token %}
-          <button type="submit" class="btn btn-outline-primary">
+          <button type="submit" class="btn btn-outline-primary hw-generate-btn">
             Сгенерировать ДЗ по этой теме
           </button>
         </form>

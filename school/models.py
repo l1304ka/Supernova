@@ -274,3 +274,50 @@ class HomeworkTask(models.Model):
 
     def __str__(self):
         return f"Задача {self.order} для {self.homework}"
+
+
+class HomeworkAppeal(models.Model):
+    """Апелляция ученика по результатам проверки ДЗ."""
+    STATUS_PENDING = 'pending'
+    STATUS_RESOLVED = 'resolved'
+    STATUS_CHOICES = [
+        (STATUS_PENDING, 'На рассмотрении'),
+        (STATUS_RESOLVED, 'Рассмотрено'),
+    ]
+
+    homework = models.OneToOneField(Homework, on_delete=models.CASCADE, related_name="appeal")
+    student_comment = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Апелляция по ДЗ"
+        verbose_name_plural = "Апелляции по ДЗ"
+
+    def __str__(self):
+        return f"Апелляция {self.homework.student} по {self.homework.lesson.title}"
+
+
+class HomeworkAppealTask(models.Model):
+    """Конкретная задача, которую ученик оспаривает."""
+    REASON_ANSWER = 'answer'
+    REASON_SOLUTION = 'solution'
+    REASON_CHOICES = [
+        (REASON_ANSWER, 'Не согласен с ответом'),
+        (REASON_SOLUTION, 'Не согласен с решением'),
+    ]
+
+    appeal = models.ForeignKey(HomeworkAppeal, on_delete=models.CASCADE, related_name="appeal_tasks")
+    task = models.ForeignKey(HomeworkTask, on_delete=models.CASCADE, related_name="appeal_tasks")
+    reason = models.CharField(max_length=20, choices=REASON_CHOICES, default=REASON_ANSWER)
+    student_note = models.TextField(blank=True)
+    teacher_verdict = models.BooleanField(null=True)
+    teacher_comment = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Задача в апелляции"
+        verbose_name_plural = "Задачи в апелляции"
+
+    def __str__(self):
+        return f"Задача {self.task.order} в апелляции {self.appeal.id}"

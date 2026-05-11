@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% block title %}Рассмотрение апелляции{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 780px;">
+
+  <!-- Шапка -->
+  <div class="appeal-page-header mb-4">
+    <div class="appeal-page-meta">
+      <a href="{% url 'index' %}" class="appeal-back">← Назад</a>
+      <span class="appeal-page-badge">Апелляция</span>
+    </div>
+    <h2 class="appeal-page-title">{{ appeal.homework.lesson.title }}</h2>
+    <div class="appeal-page-info">
+      <span>👤 {{ appeal.homework.student.surname }} {{ appeal.homework.student.name }}</span>
+      <span>🕒 {{ appeal.created_at|date:"d.m.Y H:i" }}</span>
+      <span>📋 {{ appeal_tasks|length }} задач{{ appeal_tasks|length|pluralize:"а,и," }}</span>
+    </div>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for at in appeal_tasks %}
+    <div class="ar-card mb-4">
+
+      <!-- Заголовок задачи -->
+      <div class="ar-card-header">
+        <div class="ar-task-num">Задача {{ at.task.order }}</div>
+        <div class="ar-reasons">
+          {% if 'answer' in at.reason %}<span class="ar-reason-tag">✏️ Ответ</span>{% endif %}
+          {% if 'solution' in at.reason %}<span class="ar-reason-tag">📐 Решение</span>{% endif %}
+        </div>
+      </div>
+
+      <!-- Условие -->
+      <p class="ar-task-text">{{ at.task.text }}</p>
+
+      <!-- Ответы -->
+      <div class="ar-answers-row">
+        <div class="ar-answer-box ar-answer-student">
+          <div class="ar-answer-label">Ответ ученика</div>
+          <div class="ar-answer-value">{{ at.task.student_answer }}</div>
+        </div>
+        <div class="ar-answer-box ar-answer-ai">
+          <div class="ar-answer-label">Ответ ИИ</div>
+          <div class="ar-answer-value">{{ at.task.correct_answer }}</div>
+        </div>
+      </div>
+
+      <!-- Комментарий ученика -->
+      {% if at.student_note %}
+      <div class="ar-student-note">
+        <span class="ar-student-note-icon">💬</span>
+        «{{ at.student_note }}»
+      </div>
+      {% endif %}
+
+      <!-- Решение -->
+      <details class="ar-solution-details">
+        <summary>Показать решение ИИ</summary>
+        <div class="ar-solution-body">{{ at.task.solution|safe }}</div>
+      </details>
+
+      <div class="ar-divider"></div>
+
+      <!-- Вердикт -->
+      <div class="ar-verdict-section">
+        <div class="ar-verdict-label">Ваше решение</div>
+        <div class="ar-verdict-choices">
+          <label class="ar-verdict-card" id="vc-correct-{{ at.id }}">
+            <input type="radio" name="verdict_{{ at.id }}" value="correct" required
+                   onchange="selectVerdict({{ at.id }}, 'correct')">
+            <span class="ar-verdict-icon">✔</span>
+            <span>Засчитать</span>
+          </label>
+          <label class="ar-verdict-card" id="vc-incorrect-{{ at.id }}">
+            <input type="radio" name="verdict_{{ at.id }}" value="incorrect"
+                   onchange="selectVerdict({{ at.id }}, 'incorrect')">
+            <span class="ar-verdict-icon">✘</span>
+            <span>Не засчитывать</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Комментарий учителя -->
+      <textarea name="comment_{{ at.id }}" class="ar-comment"
+                placeholder="Комментарий ученику (необязательно)..." rows="2"></textarea>
+
+    </div>
+    {% endfor %}
+
+    <div class="ar-submit-row">
+      <button type="submit" class="ar-btn-submit">Сохранить решение</button>
+      <a href="{% url 'index' %}" class="ar-btn-cancel">Отмена</a>
+    </div>
+  </form>
+
+</div>
+
+<style>
+  .appeal-page-header { }
+  .appeal-page-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .appeal-back {
+    font-size: 0.85rem;
+    opacity: .6;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity .15s;
+  }
+  .appeal-back:hover { opacity: 1; }
+  .appeal-page-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: rgba(255,193,7,.15);
+    color: #ffc107;
+    border-radius: 6px;
+    padding: 2px 8px;
+  }
+  .appeal-page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .appeal-page-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 0.85rem;
+    opacity: .6;
+  }
+
+  /* Карточка задачи */
+  .ar-card {
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    padding: 22px 24px;
+  }
+  [data-bs-theme="light"] .ar-card {
+    border-color: rgba(0,0,0,0.08);
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .ar-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .ar-task-num {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    opacity: .5;
+  }
+  .ar-reasons { display: flex; gap: 6px; }
+  .ar-reason-tag {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(255,193,7,0.12);
+    color: #ffc107;
+    font-weight: 600;
+  }
+  .ar-task-text {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* Ответы */
+  .ar-answers-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .ar-answer-box {
+    flex: 1;
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .ar-answer-student {
+    background: rgba(231,76,60,0.1);
+    border: 1px solid rgba(231,76,60,0.25);
+  }
+  .ar-answer-ai {
+    background: rgba(52,152,219,0.08);
+    border: 1px solid rgba(52,152,219,0.2);
+  }
+  .ar-answer-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    opacity: .5;
+    margin-bottom: 4px;
+  }
+  .ar-answer-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  /* Комментарий ученика */
+  .ar-student-note {
+    font-size: 0.88rem;
+    opacity: .7;
+    font-style: italic;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .ar-student-note-icon { font-style: normal; }
+
+  /* Решение */
+  .ar-solution-details {
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+  }
+  .ar-solution-details summary {
+    cursor: pointer;
+    opacity: .6;
+    font-weight: 500;
+    user-select: none;
+  }
+  .ar-solution-details summary:hover { opacity: 1; }
+  .ar-solution-body {
+    margin-top: 10px;
+    padding-left: 12px;
+    border-left: 3px solid rgba(255,255,255,0.1);
+  }
+  [data-bs-theme="light"] .ar-solution-body {
+    border-color: rgba(0,0,0,0.1);
+  }
+
+  .ar-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+    margin: 16px 0;
+  }
+  [data-bs-theme="light"] .ar-divider { background: rgba(0,0,0,0.07); }
+
+  /* Вердикт */
+  .ar-verdict-section { margin-bottom: 14px; }
+  .ar-verdict-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    opacity: .5;
+    margin-bottom: 10px;
+  }
+  .ar-verdict-choices { display: flex; gap: 10px; }
+  .ar-verdict-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: .15s;
+    user-select: none;
+  }
+  [data-bs-theme="light"] .ar-verdict-card { border-color: rgba(0,0,0,0.12); }
+  .ar-verdict-card input[type=radio] { display: none; }
+  .ar-verdict-card:hover { border-color: rgba(255,255,255,0.3); }
+  .ar-verdict-card.selected-correct {
+    border-color: #2ecc71;
+    background: rgba(46,204,113,0.12);
+    color: #2ecc71;
+  }
+  .ar-verdict-card.selected-incorrect {
+    border-color: #e74c3c;
+    background: rgba(231,76,60,0.12);
+    color: #e74c3c;
+  }
+  .ar-verdict-icon { font-size: 1rem; }
+
+  /* Комментарий учителя */
+  .ar-comment {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    resize: none;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: inherit;
+    transition: border-color .2s;
+  }
+  [data-bs-theme="light"] .ar-comment {
+    border-color: rgba(0,0,0,0.12);
+    background: #f8f9fa;
+    color: #212529;
+  }
+  .ar-comment:focus {
+    outline: none;
+    border-color: #ffc107;
+  }
+
+  /* Кнопки */
+  .ar-submit-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 32px;
+  }
+  .ar-btn-submit {
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .ar-btn-submit:hover { background: #27ae60; }
+  .ar-btn-cancel {
+    color: inherit;
+    opacity: .5;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: opacity .15s;
+  }
+  .ar-btn-cancel:hover { opacity: 1; }
+</style>
+
+<script>
+  function selectVerdict(id, value) {
+    const cardCorrect = document.getElementById(`vc-correct-${id}`);
+    const cardIncorrect = document.getElementById(`vc-incorrect-${id}`);
+    cardCorrect.classList.remove('selected-correct', 'selected-incorrect');
+    cardIncorrect.classList.remove('selected-correct', 'selected-incorrect');
+    if (value === 'correct') cardCorrect.classList.add('selected-correct');
+    else cardIncorrect.classList.add('selected-incorrect');
+  }
+</script>
+
+{% endblock %}
